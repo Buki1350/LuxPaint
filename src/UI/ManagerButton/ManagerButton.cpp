@@ -4,9 +4,13 @@
 
 #include "ManagerButton.h"
 
+#include "../../../otherLibs/nfd/nfd.h"
+#include "../../App.h"
 #include "../../Render/UIObjectManager.h"
-#include "../../Static/FilesManager/FilesManager.h"
-#include "../../Static/Utils/Utils.h"
+#include "../../StaticShared/Animator/Animator.h"
+#include "../../StaticShared/FilesManager/FilesManager.h"
+#include "../../StaticShared/Utils/Utils.h"
+#include "BlankCanvasBuilder.h"
 
 void ManagerButton::Init() {
   _uiObject_base = UIObjectManager::CreateUIObject();
@@ -14,24 +18,39 @@ void ManagerButton::Init() {
   _uiObject_base->color = Utils::LoadColor("managerButton");
   _uiObject_base->SetImage(FilesManager::LoadImage("manager_button.png"));
   _uiObject_base->zLayer = 2;
+  _uiObject_base->imageMarginScale = UIOBJECT_DEFAULT_ICON_MARGIN;
 
-  UIObject* loadButton = UIObjectManager::CreateUIObject();
-  UIObject* saveButton = UIObjectManager::CreateUIObject();
-  UIObject* settingsButton = UIObjectManager::CreateUIObject();
+  _uiObject_newButton = UIObjectManager::CreateUIObject();
+  _uiObject_loadButton = UIObjectManager::CreateUIObject();
+  _uiObject_saveButton = UIObjectManager::CreateUIObject();
+  _uiObject_settingsButton = UIObjectManager::CreateUIObject();
 
-  loadButton->color = Utils::LoadColor("managerButton_ListButton");
-  loadButton->text = "Load image";
-  loadButton->text.center = true;
-  saveButton->color = Utils::LoadColor("managerButton_ListButton");;
-  saveButton->text = "Save image";
-  saveButton->text.center = true;
-  settingsButton->color = Utils::LoadColor("managerButton_ListButton");;
-  settingsButton->text = "Settings";
-  settingsButton->text.center = true;
+  Color buttonsColor = Utils::LoadColor("managerButton_ListButton");
 
-  _uiObject_buttons.push_back(loadButton);
-  _uiObject_buttons.push_back(saveButton);
-  _uiObject_buttons.push_back(settingsButton);
+  _uiObject_newButton->color = buttonsColor;
+  _uiObject_newButton->text = "New";
+  _uiObject_newButton->text.center = true;
+  _uiObject_loadButton->isActive = false;
+
+  _uiObject_loadButton->color = buttonsColor;
+  _uiObject_loadButton->text = "Load image";
+  _uiObject_loadButton->text.center = true;
+  _uiObject_saveButton->isActive = false;
+
+  _uiObject_saveButton->color = buttonsColor;
+  _uiObject_saveButton->text = "Save image";
+  _uiObject_saveButton->text.center = true;
+  _uiObject_settingsButton->isActive = false;
+
+  _uiObject_settingsButton->color = buttonsColor;
+  _uiObject_settingsButton->text = "Settings";
+  _uiObject_settingsButton->text.center = true;
+  _uiObject_settingsButton->isActive = false;
+
+  _uiObject_buttons.push_back(_uiObject_newButton);
+  _uiObject_buttons.push_back(_uiObject_loadButton);
+  _uiObject_buttons.push_back(_uiObject_saveButton);
+  _uiObject_buttons.push_back(_uiObject_settingsButton);
 
   for (auto button : _uiObject_buttons) {
     button->zLayer = _uiObject_base->zLayer + 1;
@@ -39,14 +58,15 @@ void ManagerButton::Init() {
 }
 
 void ManagerButton::Update() {
-  AdjustSizeAndPosition();
-  HandleClick();
+  if (_uiObject_base->Clicked()) { _listExpanded = true; }
+  if (!_uiObject_base->CursorAbove()) { _listExpanded = false; }
+  _AdjustSizeAndPosition();
 }
 
-void ManagerButton::AdjustSizeAndPosition() {
+void ManagerButton::_AdjustSizeAndPosition() {
   //... data
-  Vector2Int monitorSize     = Utils::GetCurrentMonitorSize();
-  Vector2Int windowSize      = Utils::GetWindowSize();
+  Vec2f monitorSize     = Utils::GetCurrentMonitorSize().CastTo<float>();
+  Vec2f windowSize      = Utils::GetWindowSize().CastTo<float>();
   float smallerEdge          = Utils::GetSmallerMonitorEdge();
   float listButtonSeparation = smallerEdge * _listElementSeparationScale;
   float listButtonHeight     = smallerEdge * _listElementHeightScale;
@@ -54,8 +74,8 @@ void ManagerButton::AdjustSizeAndPosition() {
   float baseButtonMargin     = smallerEdge * _marginScale;
   float listWidth            = smallerEdge * _listElementWidthScale;
   float listHeight           = smallerEdge * (_uiObject_buttons.size() * (_listElementHeightScale + _listElementSeparationScale) + _listElementSeparationScale);
-  Vector2 listSize           = { listWidth, listHeight };
-  Vector2 listPos            = { windowSize.x - listSize.x - baseButtonMargin, baseButtonMargin };
+  Vec2f listSize           = { listWidth, listHeight };
+  Vec2f listPos            = { windowSize.x - listSize.x - baseButtonMargin, baseButtonMargin };
 
   //... base
   _uiObject_base->size = {monitorSize.x * _sizeScale, monitorSize.x * _sizeScale};
@@ -64,59 +84,89 @@ void ManagerButton::AdjustSizeAndPosition() {
     baseButtonMargin
   };
 
-  for (int i = 0; i < _uiObject_buttons.size(); i++) {
-    _uiObject_buttons[i]->position = {
-      windowSize.x - listButtonSeparation,
-      _uiObject_base->position.y + _uiObject_base->animOffsetPos.y + listButtonSeparation + (listButtonSeparation + listButtonHeight) * i,
-    };
-
-    _uiObject_buttons[i]->size = { 0, listButtonHeight };
-  }
+  //... buttons interactions
+  // before others, cuz "isActive" overrides click
+  if (_uiObject_newButton->Clicked()) BlankCanvasBuilder::Build();
+  else if (_uiObject_loadButton->Clicked()) _LoadImageFromSystem();
 
   //... interaction handling
-  if (_uiObject_base->IsCursorAbove() && !_listExpanded) {
+  Vec2f postAnimatedPosition = _uiObject_base->position;
+  Vec2f postAnimatedSize = _uiObject_base->size;
+  if (_listExpanded) {
+    float animationTime = 0.15f;
+    postAnimatedPosition  = Animator::AnimatePosition(_uiObject_base, listPos, animationTime, GAUSSIAN);
+    postAnimatedSize      = Animator::AnimateSize(_uiObject_base, listSize, animationTime, GAUSSIAN);
+
+    float sizeScale = _uiObject_base->size.x / postAnimatedSize.x;
+    Animator::AnimateRoundness(_uiObject_base, _uiObject_base->roundness * sizeScale, animationTime, GAUSSIAN);
+    Animator::AnimateImageAlpha(_uiObject_base, 0, animationTime, GAUSSIAN);
+
+    for (auto button : _uiObject_buttons) { button->isActive = true; }
+  }
+  else if (_uiObject_base->CursorAbove()) {
     Animator::SizeUp(_uiObject_base);
   }
-
-  float animationTime = 0.15f;
-  if (_uiObject_base->IsCursorAbove() && _listExpanded) {
-    //.. base
-    Animator::Transform(
-      _uiObject_base,
-      listPos,
-      listSize,
-      GAUSSIAN,
-      animationTime,
-      ANIMATION_DEFAULT_TOLERANCE,
-      0);
-
-    // //.. other buttons
-    for (int i = 0; i < _uiObject_buttons.size(); i++) {
-      Animator::Transform(
-        _uiObject_buttons[i],
-        {listPos.x + listButtonSeparation, listPos.y + listButtonSeparation + (listButtonHeight + listButtonSeparation) * i},
-        {listSize.x - listButtonSeparation * 2, _uiObject_buttons[i]->size.y},
-        GAUSSIAN,
-        animationTime
-        );
-
-      if (_uiObject_buttons[i]->IsCursorAbove()) {
-        //Animator::SizeUp(_uiObject_buttons[i]); //TODO
-      }
-    }
-
-  }
   else {
-    Animator::Reset(_uiObject_base, animationTime);
-    Animator::FadeIn(_uiObject_base, animationTime);
-    for (auto button : _uiObject_buttons) {
-      Animator::Reset(button, animationTime / 10);
-    }
-
-    _listExpanded = false;
+    Animator::Reset(_uiObject_base);
+    for (auto button : _uiObject_buttons) { button->isActive = false; }
   }
+
+
+  //... buttons
+  // scaling buttons to match manager button size
+  int buttonCount = _uiObject_buttons.size();
+  float totalHeight = postAnimatedSize.y;
+  float buttonHeight = (totalHeight - (buttonCount + 1) * listButtonSeparation) / buttonCount;
+  Vec2f buttonSize = {
+    postAnimatedSize.x - listButtonSeparation * 2,
+    buttonHeight
+  };
+
+  for (int i = 0; i < buttonCount; i++) {
+    auto button = _uiObject_buttons[i];
+    button->position = {
+      postAnimatedPosition.x + listButtonSeparation,
+      postAnimatedPosition.y + listButtonSeparation + (buttonHeight + listButtonSeparation) * i
+    };
+    button->size = buttonSize;
+  }
+
 }
 
-void ManagerButton::HandleClick() {
-  if (_uiObject_base->IsClicked()) { _listExpanded = true; }
+void ManagerButton::_CreateBlank(Vec2i size) {
+  Matx<Color> blankImageMatrix(size);
+  blankImageMatrix.fill(WHITE);
+  Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);
+  App::Instance->canvas.AddTexture(blankImage);
+}
+
+void ManagerButton::_LoadImageFromSystem() {
+  char* outPath = nullptr;
+
+  nfdu8filteritem_t filters[2] = {
+    { "ImageManager files", "png,jpg" },
+    { "All files", "*" }
+  };
+
+  nfdresult_t result = NFD_OpenDialog(
+      &outPath,       // <- wyjście
+      filters,        // <- lista filtrów
+      2,              // <- liczba filtrów
+      nullptr         // <- folder startowy (NULL = domyślny)
+  );
+
+  if (result == NFD_OKAY) {
+    Image img = LoadImage(outPath);
+    Texture2D tex = LoadTextureFromImage(img);
+    App::Instance->canvas.AddImage(img);
+    UnloadImage(img);
+
+    NFD_FreePath(outPath); // pamiętaj o zwolnieniu
+  }
+  else if (result == NFD_CANCEL) {
+    // użytkownik anulował
+  }
+  else {
+    printf("NFD Error: %s\n", NFD_GetError());
+  }
 }

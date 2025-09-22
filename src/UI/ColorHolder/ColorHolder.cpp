@@ -5,7 +5,7 @@
 #include "ColorHolder.h"
 
 #include "../../Render/UIObjectManager.h"
-#include "../../Static/Utils/Utils.h"
+#include "../../StaticShared/Utils/Utils.h"
 
 void ColorHolder::Init() {
   _uiObject = UIObjectManager::CreateUIObject();
@@ -14,8 +14,8 @@ void ColorHolder::Init() {
 }
 
 void ColorHolder::Update() {
-  Vector2Int monitorSize = Utils::GetCurrentMonitorSize();
-  Vector2Int windowSize = Utils::GetWindowSize();
+  Vec2i monitorSize = Utils::GetCurrentMonitorSize();
+  Vec2i windowSize = Utils::GetWindowSize();
   float width = monitorSize.x * _widthScale;
   float height = monitorSize.y * _heightScale;
 

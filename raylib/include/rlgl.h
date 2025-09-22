@@ -4555,7 +4555,7 @@ void rlBindImageTexture(unsigned int id, unsigned int index, int format, bool re
     rlGetGlTextureFormats(format, &glInternalFormat, &glFormat, &glType);
     glBindImageTexture(index, id, 0, 0, 0, readonly? GL_READ_ONLY : GL_READ_WRITE, glInternalFormat);
 #else
-    TRACELOG(RL_LOG_WARNING, "TEXTURE: Image texture binding not enabled. Define GRAPHICS_API_OPENGL_43");
+    TRACELOG(RL_LOG_WARNING, "TEXTURE: ImageManager texture binding not enabled. Define GRAPHICS_API_OPENGL_43");
 #endif
 }
 

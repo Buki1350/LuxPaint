@@ -1,8 +1,11 @@
 #include "App.h"
-
+#include "Automatition/Initializables/Initializables.h"
 #include "Render/UIObjectManager.h"
-#include "Static/FilesManager/FilesManager.h"
-#include "Static/Utils/Utils.h"
+#include "StaticShared/Animator/Animator.h"
+#include "StaticShared/FilesManager/FilesManager.h"
+#include "StaticShared/Animator/Animator.h"
+
+static App _;
 
 void App::Init()
 {
@@ -16,27 +19,24 @@ void App::Init()
     if (!windowPosition.empty()) SetWindowPosition(windowPosition[0], windowPosition[1]);
 
     SetTargetFPS(60);
-
-    Utils::Init();
     UIObjectManager::Init();
+    Initializables::InitAll();
     managerButton.Init();
     colorHolder.Init();
     toolBox.Init();
+    canvas.Init();
 }
 
 void App::Update()
 {
-    Utils::Update();
     Updatables::UpdateAll();
 }
 
 void App::Draw()
 {
     BeginDrawing();
-    ClearBackground(RAYWHITE);
-
+    ClearBackground(GRAY);
     UIObjectManager::DrawAll();
-
     EndDrawing();
 }
 
@@ -46,11 +46,8 @@ void App::Close() {
   int windowX = (int)GetWindowPosition().x;
   int windowY = (int)GetWindowPosition().y;
 
-  FilesManager::SaveArray<int>("UserPreferences.dat", "windowSize",
-                     {screenWidth, screenHeight});
-  FilesManager::SaveArray<int>("UserPreferences.dat", "windowPosition",
-                     {windowX, windowY});
-
+  FilesManager::SaveArray<int>("UserPreferences.dat", "windowSize", {screenWidth, screenHeight});
+  FilesManager::SaveArray<int>("UserPreferences.dat", "windowPosition", {windowX, windowY});
   CloseWindow();
 }
 
@@ -61,7 +58,6 @@ void App::Run()
         Update();
         Draw();
     }
-
     Close();
 }
 

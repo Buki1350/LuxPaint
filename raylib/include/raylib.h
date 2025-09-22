@@ -259,11 +259,11 @@ typedef struct Rectangle {
     float height;           // Rectangle height
 } Rectangle;
 
-// Image, pixel data stored in CPU memory (RAM)
+// ImageManager, pixel data stored in CPU memory (RAM)
 typedef struct Image {
-    void *data;             // Image raw data
-    int width;              // Image base width
-    int height;             // Image base height
+    void *data;             // ImageManager raw data
+    int width;              // ImageManager base width
+    int height;             // ImageManager base height
     int mipmaps;            // Mipmap levels, 1 by default
     int format;             // Data format (PixelFormat type)
 } Image;
@@ -1318,7 +1318,7 @@ RLAPI Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);                
 // Texture Loading and Drawing Functions (Module: textures)
 //------------------------------------------------------------------------------------
 
-// Image loading functions
+// ImageManager loading functions
 // NOTE: These functions do not require GPU access
 RLAPI Image LoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
 RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);       // Load image from RAW file data
@@ -1333,7 +1333,7 @@ RLAPI bool ExportImage(Image image, const char *fileName);                      
 RLAPI unsigned char *ExportImageToMemory(Image image, const char *fileType, int *fileSize);              // Export image to memory buffer
 RLAPI bool ExportImageAsCode(Image image, const char *fileName);                                         // Export image as code file defining an array of bytes, returns true on success
 
-// Image generation functions
+// ImageManager generation functions
 RLAPI Image GenImageColor(int width, int height, Color color);                                           // Generate image: plain color
 RLAPI Image GenImageGradientLinear(int width, int height, int direction, Color start, Color end);        // Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
 RLAPI Image GenImageGradientRadial(int width, int height, float density, Color inner, Color outer);      // Generate image: radial gradient
@@ -1344,7 +1344,7 @@ RLAPI Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY,
 RLAPI Image GenImageCellular(int width, int height, int tileSize);                                       // Generate image: cellular algorithm, bigger tileSize means bigger cells
 RLAPI Image GenImageText(int width, int height, const char *text);                                       // Generate image: grayscale image from text data
 
-// Image manipulation functions
+// ImageManager manipulation functions
 RLAPI Image ImageCopy(Image image);                                                                      // Create an image duplicate (useful for transformations)
 RLAPI Image ImageFromImage(Image image, Rectangle rec);                                                  // Create an image from another image piece
 RLAPI Image ImageFromChannel(Image image, int selectedChannel);                                          // Create an image from a selected channel of another image (GRAYSCALE)
@@ -1382,8 +1382,8 @@ RLAPI void UnloadImagePalette(Color *colors);                                   
 RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);                                       // Get image alpha border rectangle
 RLAPI Color GetImageColor(Image image, int x, int y);                                                    // Get image pixel color at (x, y) position
 
-// Image drawing functions
-// NOTE: Image software-rendering functions (CPU)
+// ImageManager drawing functions
+// NOTE: ImageManager software-rendering functions (CPU)
 RLAPI void ImageClearBackground(Image *dst, Color color);                                                // Clear image background with given color
 RLAPI void ImageDrawPixel(Image *dst, int posX, int posY, Color color);                                  // Draw pixel within an image
 RLAPI void ImageDrawPixelV(Image *dst, Vector2 position, Color color);                                   // Draw pixel within an image (Vector version)
@@ -1460,7 +1460,7 @@ RLAPI int GetPixelDataSize(int width, int height, int format);              // G
 RLAPI Font GetFontDefault(void);                                                            // Get the default Font
 RLAPI Font LoadFont(const char *fileName);                                                  // Load font from file into GPU memory (VRAM)
 RLAPI Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepointCount); // Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
-RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);                        // Load font from Image (XNA style)
+RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);                        // Load font from ImageManager (XNA style)
 RLAPI Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 RLAPI bool IsFontValid(Font font);                                                          // Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
 RLAPI GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSize, int *codepoints, int codepointCount, int type); // Load font data for further use

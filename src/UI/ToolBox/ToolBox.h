@@ -1,6 +1,6 @@
 #pragma once
 #include "../../PaintTools/ToolSet/ToolSet.h"
-#include "../../Updatables/Updatable.h"
+#include "../../Automatition/Updatables/Updatable.h"
 
 class ToolBox final : public Updatable {
   UIObject* uiObject = nullptr;

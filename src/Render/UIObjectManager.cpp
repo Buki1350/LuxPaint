@@ -28,8 +28,8 @@ void UIObjectManager::DrawAll() {
   int currentZLayer = 0;
   while (objectDrawn < objects.size()) {
     for (const auto o : objects) {
-      if (o->isActive && currentZLayer == o->zLayer) {
-        o->Draw();
+      if (currentZLayer == o->zLayer) {
+        if (o->isActive) { o->Draw(); }
         objectDrawn++;
       }
     }

@@ -14,9 +14,12 @@ endif()
 
 # Tworzymy plik wykonywalny
 add_executable(LuxPaint
-    src/main.cpp
-    src/App.cpp
-        src/Static/FilesManager/FilesManager.cpp
+        ../otherLibs/nfd/nfd_win.cpp
+        #../otherLibs/nfd/nfd_gtk.c
+        #../otherLibs/nfd/nfd_cocoa.m
+        src/main.cpp
+        src/App.cpp
+        src/StaticShared/FilesManager/FilesManager.cpp
         src/PaintTools/Shared/Tool.cpp
         src/PaintTools/Shared/Tool.h
         src/PaintTools/ToolSet/ToolSet.cpp
@@ -28,20 +31,36 @@ add_executable(LuxPaint
         src/PaintTools/PenTool.h
         src/UI/ToolBox/ToolBox.h
         src/UI/ToolBox/ToolBox.cpp
-        src/Static/Utils/Utils.cpp
-        src/Static/Utils/Utils.h
+        src/StaticShared/Utils/Utils.cpp
+        src/StaticShared/Utils/Utils.h
         src/UI/ManagerButton/ManagerButton.cpp
         src/UI/ManagerButton/ManagerButton.h
         src/UI/ColorHolder/ColorHolder.cpp
         src/UI/ColorHolder/ColorHolder.h
-        src/Updatables/Updatable.h
-        src/Updatables/Updatables.h
-        src/Updatables/Updatables.cpp
-        src/Static/Animator/Animator.cpp
-        src/Static/Animator/Animator.h
+        src/Automatition/Updatables/Updatable.h
+        src/Automatition/Updatables/Updatables.h
+        src/Automatition/Updatables/Updatables.cpp
+        src/StaticShared/Animator/Animator.cpp
+        src/StaticShared/Animator/Animator.h
         src/Defines.h
         src/Render/Text.cpp
         src/Render/Text.h
+        src/Canvas/Canvas.cpp
+        src/Canvas/Canvas.h
+        src/Math/Vec2.h
+        src/Automatition/Initializables/Initializable.h
+        src/Automatition/Initializables/Initializables.h
+        src/Automatition/Initializables/Initializable.cpp
+        src/Automatition/Initializables/Initializables.cpp
+        src/Canvas/MarchingAntsSelector/MarchingAntsSelector.cpp
+        src/Canvas/MarchingAntsSelector/MarchingAntsSelector.h
+        src/StaticShared/Singleton/Singleton.h
+        src/Math/Matx.h
+        src/StaticShared/FrontPanel/FrontPanel.cpp
+        src/StaticShared/FrontPanel/FrontPanel.h
+        src/UI/ManagerButton/BlankCanvasBuilder.h
+        src/StaticShared/Animator/AnimationValue.h
+        src/StaticShared/Animator/AnimationValue.tpp
 )
 
 # Linkowanie i include w zależności od systemu

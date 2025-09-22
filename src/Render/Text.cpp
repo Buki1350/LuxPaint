@@ -3,8 +3,8 @@
 //
 
 #include "Text.h"
+#include "../StaticShared/Utils/Utils.h"
 #include "UIObject.h"
-#include "../Static/Utils/Utils.h"
 
 #include <__msvc_ostream.hpp>
 #include <iostream>
@@ -15,8 +15,8 @@ void Text::SetParent(UIObject *parent) {
 void Text::Draw() {
   if (uiObject_parent == nullptr) return;
 
-  Vector2 finalPos = uiObject_parent->GetAnimatedPosition();
-  Vector2 finalSize = uiObject_parent->GetAnimatedSize();
+  Vec2f finalPos = uiObject_parent->position;
+  Vec2f finalSize = uiObject_parent->size;
 
   int textWidth = MeasureText(value.c_str(), fontSize);
   int textHeight = fontSize;

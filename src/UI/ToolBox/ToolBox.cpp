@@ -2,13 +2,15 @@
 
 #include "../../PaintTools/PenTool.h"
 #include "../../Render/UIObjectManager.h"
-#include "../../Static/Utils/Utils.h"
+#include "../../StaticShared/Animator/Animator.h"
+#include "../../StaticShared/Utils/Utils.h"
 
 void ToolBox::Init() {
 
   uiObject = UIObjectManager::CreateUIObject();
   uiObject->color = Utils::LoadColor("toolBoxColor");
   uiObject->roundness = 0.25f;
+  uiObject->zLayer = 1;
 
   Tool pen_tool = PenTool("pen_tool");
   ToolSet paint_toolset     = ToolSet("paint_toolset", std::vector{pen_tool});
@@ -25,7 +27,7 @@ void ToolBox::Init() {
 }
 
 void ToolBox::Update() {
-  Vector2Int monitorSize = Utils::GetCurrentMonitorSize();
+  Vec2f monitorSize = Utils::GetCurrentMonitorSize().CastTo<float>();
 
   int pixTileHeight      = (int)monitorSize.y * tilesScale;
   int pixTileWidth       = (int)pixTileHeight;
@@ -42,7 +44,7 @@ void ToolBox::Update() {
 
   uiObject->size = {pixToolBoxWidth, pixToolBoxHeight};
 
-  Vector2 tileStartPosition = {
+  Vec2f tileStartPosition = {
     (float)pixToolBoxMargin + pixTileSeparation,
     (float)pixToolBoxMargin + pixTileSeparation,
   };
@@ -51,13 +53,12 @@ void ToolBox::Update() {
     toolSets[i].uiObject->position = tileStartPosition;
     toolSets[i].uiObject->size = {(float)pixTileWidth, (float)pixTileWidth};
 
-    if (toolSets[i].uiObject->IsCursorAbove()) {
+    if (toolSets[i].uiObject->CursorAbove()) {
       Animator::SizeUp(toolSets[i].uiObject);
     }
     else {
       Animator::Reset(toolSets[i].uiObject);
     }
-
     tileStartPosition.y += pixTileHeight + pixTileMargin;
   }
 }
