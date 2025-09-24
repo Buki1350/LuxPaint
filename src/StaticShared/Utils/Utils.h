@@ -8,7 +8,7 @@
 
 #include <string>
 
-class Utils final : public Singleton<Utils>, public Updatable, public Initializable {
+class Utils final : public Singleton<Utils>, public Updatable {
   static Vec2i _GetCurrentMonitorSize();
   static float _GetSmallerMonitorEdge();
   static Vec2i _GetWindowSize();
@@ -20,6 +20,7 @@ class Utils final : public Singleton<Utils>, public Updatable, public Initializa
   static float _deltaTime;
 
 public:
+  static void SetDefaultFont();
   static float GetSmallerMonitorEdge();
   static float GetDeltaTime();
   static Vec2i GetCurrentMonitorSize();
@@ -34,7 +35,6 @@ public:
   static Texture2D MatrixToTexture(Matx<Color>& matrix);
   static Image MatrixToImage(Matx<Color>& matrix);
 
-  void Init() override;
   void Update() override;
 
 };

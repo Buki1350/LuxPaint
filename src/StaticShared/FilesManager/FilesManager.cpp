@@ -11,6 +11,6 @@ std::string FilesManager::CreateOrGetDirectory(std::string path) {
 }
 
 Image FilesManager::LoadImage(const std::string& localPath) {
-  std::string path = (CreateOrGetDirectory(PATH_RESOURCES) + localPath);
+  std::string path = (CreateOrGetDirectory(PATH_IMAGES) + localPath);
   return ::LoadImage(path.c_str());
 }

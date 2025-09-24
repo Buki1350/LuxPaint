@@ -3,7 +3,7 @@
 
 class Updatable;
 
-class Updatables {
+class UpdatablesManager final {
 public:
   inline static std::vector<Updatable*> updatables;
   static void UpdateAll();

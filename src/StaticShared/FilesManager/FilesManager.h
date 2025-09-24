@@ -10,9 +10,10 @@
 
 #define PATH_DATA "data/"
 #define PATH_RESOURCES "resources/"
+#define PATH_IMAGES "resources/Images/"
+#define PATH_FONTS "resources/Fonts/"
 #define FILE_COLOR_PALETTE "ColorPalette.dat"
 #define FILE_USER_PREFERENCES "UserPreference.dat"
-
 
 class FilesManager {
   static std::string CreateOrGetDirectory(std::string path);

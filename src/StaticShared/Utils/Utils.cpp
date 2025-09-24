@@ -5,8 +5,6 @@
 #include "Utils.h"
 
 #include "../FilesManager/FilesManager.h"
-
-#include <iostream>
 #include <raylib.h>
 
 static Utils _; // singleton declaration
@@ -23,8 +21,8 @@ Vec2i Utils::GetWindowSize() { return _windowSize; }
 float Utils::GetSmallerMonitorEdge() { return _smallerMonitorEdge; }
 float Utils::GetDeltaTime() { return _deltaTime; }
 
-void Utils::Init() {
-  _defaultFont = LoadFont("resources/fonts/Comfortaa-Bold.ttf");
+void Utils::SetDefaultFont() {
+  _defaultFont = LoadFont((std::string(PATH_FONTS) + std::string("Comfortaa-Bold.ttf")).c_str());
 }
 
 Color Utils::HexToColor(std::string hex) {

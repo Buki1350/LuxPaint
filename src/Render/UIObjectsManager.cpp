@@ -1,29 +1,38 @@
-#include "UIObjectManager.h"
+#include "UIObjectsManager.h"
 
-std::vector<UIObject*> UIObjectManager::objects;
-Shader UIObjectManager::roundedMask;
+std::vector<UIObject*> UIObjectsManager::objects;
+Shader UIObjectsManager::roundedMask;
 
-void UIObjectManager::Init() {
+void UIObjectsManager::Init() {
   objects = std::vector<UIObject*>();
   roundedMask = LoadShader(nullptr, "../Shaders/rounded_mask.fs");
 }
 
-UIObject* UIObjectManager::CreateUIObject(const UIObject &object) {
+UIObject* UIObjectsManager::Create(const UIObject &object) {
   UIObject* objPtr = new UIObject(object);
   objects.push_back(objPtr);
   return objPtr;
 }
 
-UIObject *UIObjectManager::CreateUIObject() {
+UIObject *UIObjectsManager::Create() {
   UIObject *objPtr = new UIObject();
   objects.push_back(objPtr);
   return objPtr;
 }
-void UIObjectManager::AddUIObject(UIObject *object) {
+void UIObjectsManager::Destroy(UIObject *object) {
+  for (auto it = objects.begin(); it != objects.end(); ++it) {
+    if (*it == object) {
+      objects.erase(it);
+      break;
+    }
+  }
+}
+
+void UIObjectsManager::AddUIObject(UIObject *object) {
   objects.push_back(object);
 }
 
-void UIObjectManager::DrawAll() {
+void UIObjectsManager::DrawAll() {
   int objectDrawn = 0;
   int currentZLayer = 0;
   while (objectDrawn < objects.size()) {
@@ -36,7 +45,7 @@ void UIObjectManager::DrawAll() {
     currentZLayer++;
   }
 }
-UIObject *UIObjectManager::GetObjectByName(std::string name) {
+UIObject *UIObjectsManager::GetObjectByName(std::string name) {
   for (auto &object : objects) {
     if (object->name == name) return object;
   }

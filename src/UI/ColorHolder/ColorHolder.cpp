@@ -4,11 +4,11 @@
 
 #include "ColorHolder.h"
 
-#include "../../Render/UIObjectManager.h"
+#include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 
 void ColorHolder::Init() {
-  _uiObject = UIObjectManager::CreateUIObject();
+  _uiObject = UIObjectsManager::Create();
   _uiObject->color = Utils::LoadColor("colorHolderButton");
   _uiObject->roundness = 0.3f;
 }

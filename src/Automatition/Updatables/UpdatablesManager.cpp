@@ -1,6 +1,6 @@
-#include "Updatables.h"
 #include "Updatable.h"
+#include "UpdatablesManager.h"
 
-void Updatables::UpdateAll() {
+void UpdatablesManager::UpdateAll() {
   for (Updatable* u : updatables) { u->Update(); }
 }

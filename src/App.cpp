@@ -1,9 +1,8 @@
 #include "App.h"
 #include "Automatition/Initializables/Initializables.h"
-#include "Render/UIObjectManager.h"
+#include "Render/UIObjectsManager.h"
 #include "StaticShared/Animator/Animator.h"
 #include "StaticShared/FilesManager/FilesManager.h"
-#include "StaticShared/Animator/Animator.h"
 
 static App _;
 
@@ -19,7 +18,8 @@ void App::Init()
     if (!windowPosition.empty()) SetWindowPosition(windowPosition[0], windowPosition[1]);
 
     SetTargetFPS(60);
-    UIObjectManager::Init();
+    Utils::SetDefaultFont();
+    UIObjectsManager::Init();
     Initializables::InitAll();
     managerButton.Init();
     colorHolder.Init();
@@ -29,14 +29,14 @@ void App::Init()
 
 void App::Update()
 {
-    Updatables::UpdateAll();
+    UpdatablesManager::UpdateAll();
 }
 
 void App::Draw()
 {
     BeginDrawing();
     ClearBackground(GRAY);
-    UIObjectManager::DrawAll();
+    UIObjectsManager::DrawAll();
     EndDrawing();
 }
 

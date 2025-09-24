@@ -2,7 +2,7 @@
 
 #include "../Defines.h"
 #include "../StaticShared/Utils/Utils.h"
-#include "UIObjectManager.h"
+#include "UIObjectsManager.h"
 #include "raylib.h"
 
 UIObject::UIObject() { text.SetParent(this); }
@@ -36,10 +36,10 @@ void UIObject::Draw() {
   if (outlineScale != 0) {
     float outlineThickness = outlineScale * Utils::GetSmallerMonitorEdge();
     Color outlineColor {
-      (unsigned char)(color.r * UIOBJECT_DEFAULT_OUTLINE_DARKENING),
-      (unsigned char)(color.g * UIOBJECT_DEFAULT_OUTLINE_DARKENING),
-      (unsigned char)(color.b * UIOBJECT_DEFAULT_OUTLINE_DARKENING),
-      (unsigned char)(color.a * UIOBJECT_DEFAULT_OUTLINE_DARKENING)
+      (unsigned char)(color.r * UIOBJECT_OUTLINE_DARKENING),
+      (unsigned char)(color.g * UIOBJECT_OUTLINE_DARKENING),
+      (unsigned char)(color.b * UIOBJECT_OUTLINE_DARKENING),
+      (unsigned char)(color.a * UIOBJECT_OUTLINE_DARKENING)
   };
 
     DrawRectangleRoundedLinesEx(

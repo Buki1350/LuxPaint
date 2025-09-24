@@ -1,13 +1,13 @@
 #include "ToolBox.h"
 
 #include "../../PaintTools/PenTool.h"
-#include "../../Render/UIObjectManager.h"
+#include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Animator/Animator.h"
 #include "../../StaticShared/Utils/Utils.h"
 
 void ToolBox::Init() {
 
-  uiObject = UIObjectManager::CreateUIObject();
+  uiObject = UIObjectsManager::Create();
   uiObject->color = Utils::LoadColor("toolBoxColor");
   uiObject->roundness = 0.25f;
   uiObject->zLayer = 1;

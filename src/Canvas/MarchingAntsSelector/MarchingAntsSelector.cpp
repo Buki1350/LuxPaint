@@ -1,5 +1,5 @@
 #include "MarchingAntsSelector.h"
-#include "../../Render/UIObjectManager.h"
+#include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/FilesManager/FilesManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 
@@ -20,7 +20,7 @@ void MarchingAntsSelector::StartOn(UIObject* obj) {
     newSel.MAImages[i] = GetAntTextureTextureStep(obj->GetTexture(), i);
   }
 
-  newSel.overlay = UIObjectManager::CreateUIObject();
+  newSel.overlay = UIObjectsManager::Create();
   newSel.overlay->SetImage(newSel.MAImages[0]);
   newSel.overlay->size = obj->size * 0.01f;
   newSel.overlay->zLayer = obj->zLayer;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Canvas/Canvas.h"
-#include "Render/UIObjectManager.h"
+#include "Render/UIObjectsManager.h"
 #include "StaticShared/Singleton/Singleton.h"
 #include "UI/ColorHolder/ColorHolder.h"
 #include "UI/ManagerButton/ManagerButton.h"
@@ -13,7 +13,7 @@ class App : public Singleton<App> {
 
 public:
     Canvas canvas;
-    UIObjectManager UIObjectManager;
+    UIObjectsManager UIObjectManager;
     ManagerButton managerButton;
     ColorHolder colorHolder;
     ToolBox toolBox;

@@ -23,8 +23,8 @@ add_executable(LuxPaint
         src/PaintTools/Shared/Tool.cpp
         src/PaintTools/Shared/Tool.h
         src/PaintTools/ToolSet/ToolSet.cpp
-        src/Render/UIObjectManager.cpp
-        src/Render/UIObjectManager.h
+        src/Render/UIObjectsManager.cpp
+        src/Render/UIObjectsManager.h
         src/Render/UIObject.cpp
         src/Render/UIObject.h
         src/PaintTools/PenTool.cpp
@@ -38,8 +38,8 @@ add_executable(LuxPaint
         src/UI/ColorHolder/ColorHolder.cpp
         src/UI/ColorHolder/ColorHolder.h
         src/Automatition/Updatables/Updatable.h
-        src/Automatition/Updatables/Updatables.h
-        src/Automatition/Updatables/Updatables.cpp
+        src/Automatition/Updatables/UpdatablesManager.h
+        src/Automatition/Updatables/UpdatablesManager.cpp
         src/StaticShared/Animator/Animator.cpp
         src/StaticShared/Animator/Animator.h
         src/Defines.h
@@ -56,11 +56,12 @@ add_executable(LuxPaint
         src/Canvas/MarchingAntsSelector/MarchingAntsSelector.h
         src/StaticShared/Singleton/Singleton.h
         src/Math/Matx.h
-        src/StaticShared/FrontPanel/FrontPanel.cpp
-        src/StaticShared/FrontPanel/FrontPanel.h
+        src/StaticShared/MiniMenu/MiniMenu.cpp
+        src/StaticShared/MiniMenu/MiniMenu.h
         src/UI/ManagerButton/BlankCanvasBuilder.h
         src/StaticShared/Animator/AnimationValue.h
         src/StaticShared/Animator/AnimationValue.tpp
+        src/Macros.h
 )
 
 # Linkowanie i include w zależności od systemu

@@ -6,24 +6,24 @@
 
 #include "../../../otherLibs/nfd/nfd.h"
 #include "../../App.h"
-#include "../../Render/UIObjectManager.h"
+#include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Animator/Animator.h"
 #include "../../StaticShared/FilesManager/FilesManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 #include "BlankCanvasBuilder.h"
 
 void ManagerButton::Init() {
-  _uiObject_base = UIObjectManager::CreateUIObject();
+  _uiObject_base = UIObjectsManager::Create();
   _uiObject_base->roundness = _roundness;
   _uiObject_base->color = Utils::LoadColor("managerButton");
   _uiObject_base->SetImage(FilesManager::LoadImage("manager_button.png"));
   _uiObject_base->zLayer = 2;
-  _uiObject_base->imageMarginScale = UIOBJECT_DEFAULT_ICON_MARGIN;
+  _uiObject_base->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
-  _uiObject_newButton = UIObjectManager::CreateUIObject();
-  _uiObject_loadButton = UIObjectManager::CreateUIObject();
-  _uiObject_saveButton = UIObjectManager::CreateUIObject();
-  _uiObject_settingsButton = UIObjectManager::CreateUIObject();
+  _uiObject_newButton = UIObjectsManager::Create();
+  _uiObject_loadButton = UIObjectsManager::Create();
+  _uiObject_saveButton = UIObjectsManager::Create();
+  _uiObject_settingsButton = UIObjectsManager::Create();
 
   Color buttonsColor = Utils::LoadColor("managerButton_ListButton");
 

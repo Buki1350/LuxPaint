@@ -5,7 +5,7 @@
 #include "Canvas.h"
 
 #include "../Math/Vec2.h"
-#include "../Render/UIObjectManager.h"
+#include "../Render/UIObjectsManager.h"
 #include "../StaticShared/FilesManager/FilesManager.h"
 #include "../StaticShared/Utils/Utils.h"
 #include "MarchingAntsSelector/MarchingAntsSelector.h"
@@ -69,7 +69,7 @@ void Canvas::_HandleZoomAndDrag() {
 }
 
 void Canvas::_CreateBackground() {
-  _oBackground = UIObjectManager::CreateUIObject();
+  _oBackground = UIObjectsManager::Create();
   _oBackground->SetImage(FilesManager::LoadImage("transparent_background_medium_blend.png"));
   _oBackground->zLayer = 0;
 }
@@ -91,7 +91,7 @@ void Canvas::_HandleOutline() {
 }
 
 void Canvas::AddImage(Image image) {
-  UIObject* uiObj = UIObjectManager::CreateUIObject();
+  UIObject* uiObj = UIObjectsManager::Create();
   uiObj->SetImage(image);
   uiObj->size = {(float)image.width, (float)image.height};
   uiObj->position = {100, 100};
