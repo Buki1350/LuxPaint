@@ -62,6 +62,10 @@ add_executable(LuxPaint
         src/StaticShared/Animator/AnimationValue.h
         src/StaticShared/Animator/AnimationValue.tpp
         src/Macros.h
+        src/Render/Prefabs/InputField.cpp
+        src/Render/Prefabs/InputField.h
+        src/Render/Prefabs/Button.cpp
+        src/Render/Prefabs/Button.h
 )
 
 # Linkowanie i include w zależności od systemu

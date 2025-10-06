@@ -11,10 +11,21 @@ class MiniMenu final : public Updatable {
   struct ObjectWithSavedSize {
     UIObject* object;
     Vec2f initialSize;
+    bool flexible = false;
+
+    ObjectWithSavedSize(UIObject* obj)
+        : object(obj), initialSize(obj->size), flexible(false) {}
+
+    ObjectWithSavedSize(UIObject* obj, bool flex)
+        : object(obj), initialSize(obj->size), flexible(flex) {}
   };
+
   Vec2f _targetSize;
 
-  UIObject* _oBackground = nullptr;
+  // for multiple objects in one row
+  using Row = std::vector<ObjectWithSavedSize>;
+  std::vector<Row> _rows;
+
   std::vector<ObjectWithSavedSize> _oPackedObjects;
 
   // same time as popup, but time is saved to delete pointer after animation
@@ -23,12 +34,15 @@ class MiniMenu final : public Updatable {
   bool _markedForDeletion = false;
 
   public:
+  UIObject* oBackground = nullptr;
   bool centerElements = false;
   static std::vector<MiniMenu*> Instances;
   static MiniMenu* CreateInstance();
   static void DestroyInstance(MiniMenu* miniMenu);
 
-  MiniMenu *Pack(UIObject *object);
+  MiniMenu* Pack(UIObject *object);
+  MiniMenu* PackRow(std::initializer_list<ObjectWithSavedSize> objects);
+  static ObjectWithSavedSize FlexSeparator();
   void _HandleClosing();
   void _CalculateTransforms();
   void _HandleDeleting();

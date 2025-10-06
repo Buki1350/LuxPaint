@@ -19,6 +19,19 @@ UIObject *UIObjectsManager::Create() {
   objects.push_back(objPtr);
   return objPtr;
 }
+
+InputField *UIObjectsManager::CreateInputField() {
+  InputField *objPtr = new InputField();
+  objects.push_back(objPtr);
+  return objPtr;
+}
+
+Button *UIObjectsManager::CreateButton() {
+  Button *objPtr = new Button();
+  objects.push_back(objPtr);
+  return objPtr;
+}
+
 void UIObjectsManager::Destroy(UIObject *object) {
   for (auto it = objects.begin(); it != objects.end(); ++it) {
     if (*it == object) {
@@ -26,7 +39,10 @@ void UIObjectsManager::Destroy(UIObject *object) {
       break;
     }
   }
+
+  delete object; // <-- ważne, żeby nie zostawić wiszącego wskaźnika
 }
+
 
 void UIObjectsManager::AddUIObject(UIObject *object) {
   objects.push_back(object);

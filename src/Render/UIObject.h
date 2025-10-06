@@ -24,7 +24,8 @@ public:
   bool          keepRoundness = true;
 
   UIObject();
-  void Draw();
+  virtual ~UIObject() = default;
+  virtual void Draw();
   bool CursorAbove() const;
   bool Clicked() const;
   void SetImage(const Texture &texture);

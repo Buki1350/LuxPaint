@@ -14,36 +14,61 @@ MiniMenu *MiniMenu::CreateInstance() {
 }
 
 void MiniMenu::DestroyInstance(MiniMenu* miniMenu) {
-  if (!miniMenu || !miniMenu->_oBackground) return;
+  if (!miniMenu || !miniMenu->oBackground) return;
   miniMenu->_markedForDeletion = true;
 }
 
-MiniMenu *MiniMenu::Pack(UIObject *object) {
+MiniMenu* MiniMenu::Pack(UIObject* object) {
+  return PackRow({object});
+}
+
+MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) {
   float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
-  if (!_oBackground) {
-    _oBackground = UIObjectsManager::Create();
+
+  if (!oBackground) {
+    oBackground = UIObjectsManager::Create();
     _targetSize = Vec2f::ones() * margin;
-    _oBackground->color = Utils::LoadColor("miniMenu");
-    _oBackground->size = {0, 0};
+    oBackground->color = Utils::LoadColor("miniMenu");
+    oBackground->size = {0, 0};
   }
 
-  if (object->size.x > _targetSize.x - 2 * margin) {
-    _targetSize.x = object->size.x + 2 * margin;
+  Row row;
+  float rowWidth = margin;
+  float rowHeight = 0;
+
+  for (auto e : objects) {
+    row.push_back(e);
+
+    if (!e.flexible) {
+      rowWidth += e.initialSize.x;
+    }
+    rowWidth += margin; // margines ZA każdym elementem
+
+
+    rowHeight = std::max(rowHeight, e.initialSize.y);
+
+    e.object->zLayer = oBackground->zLayer + 1;
+    e.object->position = oBackground->position + oBackground->size / 2;
+    e.object->size = Vec2f::zero();
+
+    _oPackedObjects.push_back(e);
   }
 
-  _targetSize.y += object->size.y + margin;
-  object->zLayer = _oBackground->zLayer + 1;
-  object->position = _oBackground->position + _oBackground->size / 2;
-  _oPackedObjects.push_back({object, object->size});
-  object->size = Vec2f::zero();
+  _rows.push_back(row);
+
+  _targetSize.x = std::max(_targetSize.x, rowWidth);
+  _targetSize.y += rowHeight + margin;
 
   return this;
+}
+MiniMenu::ObjectWithSavedSize MiniMenu::FlexSeparator() {
+  return {UIObjectsManager::Create(), true};
 }
 
 void MiniMenu::_HandleClosing() {
   if (Instances.size() > 0 && this == MiniMenu::Instances[0]) {
     for (auto instance : Instances) {
-      if (IsMouseButtonPressed(0) && !instance->_oBackground->Clicked()) {
+      if (IsMouseButtonPressed(0) && !instance->oBackground->Clicked()) {
         DestroyInstance(instance);
         break;
       }
@@ -52,49 +77,91 @@ void MiniMenu::_HandleClosing() {
 }
 
 void MiniMenu::_CalculateTransforms() {
-  if (!_oBackground || _markedForDeletion)
-    return;
+    if (!oBackground || _markedForDeletion)
+        return;
 
-  float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
+    float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
 
-  Vec2f postAnimatedSize = Animator::AnimateSize(
-      _oBackground, _targetSize, ANIMATION_POPUP_DURATION, GAUSSIAN);
+    Vec2f postAnimatedSize = Animator::AnimateSize(
+        oBackground, _targetSize, ANIMATION_POPUP_DURATION, GAUSSIAN
+    );
 
-  Vec2f windowSize = Utils::GetWindowSize().CastTo<float>();
-  _oBackground->position = windowSize / 2 - postAnimatedSize / 2;
+    Vec2f windowSize = Utils::GetWindowSize().CastTo<float>();
+    oBackground->position = windowSize / 2 - postAnimatedSize / 2;
 
-  float totalElementsHeight = margin;
-  float maxElementWidth = 0;
-  for (auto &e : _oPackedObjects) {
-    totalElementsHeight += e.initialSize.y + margin;
-    maxElementWidth = fmax(maxElementWidth, e.initialSize.x);
-  }
+    float totalHeight = margin;
+    float maxRowWidth = 0;
+    std::vector<float> rowHeights;
+    std::vector<float> rowWidths;
+    std::vector<int> flexCounts;
 
-  Vec2f scale = {postAnimatedSize.x / (maxElementWidth + 2 * margin),
-                 postAnimatedSize.y / totalElementsHeight};
+    for (auto &row : _rows) {
+        float rowWidth = 0;
+        float rowHeight = 0;
+        int flexibleCount = 0;
 
-  float yOffset = margin * scale.y;
-  for (auto &e : _oPackedObjects) {
-    float objWidthScaled = e.initialSize.x * scale.x;
-    float objHeightScaled = e.initialSize.y * scale.y;
+        for (auto &e : row) {
+          if (e.flexible) {
+            flexibleCount++;
+          } else {
+            rowWidth += e.initialSize.x;
+          }
+          rowWidth += margin; // margines za każdym elementem
 
-    float x = _oBackground->position.x + margin * scale.x;
-    if (centerElements) {
-      x = _oBackground->position.x + (postAnimatedSize.x - objWidthScaled) / 2;
+          rowHeight = std::max(rowHeight, e.initialSize.y);
+        }
+        rowWidth += margin;
+
+        rowWidths.push_back(rowWidth);
+        rowHeights.push_back(rowHeight);
+        flexCounts.push_back(flexibleCount);
+
+        totalHeight += rowHeight + margin;
+        maxRowWidth = std::max(maxRowWidth, rowWidth);
     }
 
-    e.object->size = {objWidthScaled, objHeightScaled};
-    e.object->position = {x, _oBackground->position.y + yOffset};
-    yOffset += objHeightScaled + margin * scale.y;
-  }
+    Vec2f scale = {
+        postAnimatedSize.x / maxRowWidth,
+        postAnimatedSize.y / totalHeight
+    };
+
+    float yOffset = margin * scale.y;
+
+    for (size_t r = 0; r < _rows.size(); r++) {
+        auto &row = _rows[r];
+        float rowWidthScaled = rowWidths[r] * scale.x;
+        float rowHeightScaled = rowHeights[r] * scale.y;
+
+        float xOffset = oBackground->position.x + margin * scale.x;
+        if (centerElements) {
+            xOffset = oBackground->position.x + (postAnimatedSize.x - rowWidthScaled) / 2 + margin * scale.x;
+        }
+
+        // dodatkowa przestrzeń na flexy
+        float extraSpace = (postAnimatedSize.x - rowWidths[r] * scale.x);
+        float flexUnit = (flexCounts[r] > 0) ? extraSpace / flexCounts[r] : 0;
+
+        for (auto &e : row) {
+            float objWidthScaled = e.flexible ? flexUnit : e.initialSize.x * scale.x;
+            float objHeightScaled = e.initialSize.y * scale.y;
+
+            e.object->size = {objWidthScaled, objHeightScaled};
+            e.object->position = {xOffset, oBackground->position.y + yOffset};
+
+            xOffset += objWidthScaled + margin * scale.x;
+        }
+
+        yOffset += rowHeightScaled + margin * scale.y;
+    }
 }
+
 
 void MiniMenu::_HandleDeleting() {
   if (_markedForDeletion) {
     if (_deletingElapsed < _deletingDuration + ANIMATION_TOLERANCE) {
       _deletingElapsed += Utils::GetDeltaTime();
-      Animator::AnimateSize(_oBackground, {0, 0}, _deletingDuration);
-      Animator::AnimatePosition(_oBackground, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
+      Animator::AnimateSize(oBackground, {0, 0}, _deletingDuration);
+      Animator::AnimatePosition(oBackground, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
       for (auto &e : _oPackedObjects) {
         Animator::AnimateSize(e.object, {0, 0}, _deletingDuration);
         Animator::AnimatePosition(e.object, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
@@ -102,11 +169,11 @@ void MiniMenu::_HandleDeleting() {
       return;
     }
 
-    if (!Animator::AnimatorContains(_oBackground, NONE)) {
+    if (!Animator::AnimatorContains(oBackground, NONE)) {
       auto it = std::find(Instances.begin(), Instances.end(), this);
       if (it != Instances.end()) Instances.erase(it);
 
-      UIObjectsManager::Destroy(_oBackground);
+      UIObjectsManager::Destroy(oBackground);
       for (auto o : _oPackedObjects) {
         UIObjectsManager::Destroy(o.object);
       }
