@@ -33,6 +33,7 @@ Button *UIObjectsManager::CreateButton() {
 }
 
 void UIObjectsManager::Destroy(UIObject *object) {
+  Animator::Terminate(object);
   for (auto it = objects.begin(); it != objects.end(); ++it) {
     if (*it == object) {
       objects.erase(it);
@@ -40,8 +41,14 @@ void UIObjectsManager::Destroy(UIObject *object) {
     }
   }
 
-  delete object; // <-- ważne, żeby nie zostawić wiszącego wskaźnika
+  if (auto up = dynamic_cast<Updatable*>(object)) {
+    auto &vec = UpdatablesManager::updatables;
+    vec.erase(std::remove(vec.begin(), vec.end(), up), vec.end());
+  }
+
+  delete object;
 }
+
 
 
 void UIObjectsManager::AddUIObject(UIObject *object) {

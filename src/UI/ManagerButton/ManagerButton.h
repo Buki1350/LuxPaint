@@ -1,16 +1,17 @@
 #pragma once
-#include "../../Render/UIObject.h"
 #include "../../Automatition/Updatables/Updatable.h"
+#include "../../Render/UIObject.h"
 
+class Button;
 class App;
 
 class ManagerButton final : public Updatable {
   UIObject* _uiObject_base = nullptr;
-  UIObject* _uiObject_newButton = nullptr;
-  UIObject* _uiObject_saveButton = nullptr;
-  UIObject* _uiObject_loadButton = nullptr;
-  UIObject* _uiObject_settingsButton = nullptr;
-  std::vector<UIObject*> _uiObject_buttons;
+  Button* _uiObject_newButton = nullptr;
+  Button* _uiObject_saveButton = nullptr;
+  Button* _uiObject_loadButton = nullptr;
+  Button* _uiObject_settingsButton = nullptr;
+  std::vector<Button*> _uiObject_buttons;
 
   float _roundness = 0.2f;
   float _marginScale = 0.01f;

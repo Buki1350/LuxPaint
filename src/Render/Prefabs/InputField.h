@@ -11,7 +11,7 @@ enum class InputMode {
   LETTERS_AND_NUMBERS
 };
 
-class InputField : public UIObject, public Updatable {
+class InputField final : public UIObject, public Updatable {
   std::string _value;
   InputMode _mode = InputMode::LETTERS_AND_NUMBERS;
   bool _focused = false;

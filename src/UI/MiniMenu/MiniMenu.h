@@ -1,13 +1,12 @@
 #pragma once
 
-#include "../../Render/UIObject.h"
 #include "../../Automatition/Updatables/Updatable.h"
+#include "../../Render/UIObject.h"
+
+#include <functional>
 #include <vector>
 
-
 class MiniMenu final : public Updatable {
-
-  // for popup animation - size up from point in the middle
   struct ObjectWithSavedSize {
     UIObject* object;
     Vec2f initialSize;
@@ -19,19 +18,16 @@ class MiniMenu final : public Updatable {
     ObjectWithSavedSize(UIObject* obj, bool flex)
         : object(obj), initialSize(obj->size), flexible(flex) {}
   };
-
   Vec2f _targetSize;
-
   // for multiple objects in one row
   using Row = std::vector<ObjectWithSavedSize>;
   std::vector<Row> _rows;
-
   std::vector<ObjectWithSavedSize> _oPackedObjects;
-
   // same time as popup, but time is saved to delete pointer after animation
   const float _deletingDuration = ANIMATION_POPUP_DURATION;
   float _deletingElapsed = 0.0f;
   bool _markedForDeletion = false;
+  std::function<void()> _onDestructionFunc;
 
   public:
   UIObject* oBackground = nullptr;
@@ -47,4 +43,5 @@ class MiniMenu final : public Updatable {
   void _CalculateTransforms();
   void _HandleDeleting();
   void Update() override;
+  void OnDestroy(std::function<void()> labdaFunction);
 };

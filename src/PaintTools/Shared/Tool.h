@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Render/UIObject.h"
+#include "../../Render/Prefabs/Button.h"
 #include "../../StaticShared/FilesManager/FilesManager.h"
 #include "raylib.h"
 
@@ -7,10 +7,9 @@
 
 class Tool {
   protected:
-  UIObject toolButton;
   std::string toolName;
 
   public:
+  Button button;
   Tool(const std::string &name);
-  virtual void OnClick();
 };

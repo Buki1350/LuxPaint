@@ -42,7 +42,9 @@ public:
   static void FadeOut(UIObject *uiObject, float time);
   static void FadeIn(UIObject *uiObject, float time);
 
-  //... other
+  //...
+  static void Terminate(UIObject *uiObject);
+  static void Terminate(std::vector<UIObject*>& uiObjects);
   static void Free(UIObject* uiObject);
   static bool AnimatorContains(UIObject* uiObject, UIObjectParameter param);
 

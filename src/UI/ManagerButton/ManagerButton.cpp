@@ -8,6 +8,7 @@
 #include "../../App.h"
 #include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Animator/Animator.h"
+#include "../../StaticShared/DelayedAction/DelayedAction.h"
 #include "../../StaticShared/FilesManager/FilesManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 #include "BlankCanvasBuilder.h"
@@ -20,32 +21,38 @@ void ManagerButton::Init() {
   _uiObject_base->zLayer = 2;
   _uiObject_base->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
-  _uiObject_newButton = UIObjectsManager::Create();
-  _uiObject_loadButton = UIObjectsManager::Create();
-  _uiObject_saveButton = UIObjectsManager::Create();
-  _uiObject_settingsButton = UIObjectsManager::Create();
+  _uiObject_newButton = UIObjectsManager::CreateButton();
+  _uiObject_loadButton = UIObjectsManager::CreateButton();
+  _uiObject_saveButton = UIObjectsManager::CreateButton();
+  _uiObject_settingsButton = UIObjectsManager::CreateButton();
 
   Color buttonsColor = Utils::LoadColor("managerButton_ListButton");
 
   _uiObject_newButton->color = buttonsColor;
   _uiObject_newButton->text = "New";
   _uiObject_newButton->text.center = true;
-  _uiObject_loadButton->isActive = false;
+  _uiObject_newButton->OnClick([](){BlankCanvasBuilder::Build();});
+  _uiObject_newButton->allowInteraction = false;
 
+  _uiObject_loadButton->isActive = false;
   _uiObject_loadButton->color = buttonsColor;
   _uiObject_loadButton->text = "Load image";
   _uiObject_loadButton->text.center = true;
-  _uiObject_saveButton->isActive = false;
+  _uiObject_loadButton->OnClick([this](){_LoadImageFromSystem();});
+  _uiObject_loadButton->allowInteraction = false;
 
+  _uiObject_saveButton->isActive = false;
   _uiObject_saveButton->color = buttonsColor;
   _uiObject_saveButton->text = "Save image";
   _uiObject_saveButton->text.center = true;
-  _uiObject_settingsButton->isActive = false;
+  _uiObject_saveButton->allowInteraction = false;
 
+  _uiObject_settingsButton->isActive = false;
   _uiObject_settingsButton->color = buttonsColor;
   _uiObject_settingsButton->text = "Settings";
   _uiObject_settingsButton->text.center = true;
   _uiObject_settingsButton->isActive = false;
+  _uiObject_settingsButton->allowInteraction = false;
 
   _uiObject_buttons.push_back(_uiObject_newButton);
   _uiObject_buttons.push_back(_uiObject_loadButton);
@@ -86,8 +93,8 @@ void ManagerButton::_AdjustSizeAndPosition() {
 
   //... buttons interactions
   // before others, cuz "isActive" overrides click
-  if (_uiObject_newButton->Clicked()) BlankCanvasBuilder::Build();
-  else if (_uiObject_loadButton->Clicked()) _LoadImageFromSystem();
+  // if (_uiObject_newButton->Clicked()) BlankCanvasBuilder::Build();
+  // else if (_uiObject_loadButton->Clicked()) _LoadImageFromSystem();
 
   //... interaction handling
   Vec2f postAnimatedPosition = _uiObject_base->position;
@@ -101,14 +108,22 @@ void ManagerButton::_AdjustSizeAndPosition() {
     Animator::AnimateRoundness(_uiObject_base, _uiObject_base->roundness * sizeScale, animationTime, GAUSSIAN);
     Animator::AnimateImageAlpha(_uiObject_base, 0, animationTime, GAUSSIAN);
 
-    for (auto button : _uiObject_buttons) { button->isActive = true; }
+    for (auto button : _uiObject_buttons) {
+      button->isActive = true;
+    }
+
+    new DelayedAction(animationTime, [this]() {
+      for (auto button : _uiObject_buttons) {
+        button->allowInteraction = true;
+      }
+    });
   }
   else if (_uiObject_base->CursorAbove()) {
     Animator::SizeUp(_uiObject_base);
   }
   else {
     Animator::Reset(_uiObject_base);
-    for (auto button : _uiObject_buttons) { button->isActive = false; }
+    for (auto button : _uiObject_buttons) { button->isActive = false; button->allowInteraction = false; }
   }
 
 
@@ -131,13 +146,6 @@ void ManagerButton::_AdjustSizeAndPosition() {
     button->size = buttonSize;
   }
 
-}
-
-void ManagerButton::_CreateBlank(Vec2i size) {
-  Matx<Color> blankImageMatrix(size);
-  blankImageMatrix.fill(WHITE);
-  Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);
-  App::Instance->canvas.AddTexture(blankImage);
 }
 
 void ManagerButton::_LoadImageFromSystem() {

@@ -119,3 +119,18 @@ Texture2D Utils::MatrixToTexture(Matx<Color> &matrix) {
 Image Utils::MatrixToImage(Matx<Color> &matrix) {
   return LoadImageFromTexture(MatrixToTexture(matrix));
 }
+
+bool Utils::MouseClicked() { return IsMouseButtonReleased(0); }
+
+Color Utils::DarkenColor(const Color& color, float factor) {
+  factor = 1 - factor;
+  if (factor < 0.0f) factor = 0.0f;
+  if (factor > 1.0f) factor = 1.0f;
+
+  Color result;
+  result.r = (unsigned char)(color.r * factor);
+  result.g = (unsigned char)(color.g * factor);
+  result.b = (unsigned char)(color.b * factor);
+  result.a = color.a;
+  return result;
+}

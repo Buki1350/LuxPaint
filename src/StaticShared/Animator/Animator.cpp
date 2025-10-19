@@ -1,6 +1,9 @@
 #include "Animator.h"
 #include "AnimationValue.h"
+
+#include <__msvc_ostream.hpp>
 #include <algorithm> // find_if
+#include <iostream>
 
 static Animator _;
 
@@ -20,7 +23,7 @@ void Animator::Update() {
       animatedObjectsValues.end()
   );
 
-  // update wszystkich
+  std::cout << "[Animator] AOV count: " << animatedObjectsValues.size() << std::endl;
   for (auto& anim : animatedObjectsValues) {
     anim->LocalUpdate();
   }
@@ -173,6 +176,7 @@ void Animator::Reset(UIObject *uiObject, float time) {
 }
 
 void Animator::SizeUp(UIObject *uiObject, float scale, float time) {
+  if (AnimatorContains(uiObject, SIZE)) return;
   Vector2 offsetSize = {uiObject->size.x * scale, uiObject->size.y * scale};
   Vector2 offsetPos = {-uiObject->size.x * scale / 2.0f,
                        -uiObject->size.y * scale / 2.0f};
@@ -199,6 +203,26 @@ void Animator::FadeIn(UIObject *uiObject, float time) {
   Animator::Transform(uiObject, uiObject->position, uiObject->size, GAUSSIAN,
                       time, 0.0f, 1.0f);
 }
+void Animator::Terminate(UIObject *uiObject) {
+  auto arr = std::vector<UIObject*>{uiObject};
+  Animator::Terminate(arr);
+}
+
+void Animator::Terminate(std::vector<UIObject*>& uiObjects) {
+  if (Instance == nullptr) return;
+
+  Instance->animatedObjectsValues.erase(
+      std::remove_if(
+          Instance->animatedObjectsValues.begin(),
+          Instance->animatedObjectsValues.end(),
+          [&](const std::unique_ptr<IAnimationValue>& anim) {
+              return std::find(uiObjects.begin(), uiObjects.end(), anim->uiObject) != uiObjects.end();
+          }
+      ),
+      Instance->animatedObjectsValues.end()
+  );
+}
+
 
 void Animator::Free(UIObject *uiObject) {
   Instance->animatedObjectsValues.erase(
@@ -218,156 +242,3 @@ bool Animator::AnimatorContains(UIObject* uiObject, UIObjectParameter param) {
   }
   return false;
 }
-
-// #include "Animator.h"
-// #include <algorithm> // find_if
-//
-// static Animator _;
-//
-// std::vector<Animator::AnimatedUIObjectsSet> Animator::animatedUIObjects;
-//
-// Vec2f Animator::Vector2Lerp(Vec2f start, Vec2f end, float t) {
-//   return {
-//     start.x + (end.x - start.x) * t,
-//     start.y + (end.y - start.y) * t
-//   };
-// }
-//
-// Vec2f Animator::GetInterpolatedValue(Vec2f start, Vec2f end, float t,
-//                                      MovementType movementType) {
-//   float alpha = t;
-//   switch (movementType) {
-//   case GAUSSIAN:
-//     alpha = -cos(t * PI) * .5f + .5f;
-//     break;
-//   case LINEAR:
-//   default:
-//     break;
-//   }
-//   return Vector2Lerp(start, end, alpha);
-// }
-//
-// void Animator::Update() {
-//   for (auto &anim : Animator::animatedUIObjects) {
-//     anim.elapsed += GetFrameTime();
-//     float t = anim.duration > 0.0f ? anim.elapsed / anim.duration : 1.0f;
-//     if (t > 1.0f) t = 1.0f;
-//
-//     anim.uiObject->animOffsetPos  = GetInterpolatedValue(anim.startPosition, anim.targetPosition, t, anim.movementType);
-//     anim.uiObject->animOffsetSize = GetInterpolatedValue(anim.startSize, anim.targetSize, t, anim.movementType);
-//
-//     float alphaT = anim.movementType == GAUSSIAN ? -cos(t * PI) * 0.5f + 0.5f : t;
-//     anim.uiObject->imageAlpha = anim.startAlpha + (anim.targetAlpha - anim.startAlpha) * alphaT;
-//
-//     if (t >= 1.0f) {
-//       anim.uiObject->animOffsetPos  = anim.targetPosition;
-//       anim.uiObject->animOffsetSize = anim.targetSize;
-//       anim.uiObject->imageAlpha     = anim.targetAlpha;
-//     }
-//   }
-// }
-//
-// void Animator::Transform(
-//   UIObject *uiObject,
-//   Vec2f targetAbsPos,
-//   Vec2f targetAbsSize,
-//   MovementType movementType,
-//   float duration,
-//   float tolerance,
-//   float targetImageAlpha
-// ) {
-//   auto it = std::find_if(animatedUIObjects.begin(), animatedUIObjects.end(),
-//     [&](const AnimatedUIObjectsSet &anim) { return anim.uiObject == uiObject; });
-//
-//   if (it == animatedUIObjects.end()) {
-//     AnimatedUIObjectsSet entry;
-//     entry.uiObject   = uiObject;
-//     entry.startPosition     = uiObject->position + uiObject->animOffsetPos;
-//     entry.startSize         = uiObject->size + uiObject->animOffsetSize;
-//     entry.targetPosition    = { targetAbsPos.x - uiObject->position.x, targetAbsPos.y - uiObject->position.y };
-//     entry.targetSize        = { targetAbsSize.x - uiObject->size.x, targetAbsSize.y - uiObject->size.y };
-//
-//     entry.startAlpha        = uiObject->imageAlpha;
-//     entry.targetAlpha       = targetImageAlpha;
-//     entry.prevTargetAlpha   = targetImageAlpha;
-//
-//     entry.prevTargetPosition = entry.targetPosition;
-//     entry.prevTargetSize     = entry.targetSize;
-//
-//     entry.elapsed = 0.0f;
-//     entry.duration = duration;
-//     entry.movementType = movementType;
-//     entry.tolerance = tolerance;
-//
-//     animatedUIObjects.push_back(std::move(entry));
-//     it = std::prev(animatedUIObjects.end());
-//   }
-//
-//   auto &anim = *it;
-//
-//   //... change movement if target changed
-//   bool targetChanged =
-//       anim.prevTargetPosition.x != targetAbsPos.x || anim.prevTargetPosition.y != targetAbsPos.y ||
-//       anim.prevTargetSize.x     != targetAbsSize.x  || anim.prevTargetSize.y     != targetAbsSize.y ||
-//       anim.prevTargetAlpha      != targetImageAlpha;
-//
-//   if (targetChanged) {
-//     anim.startPosition = uiObject->animOffsetPos;
-//     anim.startSize     = uiObject->animOffsetSize;
-//     anim.targetPosition = { targetAbsPos.x - uiObject->position.x, targetAbsPos.y - uiObject->position.y };
-//     anim.targetSize     = { targetAbsSize.x - uiObject->size.x, targetAbsSize.y - uiObject->size.y };
-//
-//     anim.startAlpha     = uiObject->imageAlpha;
-//     anim.targetAlpha    = targetImageAlpha;
-//
-//     anim.elapsed = 0.0f;
-//     anim.duration = duration;
-//     anim.movementType = movementType;
-//     anim.tolerance = tolerance;
-//
-//     anim.prevTargetPosition = targetAbsPos;
-//     anim.prevTargetSize     = targetAbsSize;
-//     anim.prevTargetAlpha    = targetImageAlpha;
-//   }
-// }
-//
-// void Animator::SizeUp(UIObject *uiObject, float scale, float time) {
-//   Vector2 offsetSize = {uiObject->size.x * scale, uiObject->size.y * scale};
-//   Vector2 offsetPos = {-uiObject->size.x * scale / 2.0f,
-//                        -uiObject->size.y * scale / 2.0f};
-//
-//   Animator::Transform(
-//       uiObject,
-//       {uiObject->position.x + offsetPos.x, uiObject->position.y + offsetPos.y},
-//       {uiObject->size.x + offsetSize.x, uiObject->size.y + offsetSize.y},
-//       GAUSSIAN, time);
-// }
-//
-// void Animator::FadeOut(UIObject *uiObject, float time) {
-//   Animator::Transform(uiObject,
-//       uiObject->position,
-//       uiObject->size,
-//       GAUSSIAN,
-//       time,
-//       0.0f,
-//       0.0f
-//   );
-// }
-//
-// void Animator::FadeIn(UIObject *uiObject, float time) {
-//   Animator::Transform(uiObject,
-//       uiObject->position,
-//       uiObject->size,
-//       GAUSSIAN,
-//       time,
-//       0.0f,
-//       1.0f
-//   );
-// }
-//
-// void Animator::Reset(UIObject *uiObject, float time) {
-//   Animator::Transform(uiObject,
-//       uiObject->position,
-//       uiObject->size,
-//       GAUSSIAN, time);
-// }

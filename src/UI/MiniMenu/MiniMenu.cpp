@@ -1,9 +1,9 @@
-#include "MiniMenu.h"
+#include "../../UI/MiniMenu/MiniMenu.h"
 
 #include "../../Render/UIObjectsManager.h"
-#include "../Animator/Animator.h"
-#include "../FilesManager/FilesManager.h"
-#include "../Utils/Utils.h"
+#include "../../StaticShared/Animator/Animator.h"
+#include "../../StaticShared/FilesManager/FilesManager.h"
+#include "../../StaticShared/Utils/Utils.h"
 
 std::vector<MiniMenu*> MiniMenu::Instances = {};
 
@@ -66,15 +66,28 @@ MiniMenu::ObjectWithSavedSize MiniMenu::FlexSeparator() {
 }
 
 void MiniMenu::_HandleClosing() {
-  if (Instances.size() > 0 && this == MiniMenu::Instances[0]) {
-    for (auto instance : Instances) {
-      if (IsMouseButtonPressed(0) && !instance->oBackground->Clicked()) {
+  if (Instances.empty() || this != MiniMenu::Instances[0]) return;
+
+  for (auto instance : Instances) {
+    if (IsMouseButtonPressed(0)) {
+      bool cursorAboveAny = instance->oBackground->CursorAbove();
+
+      // sprawdzamy też wszystkie elementy
+      for (auto &e : instance->_oPackedObjects) {
+        if (e.object->CursorAbove()) {
+          cursorAboveAny = true;
+          break;
+        }
+      }
+
+      if (!cursorAboveAny) {
         DestroyInstance(instance);
         break;
       }
     }
   }
 }
+
 
 void MiniMenu::_CalculateTransforms() {
     if (!oBackground || _markedForDeletion)
@@ -162,6 +175,7 @@ void MiniMenu::_HandleDeleting() {
       _deletingElapsed += Utils::GetDeltaTime();
       Animator::AnimateSize(oBackground, {0, 0}, _deletingDuration);
       Animator::AnimatePosition(oBackground, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
+
       for (auto &e : _oPackedObjects) {
         Animator::AnimateSize(e.object, {0, 0}, _deletingDuration);
         Animator::AnimatePosition(e.object, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
@@ -173,11 +187,15 @@ void MiniMenu::_HandleDeleting() {
       auto it = std::find(Instances.begin(), Instances.end(), this);
       if (it != Instances.end()) Instances.erase(it);
 
-      UIObjectsManager::Destroy(oBackground);
-      for (auto o : _oPackedObjects) {
-        UIObjectsManager::Destroy(o.object);
-      }
+      std::vector<UIObject*> uiObjectsToDelete;
+      uiObjectsToDelete.push_back(oBackground);
+      for (auto o : _oPackedObjects) { uiObjectsToDelete.push_back(o.object); }
+
+      Animator::Terminate(uiObjectsToDelete);
+
+      for (auto o : uiObjectsToDelete) { UIObjectsManager::Destroy(o); }
       _oPackedObjects.clear();
+      _onDestructionFunc();
 
       delete this;
     }
@@ -188,6 +206,9 @@ void MiniMenu::Update() {
   _HandleClosing();
   _CalculateTransforms();
   _HandleDeleting();
+}
+void MiniMenu::OnDestroy(std::function<void()> labdaFunction) {
+  _onDestructionFunc = labdaFunction;
 }
 
 

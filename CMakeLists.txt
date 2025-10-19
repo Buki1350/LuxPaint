@@ -56,8 +56,8 @@ add_executable(LuxPaint
         src/Canvas/MarchingAntsSelector/MarchingAntsSelector.h
         src/StaticShared/Singleton/Singleton.h
         src/Math/Matx.h
-        src/StaticShared/MiniMenu/MiniMenu.cpp
-        src/StaticShared/MiniMenu/MiniMenu.h
+        src/UI/MiniMenu/MiniMenu.cpp
+        src/UI/MiniMenu/MiniMenu.h
         src/UI/ManagerButton/BlankCanvasBuilder.h
         src/StaticShared/Animator/AnimationValue.h
         src/StaticShared/Animator/AnimationValue.tpp
@@ -66,6 +66,7 @@ add_executable(LuxPaint
         src/Render/Prefabs/InputField.h
         src/Render/Prefabs/Button.cpp
         src/Render/Prefabs/Button.h
+        src/StaticShared/DelayedAction/DelayedAction.h
 )
 
 # Linkowanie i include w zależności od systemu
@@ -75,9 +76,9 @@ if (WIN32)
     target_link_libraries(LuxPaint PRIVATE raylib opengl32 gdi32 winmm)
 
     # Ukrycie konsoli, ale zachowanie main()
-    set_target_properties(LuxPaint PROPERTIES
-        LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
-    )
+#    set_target_properties(LuxPaint PROPERTIES
+#        LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
+#    )
 
     # Kopiowanie DLL po buildzie
     add_custom_command(

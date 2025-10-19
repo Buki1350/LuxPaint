@@ -28,6 +28,8 @@ public:
   virtual void Draw();
   bool CursorAbove() const;
   bool Clicked() const;
+  bool Pressed() const;
+  bool ClickReleased() const;
   void SetImage(const Texture &texture);
   void SetImage(const Image &image);
   Vec2i GetImageSize();

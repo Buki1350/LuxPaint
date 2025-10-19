@@ -8,10 +8,10 @@ ToolSet::ToolSet(const std::string &name, const std::vector<Tool> &tools) {
   this->tools = tools;
 
   // ... adjusted by ToolBox
-  uiObject = UIObjectsManager::Create();
-  uiObject->color = WHITE;
-  uiObject->SetImage(icon);
-  uiObject->roundness = 0.3f;
-  uiObject->zLayer = 2;
-  uiObject->imageMarginScale = UIOBJECT_ICON_MARGIN;
+  button = UIObjectsManager::CreateButton();
+  button->color = WHITE;
+  button->SetImage(icon);
+  button->roundness = 0.3f;
+  button->zLayer = 2;
+  button->imageMarginScale = UIOBJECT_ICON_MARGIN;
 }

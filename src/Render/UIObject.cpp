@@ -87,6 +87,14 @@ bool UIObject::CursorAbove() const {
 }
 
 bool UIObject::Clicked() const {
+  return isActive && CursorAbove() && Utils::MouseClicked();
+}
+
+bool UIObject::ClickReleased() const {
+  return Clicked();
+}
+
+bool UIObject::Pressed() const {
   return isActive && CursorAbove() && IsMouseButtonPressed(0);
 }
 
