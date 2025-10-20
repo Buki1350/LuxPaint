@@ -20,15 +20,14 @@ add_executable(LuxPaint
         src/main.cpp
         src/App.cpp
         src/StaticShared/FilesManager/FilesManager.cpp
-        src/PaintTools/Shared/Tool.cpp
-        src/PaintTools/Shared/Tool.h
-        src/PaintTools/ToolSet/ToolSet.cpp
+        src/Tools/Shared/Tool.cpp
+        src/Tools/Shared/Tool.h
+        src/Tools/ToolSet/ToolSet.cpp
         src/Render/UIObjectsManager.cpp
         src/Render/UIObjectsManager.h
         src/Render/UIObject.cpp
         src/Render/UIObject.h
-        src/PaintTools/PenTool.cpp
-        src/PaintTools/PenTool.h
+        src/Tools/PaintTools/PenTool.h
         src/UI/ToolBox/ToolBox.h
         src/UI/ToolBox/ToolBox.cpp
         src/StaticShared/Utils/Utils.cpp
@@ -67,6 +66,7 @@ add_executable(LuxPaint
         src/Render/Prefabs/Button.cpp
         src/Render/Prefabs/Button.h
         src/StaticShared/DelayedAction/DelayedAction.h
+        src/Tools/PaintTools/BrushTool.h
 )
 
 # Linkowanie i include w zależności od systemu

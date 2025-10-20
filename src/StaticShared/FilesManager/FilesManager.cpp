@@ -1,5 +1,6 @@
 #include "FilesManager.h"
 #include <filesystem>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -14,3 +15,5 @@ Image FilesManager::LoadImage(const std::string& localPath) {
   std::string path = (CreateOrGetDirectory(PATH_IMAGES) + localPath);
   return ::LoadImage(path.c_str());
 }
+
+bool FilesManager::Exists(const char* str) { return std::filesystem::exists(str); }

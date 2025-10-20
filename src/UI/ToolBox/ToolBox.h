@@ -1,13 +1,12 @@
 #pragma once
-#include "../../PaintTools/ToolSet/ToolSet.h"
+#include "../../Tools/ToolSet/ToolSet.h"
 #include "../../Automatition/Updatables/Updatable.h"
 
 class ToolBox final : public Updatable {
   UIObject* _oBackground = nullptr;
-  UIObject* _activeToolsBackground = nullptr;
-  Color activeToolsBackgroundColor {};
+  Color toolSetListColor {};
   const ToolSet* _currentToolSet = nullptr;
-  std::vector<ToolSet> toolSets;
+  std::vector<ToolSet*> toolSets;
 
   float uiObjectBorderSeparation = 0.01f;
   float tilesScale = 0.05f;
@@ -15,9 +14,27 @@ class ToolBox final : public Updatable {
   float marginScale = 0.01f;
   float tilesSeparationScale = 0.01f;
 
+  void _ExpandTools(ToolSet* toolSet);
+
+  // ... internal helper class
+  friend class ToolsSetList;
+  class ToolsSetList final : public Updatable
+  {
+    ToolBox* _toolBox = nullptr;
+    ToolSet&  _toolSet;
+    UIObject* _oToolSetListBackground = nullptr;
+    std::vector<Button*> _toolsButtons;
+    std::pair<Vec2f, Vec2f> _CalculateTransforms();
+
+  public:
+    ToolsSetList( ToolBox* toolBox, ToolSet& toolSet );
+    void Update() override;
+  };
+  std::vector<ToolsSetList*> _toolsSetList_Instances;
+
+  ToolsSetList* _activeTools = nullptr;
 
 public:
   void Init();
   void Update() override;
-  void _ExpandTools(const ToolSet& toolSet);
 };

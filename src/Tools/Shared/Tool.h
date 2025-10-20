@@ -10,6 +10,6 @@ class Tool {
   std::string toolName;
 
   public:
-  Button button;
+  Texture2D icon;
   Tool(const std::string &name);
 };

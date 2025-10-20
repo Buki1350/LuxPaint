@@ -26,7 +26,7 @@ void ManagerButton::Init() {
   _uiObject_saveButton = UIObjectsManager::CreateButton();
   _uiObject_settingsButton = UIObjectsManager::CreateButton();
 
-  Color buttonsColor = Utils::LoadColor("managerButton_ListButton");
+  Color buttonsColor = Utils::LoadColor("managerButton_listButton");
 
   _uiObject_newButton->color = buttonsColor;
   _uiObject_newButton->text = "New";

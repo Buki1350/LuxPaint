@@ -1,5 +1,5 @@
 #pragma once
-#include "Shared/Tool.h"
+#include "../Shared/Tool.h"
 
 class PenTool final : public Tool {
   public:

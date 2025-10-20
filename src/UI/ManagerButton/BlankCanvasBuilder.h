@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Render/UIObjectsManager.h"
 #include "../../UI/MiniMenu/MiniMenu.h"
+
 class BlankCanvasBuilder {
 public:
   inline static MiniMenu* canvasCreator = nullptr;
@@ -75,7 +76,7 @@ public:
     });
   }
 
-  void BlankCanvasBuilder::_CreateBlank(Vec2i size) {
+  void _CreateBlank(Vec2i size) {
     Matx<Color> blankImageMatrix(size);
     blankImageMatrix.fill(WHITE);
     Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);

@@ -6,7 +6,6 @@
 #include "../StaticShared/Utils/Utils.h"
 #include "UIObject.h"
 
-#include <__msvc_ostream.hpp>
 #include <iostream>
 void Text::SetParent(UIObject *parent) {
   uiObject_parent = parent;

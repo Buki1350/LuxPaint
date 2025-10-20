@@ -36,11 +36,11 @@ public:
 
   // ---- Other ----
   static Image LoadImage(const std::string &localPath);
+  static bool Exists(const char* str);
 };
 
 
 // ================= Helpers =================
-
 template<typename T>
 T Convert(const std::string &s) {
   std::stringstream ss(s);
@@ -119,7 +119,6 @@ void FilesManager::Save(std::string path, const std::string &token, const T &val
   oss << token << ": " << value;
   std::string newLine = oss.str();
 
-  // jeśli plik nie istnieje
   if (!std::filesystem::exists(path)) {
     std::ofstream file(path);
     file << newLine << "\n";

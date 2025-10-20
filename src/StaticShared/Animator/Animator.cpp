@@ -1,7 +1,6 @@
 #include "Animator.h"
 #include "AnimationValue.h"
 
-#include <__msvc_ostream.hpp>
 #include <algorithm> // find_if
 #include <iostream>
 

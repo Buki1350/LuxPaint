@@ -111,3 +111,7 @@ void Canvas::Update() {
   _HandleOutline();
 }
 
+void Canvas::SetCurrentTool(Tool* tool) {
+  _currentTool = tool;
+}
+

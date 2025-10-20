@@ -50,7 +50,12 @@ Vec2i Utils::_GetWindowSize() {
 }
 
 Color Utils::LoadColor(std::string token) {
-  return HexToColor(FilesManager::Load<std::string>(FILE_COLOR_PALETTE, token));
+  Color color = HexToColor(FilesManager::Load<std::string>(FILE_COLOR_PALETTE, token));
+  if ( color.r == 0 && color.g == 0 && color.b == 0 && color.a == 255 ) {
+    FilesManager::Save(std::string(FILE_COLOR_PALETTE), token, "#7d7d7d");
+    color = Utils::HexToColor("#7d7d7d");
+  }
+  return color;
 }
 
 Font Utils::GetDefaultFont() { return _defaultFont; }
