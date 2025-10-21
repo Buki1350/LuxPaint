@@ -6,22 +6,60 @@
 
 #include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Utils/Utils.h"
+#include "../ColorPicker/ColorPicker.h"
 
 void ColorHolder::Init() {
-  _uiObject = UIObjectsManager::Create();
-  _uiObject->color = Utils::LoadColor("colorHolderButton");
-  _uiObject->roundness = 0.3f;
+  _oBackground = new UIObject();
+  _oBackground->color = Utils::LoadColor("colorHolderButton");
+  _oBackground->roundness = 0.3f;
+  _oBackground->zLayer = 1;
+
+  Button* colorPickButton = new Button();
+  colorPickButton->color = WHITE;
+  colorPickButton->zLayer = _oBackground->zLayer + 1;
+  colorPickButton->roundness = _oBackground->roundness;
+  colorPickButton->OnClick([this]() {
+    _CreateColorPicker();
+  });
+  _buttons.push_back(colorPickButton);
 }
 
 void ColorHolder::Update() {
-  Vec2i monitorSize = Utils::GetCurrentMonitorSize();
-  Vec2i windowSize = Utils::GetWindowSize();
-  float width = monitorSize.x * _widthScale;
-  float height = monitorSize.y * _heightScale;
+  float screenScale = Utils::GetSmallerMonitorEdge();
+  float windowHeight = Utils::GetWindowSize().y;
+  float separatorSize = _separatorScale * screenScale;
+  float offset = _offsetScale * screenScale;
+  Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
 
-  _uiObject->size = {width, height};
-  _uiObject->position = {
-    (float)monitorSize.x * _marginScale,
-    (float)windowSize.y - height - monitorSize.y * _marginScale
-  };
+  _oBackground->size = Vec2f(
+    separatorSize + _buttons.size() * (buttonSize.x + separatorSize),
+    buttonSize.y + separatorSize * 2
+    );
+  _oBackground->position = Vec2f(offset, windowHeight - separatorSize - _oBackground->size.y);
+
+  for (int i = 0; i < _buttons.size(); i++) {
+    _buttons[i]->size = buttonSize;
+    _buttons[i]->position = Vec2f(
+      _oBackground->position.x + separatorSize + (buttonSize.x + separatorSize) * i,
+      _oBackground->position.y + separatorSize
+      );
+  }
+}
+
+void ColorHolder::_CreateColorPicker() {
+  float screenScale = Utils::GetSmallerMonitorEdge();
+  float windowHeight = Utils::GetWindowSize().y;
+  float separatorSize = _separatorScale * screenScale;
+  float offset = _offsetScale * screenScale;
+  Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
+
+
+  ColorPicker* cp = new ColorPicker();
+  cp->size = Vec2f(300, 300);
+  cp->position = Vec2f(
+    separatorSize,
+    _oBackground->position.y + separatorSize + cp->size.y
+    );
+  cp->color = WHITE;
+  cp->zLayer = 5;
 }

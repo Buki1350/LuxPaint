@@ -8,7 +8,7 @@ ToolSet::ToolSet(const std::string &name, const std::vector<Tool*> &tools) {
   this->tools = tools;
 
   // ... adjusted by ToolBox
-  button = UIObjectsManager::CreateButton();
+  button = new Button();
   button->color = WHITE;
   button->SetImage(icon);
   button->roundness = 0.3f;

@@ -8,12 +8,12 @@
 #include "../../Tools/PaintTools/BrushTool.h"
 
 void ToolBox::Init() {
-  _oBackground = UIObjectsManager::Create();
+  _oBackground = new UIObject();//UIObjectsManager::Create();
   _oBackground->color = Utils::LoadColor("toolBox");
   _oBackground->roundness = 0.25f;
   _oBackground->zLayer = 3;
 
-  toolSetListColor = Utils::LoadColor("toolSet");
+  _toolSetListColor = Utils::LoadColor("toolSet");
 
   Tool* pen_tool = new PenTool("pen_tool");
   Tool* brush_tool = new BrushTool("brush_tool");
@@ -27,11 +27,11 @@ void ToolBox::Init() {
 
   ToolSet* effects_toolset   = new ToolSet("effects_toolset", std::vector<Tool*>{});
 
-  toolSets.push_back(paint_toolset);
-  toolSets.push_back(shapes_toolset);
-  toolSets.push_back(fill_toolset);
-  toolSets.push_back(selection_toolset);
-  toolSets.push_back(effects_toolset);
+  _toolSets.push_back(paint_toolset);
+  _toolSets.push_back(shapes_toolset);
+  _toolSets.push_back(fill_toolset);
+  _toolSets.push_back(selection_toolset);
+  _toolSets.push_back(effects_toolset);
 
   paint_toolset->button->OnClick([this, paint_toolset](){ _ExpandTools(paint_toolset); });
 }
@@ -39,13 +39,13 @@ void ToolBox::Init() {
 void ToolBox::Update() {
   Vec2f monitorSize = Utils::GetCurrentMonitorSize().CastTo<float>();
 
-  int pixTileHeight      = (int)monitorSize.y * tilesScale;
+  int pixTileHeight      = (int)monitorSize.y * _tilesScale;
   int pixTileWidth       = (int)pixTileHeight;
-  int pixTileSeparation  = (int)monitorSize.y * tilesSeparationScale;
-  int pixTileMargin      = (int)monitorSize.y * marginScale;
-  float pixToolBoxHeight = pixTileSeparation + toolSets.size() * (pixTileHeight + pixTileSeparation);
+  int pixTileSeparation  = (int)monitorSize.y * _tilesSeparationScale;
+  int pixTileMargin      = (int)monitorSize.y * _marginScale;
+  float pixToolBoxHeight = pixTileSeparation + _toolSets.size() * (pixTileHeight + pixTileSeparation);
   float pixToolBoxWidth  = pixTileSeparation + pixTileWidth + pixTileSeparation;
-  float pixToolBoxMargin = monitorSize.x * uiObjectBorderSeparation;
+  float pixToolBoxMargin = monitorSize.x * _uiObjectBorderSeparation;
 
   _oBackground->position = {
       pixToolBoxMargin,
@@ -59,9 +59,9 @@ void ToolBox::Update() {
     (float)pixToolBoxMargin + pixTileSeparation,
   };
 
-  for (int i = 0; i < toolSets.size(); i++) {
-    toolSets[i]->button->position = tileStartPosition;
-    toolSets[i]->button->size = {(float)pixTileWidth, (float)pixTileWidth};
+  for (int i = 0; i < _toolSets.size(); i++) {
+    _toolSets[i]->button->position = tileStartPosition;
+    _toolSets[i]->button->size = {(float)pixTileWidth, (float)pixTileWidth};
 
     tileStartPosition.y += pixTileHeight + pixTileMargin;
   }
@@ -76,10 +76,10 @@ void ToolBox::_ExpandTools(ToolSet* toolSet) {
 ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 : _toolBox(toolBox), _toolSet(toolSet) {
   toolBox->_toolsSetList_Instances.push_back(this);
-  _oToolSetListBackground = UIObjectsManager::Create();
+  _oToolSetListBackground = new UIObject();// UIObjectsManager::Create();
 
   for (auto tool : toolSet.tools) {
-    Button* newButton = UIObjectsManager::CreateButton();
+    Button* newButton = new Button();//UIObjectsManager::CreateButton();
     newButton->SetImage(tool->icon);
     newButton->OnClick([tool] {App::Instance->canvas.SetCurrentTool(tool); });
     newButton->color = WHITE;
@@ -88,7 +88,7 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
     _toolsButtons.push_back(newButton);
   }
 
-  _oToolSetListBackground->color = toolBox->toolSetListColor;
+  _oToolSetListBackground->color = toolBox->_toolSetListColor;
   _oToolSetListBackground->position = toolBox->_oBackground->position;
 
   auto [targetPosition, targetSize] = _CalculateTransforms();
@@ -98,13 +98,13 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 
 std::pair<Vec2f, Vec2f> ToolBox::ToolsSetList::_CalculateTransforms() {
   float smallerMonitorEdge = Utils::GetSmallerMonitorEdge();
-  Vec2f tileSize = Vec2f(_toolBox->tilesScale * smallerMonitorEdge);
-  float separator = _toolBox->tilesSeparationScale * smallerMonitorEdge;
+  Vec2f tileSize = Vec2f(_toolBox->_tilesScale * smallerMonitorEdge);
+  float separator = _toolBox->_tilesSeparationScale * smallerMonitorEdge;
 
-  int cols = _toolSet.tools.size() / _toolBox->toolSets.size() + 1;
+  int cols = _toolSet.tools.size() / _toolBox->_toolSets.size() + 1;
   float targetWidth = separator + cols * (tileSize.x + separator);
-  float targetHeight = _toolSet.tools.size() > _toolBox->toolSets.size()?
-    separator + _toolBox->toolSets.size() * (tileSize.y + separator) :
+  float targetHeight = _toolSet.tools.size() > _toolBox->_toolSets.size()?
+    separator + _toolBox->_toolSets.size() * (tileSize.y + separator) :
     separator + _toolSet.tools.size() * (tileSize.y + separator);
 
   Vec2f targetSize = Vec2f(targetWidth, targetHeight);
@@ -121,8 +121,9 @@ void ToolBox::ToolsSetList::Update() {
         auto& vec = _toolBox->_toolsSetList_Instances;
         auto it = std::find(vec.begin(), vec.end(), this);
         if (it != vec.end()) vec.erase(it);
-        UIObjectsManager::Destroy(_oToolSetListBackground);
-        for (auto button : _toolsButtons) { UIObjectsManager::Destroy(button); }
+        //UIObjectsManager::Destroy(_oToolSetListBackground);
+        delete _oToolSetListBackground;
+        for (auto button : _toolsButtons) delete button; // { UIObjectsManager::Destroy(button); }
 
         delete this;
     });
@@ -130,8 +131,8 @@ void ToolBox::ToolsSetList::Update() {
   }
 
   float smallerMonitorEdge = Utils::GetSmallerMonitorEdge();
-  Vec2f tileSize = Vec2f(_toolBox->tilesScale * smallerMonitorEdge);
-  float separator = _toolBox->tilesSeparationScale * smallerMonitorEdge;
+  Vec2f tileSize = Vec2f(_toolBox->_tilesScale * smallerMonitorEdge);
+  float separator = _toolBox->_tilesSeparationScale * smallerMonitorEdge;
 
   for (int i = 0; i < _toolsButtons.size(); i++) {
     _toolsButtons[i]->size = tileSize;

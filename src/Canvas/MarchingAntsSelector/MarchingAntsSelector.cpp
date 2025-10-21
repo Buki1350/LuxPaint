@@ -20,7 +20,7 @@ void MarchingAntsSelector::StartOn(UIObject* obj) {
     newSel.MAImages[i] = GetAntTextureTextureStep(obj->GetTexture(), i);
   }
 
-  newSel.overlay = UIObjectsManager::Create();
+  newSel.overlay = new UIObject();// UIObjectsManager::Create();
   newSel.overlay->SetImage(newSel.MAImages[0]);
   newSel.overlay->size = obj->size * 0.01f;
   newSel.overlay->zLayer = obj->zLayer;

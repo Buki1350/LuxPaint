@@ -4,15 +4,15 @@
 
 class ToolBox final : public Updatable {
   UIObject* _oBackground = nullptr;
-  Color toolSetListColor {};
+  Color _toolSetListColor {};
   const ToolSet* _currentToolSet = nullptr;
-  std::vector<ToolSet*> toolSets;
+  std::vector<ToolSet*> _toolSets;
 
-  float uiObjectBorderSeparation = 0.01f;
-  float tilesScale = 0.05f;
-  float widthScale = 0.04f;
-  float marginScale = 0.01f;
-  float tilesSeparationScale = 0.01f;
+  float _uiObjectBorderSeparation = 0.01f;
+  float _tilesScale = 0.05f;
+  float _widthScale = 0.04f;
+  float _marginScale = 0.01f;
+  float _tilesSeparationScale = 0.01f;
 
   void _ExpandTools(ToolSet* toolSet);
 

@@ -14,17 +14,17 @@
 #include "BlankCanvasBuilder.h"
 
 void ManagerButton::Init() {
-  _uiObject_base = UIObjectsManager::Create();
+  _uiObject_base = new UIObject(); //UIObjectsManager::Create();
   _uiObject_base->roundness = _roundness;
   _uiObject_base->color = Utils::LoadColor("managerButton");
   _uiObject_base->SetImage(FilesManager::LoadImage("manager_button.png"));
   _uiObject_base->zLayer = 2;
   _uiObject_base->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
-  _uiObject_newButton = UIObjectsManager::CreateButton();
-  _uiObject_loadButton = UIObjectsManager::CreateButton();
-  _uiObject_saveButton = UIObjectsManager::CreateButton();
-  _uiObject_settingsButton = UIObjectsManager::CreateButton();
+  _uiObject_newButton = new Button();//UIObjectsManager::CreateButton();
+  _uiObject_loadButton = new Button();//UIObjectsManager::CreateButton();
+  _uiObject_saveButton = new Button();//UIObjectsManager::CreateButton();
+  _uiObject_settingsButton = new Button();//UIObjectsManager::CreateButton();
 
   Color buttonsColor = Utils::LoadColor("managerButton_listButton");
 

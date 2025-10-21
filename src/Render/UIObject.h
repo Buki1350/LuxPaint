@@ -15,7 +15,7 @@ public:
   std::string   name = "";
   Vec2f         position {0,0};
   Vec2f         size {0,0};
-  Color         color = WHITE;
+  Color         color {};
   float         roundness = 0;
   float         imageAlpha = 1;
   float         imageMarginScale = 0;
@@ -26,7 +26,7 @@ public:
   bool          keepRoundness = true;
 
   UIObject();
-  virtual ~UIObject() = default;
+  ~UIObject();
   virtual void Draw();
   bool CursorAbove() const;
   bool Clicked() const;

@@ -67,6 +67,8 @@ add_executable(LuxPaint
         src/Render/Prefabs/Button.h
         src/StaticShared/DelayedAction/DelayedAction.h
         src/Tools/PaintTools/BrushTool.h
+        src/UI/ColorPicker/ColorPicker.cpp
+        src/UI/ColorPicker/ColorPicker.h
 )
 
 # Linkowanie i include w zależności od systemu

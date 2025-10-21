@@ -26,7 +26,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
   float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
 
   if (!oBackground) {
-    oBackground = UIObjectsManager::Create();
+    oBackground = new UIObject();//UIObjectsManager::Create();
     _targetSize = Vec2f::ones() * margin;
     oBackground->color = Utils::LoadColor("miniMenu");
     oBackground->size = {0, 0};
@@ -62,7 +62,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
   return this;
 }
 MiniMenu::ObjectWithSavedSize MiniMenu::FlexSeparator() {
-  return {UIObjectsManager::Create(), true};
+  return {new UIObject()/*UIObjectsManager::Create()*/, true};
 }
 
 void MiniMenu::_HandleClosing() {
@@ -193,7 +193,7 @@ void MiniMenu::_HandleDeleting() {
 
       Animator::Terminate(uiObjectsToDelete);
 
-      for (auto o : uiObjectsToDelete) { UIObjectsManager::Destroy(o); }
+      for (auto o : uiObjectsToDelete) delete o;//{ UIObjectsManager::Destroy(o); }
       _oPackedObjects.clear();
       _onDestructionFunc();
 

@@ -5,7 +5,27 @@
 #include "UIObjectsManager.h"
 #include "raylib.h"
 
-UIObject::UIObject() { text.SetParent(this); }
+UIObject::UIObject() {
+  text.SetParent(this);
+  UIObjectsManager::objects.push_back(this);
+}
+
+UIObject::~UIObject() {
+  Animator::Terminate(this);
+  for (auto it = UIObjectsManager::objects.begin(); it != UIObjectsManager::objects.end(); ++it) {
+    if (*it == this) {
+      UIObjectsManager::objects.erase(it);
+      break;
+    }
+  }
+
+  if (auto up = dynamic_cast<Updatable*>(this)) {
+    auto &vec = UpdatablesManager::updatables;
+    vec.erase(std::remove(vec.begin(), vec.end(), up), vec.end());
+  }
+
+  delete this;
+}
 
 Vec2i UIObject::GetImageSize() {
   if (_hasTexture) {

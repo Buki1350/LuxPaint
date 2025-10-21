@@ -15,7 +15,8 @@ void Canvas::Init() { _CreateBackground(); }
 void Canvas::Update() {
   _HandleZoomAndDrag();
   _UpdateBackground();
-  _HandleOutline();
+  //_HandleOutline();
+  _HandlePainting();
 }
 
 bool Canvas::_CanDrag() {
@@ -74,7 +75,7 @@ void Canvas::_HandleZoomAndDrag() {
 }
 
 void Canvas::_CreateBackground() {
-  _oBackground = UIObjectsManager::Create();
+  _oBackground = new UIObject();// UIObjectsManager::Create();
   _oBackground->SetImage(FilesManager::LoadImage("transparent_background_medium_blend.png"));
   _oBackground->zLayer = 0;
 }
@@ -114,7 +115,7 @@ void Canvas::_HandlePainting() {
 }
 
 void Canvas::AddImage(Image image) {
-  UIObject* uiObj = UIObjectsManager::Create();
+  UIObject* uiObj = new UIObject();// UIObjectsManager::Create();
   uiObj->SetImage(image);
   uiObj->size = {(float)image.width, (float)image.height};
   uiObj->position = {100, 100};
