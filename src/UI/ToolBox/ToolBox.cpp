@@ -1,6 +1,4 @@
 #include "ToolBox.h"
-#include "ToolBox.h"
-
 #include "../../App.h"
 #include "../../Tools/PaintTools/PenTool.h"
 #include "../../Render/UIObjectsManager.h"
@@ -13,7 +11,7 @@ void ToolBox::Init() {
   _oBackground = UIObjectsManager::Create();
   _oBackground->color = Utils::LoadColor("toolBox");
   _oBackground->roundness = 0.25f;
-  _oBackground->zLayer = 1;
+  _oBackground->zLayer = 3;
 
   toolSetListColor = Utils::LoadColor("toolSet");
 
@@ -79,10 +77,14 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 : _toolBox(toolBox), _toolSet(toolSet) {
   toolBox->_toolsSetList_Instances.push_back(this);
   _oToolSetListBackground = UIObjectsManager::Create();
+
   for (auto tool : toolSet.tools) {
     Button* newButton = UIObjectsManager::CreateButton();
     newButton->SetImage(tool->icon);
     newButton->OnClick([tool] {App::Instance->canvas.SetCurrentTool(tool); });
+    newButton->color = WHITE;
+    newButton->zLayer = _oToolSetListBackground->zLayer + 1;
+    newButton->roundness = 1;
     _toolsButtons.push_back(newButton);
   }
 
@@ -112,7 +114,7 @@ std::pair<Vec2f, Vec2f> ToolBox::ToolsSetList::_CalculateTransforms() {
 }
 
 void ToolBox::ToolsSetList::Update() {
-  // Zamykanie ToolSetList
+  // ... closing toolSetList
   if (!_oToolSetListBackground->Clicked() && Utils::MouseClicked()) {
     Animator::Reset(_oToolSetListBackground, ANIMATION_POPUP_DURATION);
     new DelayedAction(ANIMATION_POPUP_DURATION, [this](){
@@ -120,29 +122,23 @@ void ToolBox::ToolsSetList::Update() {
         auto it = std::find(vec.begin(), vec.end(), this);
         if (it != vec.end()) vec.erase(it);
         UIObjectsManager::Destroy(_oToolSetListBackground);
+        for (auto button : _toolsButtons) { UIObjectsManager::Destroy(button); }
+
         delete this;
     });
     return;
   }
 
-  // Aktualne wymiary tła
-  Vec2f bgPos = _oToolSetListBackground->position;
-  Vec2f bgSize = _oToolSetListBackground->size;
+  float smallerMonitorEdge = Utils::GetSmallerMonitorEdge();
+  Vec2f tileSize = Vec2f(_toolBox->tilesScale * smallerMonitorEdge);
+  float separator = _toolBox->tilesSeparationScale * smallerMonitorEdge;
 
-  int numButtons = _toolsButtons.size();
-
-  // Określamy kafelek i odstęp w tle
-  float separator = _toolBox->tilesSeparationScale * Utils::GetSmallerMonitorEdge();
-  float tileWidth = (bgSize.x - separator * (numButtons + 1)) / numButtons; // rozkład w poziomie
-  float tileHeight = bgSize.y - 2 * separator; // dopasowanie do wysokości tła
-
-  // Układamy przyciski
-  for (int i = 0; i < numButtons; i++) {
-    _toolsButtons[i]->size = Vec2f(tileWidth, tileHeight);
+  for (int i = 0; i < _toolsButtons.size(); i++) {
+    _toolsButtons[i]->size = tileSize;
     _toolsButtons[i]->position = Vec2f(
-        bgPos.x + separator + i * (tileWidth + separator),
-        bgPos.y + separator
-    );
+      _oToolSetListBackground->position.x + separator,
+      _oToolSetListBackground->position.y + separator + (tileSize.y + separator) * i
+      );
   }
 }
 

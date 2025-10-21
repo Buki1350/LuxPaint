@@ -166,12 +166,59 @@ float Animator::AnimateRoundness(UIObject *uiObject, float targetRoundness,
 }
 
 void Animator::Reset(UIObject *uiObject, float time) {
-  if (AnimatorContains(uiObject, NONE)) return;
+  if (AnimatorContains(uiObject, NONE))
+    return;
   for (auto &aov : Instance->animatedObjectsValues) {
     if (aov->uiObject == uiObject) {
       aov->Reset(time);
     }
   }
+}
+
+void Animator::Apply(UIObject* uiObject) {
+    // jeśli animator nie istnieje lub brak obiektów — nic nie robimy
+    if (Instance == nullptr) return;
+
+    for (auto &anim : Instance->animatedObjectsValues) {
+        if (anim->uiObject == uiObject) {
+            // typ animacji zależy od parametru — ale zawsze możemy użyć targetValue
+            if (anim->objectParameter == POSITION) {
+                auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
+                *av->currentValue = av->targetValue;
+                av->savedValue = av->targetValue;
+            } else if (anim->objectParameter == SIZE) {
+                auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
+                *av->currentValue = av->targetValue;
+                av->savedValue = av->targetValue;
+            } else if (anim->objectParameter == COLOR) {
+                auto av = static_cast<AnimationValue<Color>*>(anim.get());
+                *av->currentValue = av->targetValue;
+                av->savedValue = av->targetValue;
+            } else if (anim->objectParameter == IMAGE_ALPHA) {
+                auto av = static_cast<AnimationValue<float>*>(anim.get());
+                *av->currentValue = av->targetValue;
+                av->savedValue = av->targetValue;
+            } else if (anim->objectParameter == ROUNDNESS) {
+                auto av = static_cast<AnimationValue<float>*>(anim.get());
+                *av->currentValue = av->targetValue;
+                av->savedValue = av->targetValue;
+            }
+
+            anim->readyToDelete = true;
+        }
+    }
+
+    // usuń animacje, które już zostały „zastosowane”
+    Instance->animatedObjectsValues.erase(
+        std::remove_if(
+            Instance->animatedObjectsValues.begin(),
+            Instance->animatedObjectsValues.end(),
+            [&](const std::unique_ptr<IAnimationValue>& anim) {
+                return anim->uiObject == uiObject && anim->readyToDelete;
+            }
+        ),
+        Instance->animatedObjectsValues.end()
+    );
 }
 
 void Animator::SizeUp(UIObject *uiObject, float scale, float time) {

@@ -12,6 +12,11 @@
 
 void Canvas::Init() { _CreateBackground(); }
 
+void Canvas::Update() {
+  _HandleZoomAndDrag();
+  _UpdateBackground();
+  _HandleOutline();
+}
 
 bool Canvas::_CanDrag() {
   return IsKeyDown(KEY_SPACE) || IsMouseButtonDown(MOUSE_MIDDLE_BUTTON);
@@ -90,6 +95,24 @@ void Canvas::_HandleOutline() {
   }
 }
 
+void Canvas::_HandlePainting() {
+  if (_currentTool == nullptr || !IsMouseButtonDown(0)) return;
+  UIObject* hitLayer = nullptr;
+  for (auto layer : _oLayers) {
+    if (layer->CursorAbove()) {
+      hitLayer = layer;
+      break;
+    }
+  }
+
+  if (!hitLayer) return;
+
+  // ... calculating hit position
+  Vec2f onTextureHitPosition = Utils::GetMousePosition() - hitLayer->position;
+  _currentTool->Apply(hitLayer, onTextureHitPosition);
+
+}
+
 void Canvas::AddImage(Image image) {
   UIObject* uiObj = UIObjectsManager::Create();
   uiObj->SetImage(image);
@@ -103,12 +126,6 @@ void Canvas::AddImage(Image image) {
 
 void Canvas::AddTexture(Texture2D texture) {
   AddImage(LoadImageFromTexture(texture));
-}
-
-void Canvas::Update() {
-  _HandleZoomAndDrag();
-  _UpdateBackground();
-  _HandleOutline();
 }
 
 void Canvas::SetCurrentTool(Tool* tool) {

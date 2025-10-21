@@ -12,6 +12,6 @@ ToolSet::ToolSet(const std::string &name, const std::vector<Tool*> &tools) {
   button->color = WHITE;
   button->SetImage(icon);
   button->roundness = 0.3f;
-  button->zLayer = 2;
+  button->zLayer = 4;
   button->imageMarginScale = UIOBJECT_ICON_MARGIN;
 }

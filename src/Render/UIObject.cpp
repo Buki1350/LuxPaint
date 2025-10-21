@@ -104,7 +104,18 @@ void UIObject::SetImage(const Texture &texture) {
 }
 
 void UIObject::SetImage(const Image &image) {
-  Texture2D texture = LoadTextureFromImage(image);
-  _texture = texture;
+  _image = ImageCopy(image);
+  _texture = LoadTextureFromImage(_image);
   _hasTexture = true;
+  _hasImage = true;
 }
+
+void UIObject::UpdateTexture() {
+  if (_hasImage && _hasTexture) {
+    ::UpdateTexture(_texture, _image.data);
+  }
+}
+Image UIObject::GetImage() {
+  return _image;
+}
+

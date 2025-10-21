@@ -1,5 +1,4 @@
 #pragma once
-#include "../Defines.h"
 #include "../Render/UIObject.h"
 #include "../Automatition/Updatables/Updatable.h"
 #include "raylib.h"
@@ -21,6 +20,7 @@ class Canvas final : public Updatable {
   void _UpdateBackground();
 
   void _HandleOutline();
+  void _HandlePainting();
 
 public:
   void Init();

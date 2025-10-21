@@ -8,12 +8,14 @@
 class UIObject {
   Texture2D   _texture = {};
   bool        _hasTexture = false;
+  Image       _image;
+  bool        _hasImage = false;
 
 public:
   std::string   name = "";
   Vec2f         position {0,0};
   Vec2f         size {0,0};
-  Color         color {0,0,0};
+  Color         color = WHITE;
   float         roundness = 0;
   float         imageAlpha = 1;
   float         imageMarginScale = 0;
@@ -32,13 +34,15 @@ public:
   bool ClickReleased() const;
   void SetImage(const Texture &texture);
   void SetImage(const Image &image);
+  void UpdateTexture();
+  Image GetImage();
   Vec2i GetImageSize();
   Texture & GetTexture();
 };
 
-// animator utility
+// ... animator utility
 enum UIObjectParameter {
-  NONE, // for reset
+  NONE, // ... for reset
   POSITION,
   SIZE,
   COLOR,

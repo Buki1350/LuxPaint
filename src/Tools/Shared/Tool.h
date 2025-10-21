@@ -12,4 +12,5 @@ class Tool {
   public:
   Texture2D icon;
   Tool(const std::string &name);
+  virtual void Apply(UIObject* imageToPaint, Vec2f vec2) = 0;
 };
