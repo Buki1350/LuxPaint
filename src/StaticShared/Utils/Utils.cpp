@@ -125,7 +125,7 @@ Image Utils::MatrixToImage(Matx<Color> &matrix) {
   return LoadImageFromTexture(MatrixToTexture(matrix));
 }
 
-bool Utils::MouseClicked() { return IsMouseButtonReleased(0); }
+bool Utils::MouseReleased() { return IsMouseButtonReleased(0); }
 
 Color Utils::DarkenColor(const Color& color, float factor) {
   factor = 1 - factor;

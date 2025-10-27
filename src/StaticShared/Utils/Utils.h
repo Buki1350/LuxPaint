@@ -1,5 +1,4 @@
 #pragma once
-#include "../../Automatition/Initializables/Initializable.h"
 #include "../../Automatition/Updatables/Updatable.h"
 #include "../../Math/Matx.h"
 #include "../../Math/Vec2.h"
@@ -34,7 +33,7 @@ public:
   static Matx<Color> ImageToMatrix(Image& texture);
   static Texture2D MatrixToTexture(Matx<Color>& matrix);
   static Image MatrixToImage(Matx<Color>& matrix);
-  static bool MouseClicked();
+  static bool MouseReleased();
   static Color DarkenColor(const Color& color, float factor);
 
   void Update() override;

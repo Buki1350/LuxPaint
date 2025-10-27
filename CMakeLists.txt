@@ -63,12 +63,13 @@ add_executable(LuxPaint
         src/Macros.h
         src/Render/Prefabs/InputField.cpp
         src/Render/Prefabs/InputField.h
-        src/Render/Prefabs/Button.cpp
         src/Render/Prefabs/Button.h
         src/StaticShared/DelayedAction/DelayedAction.h
         src/Tools/PaintTools/BrushTool.h
         src/UI/ColorPicker/ColorPicker.cpp
         src/UI/ColorPicker/ColorPicker.h
+        src/Render/Prefabs/Slider.cpp
+        src/Render/Prefabs/Slider.h
 )
 
 # Linkowanie i include w zależności od systemu

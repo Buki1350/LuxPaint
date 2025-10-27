@@ -7,14 +7,24 @@
 
 UIObject::UIObject() {
   text.SetParent(this);
-  UIObjectsManager::objects.push_back(this);
+  UIObjectsManager::_objects.push_back(this);
 }
 
-UIObject::~UIObject() {
+Vec2i UIObject::GetImageSize() {
+  if (_hasTexture) {
+    return {_texture.width, _texture.height};
+  }
+  return {0, 0};
+}
+
+Texture &UIObject::GetTexture() { return _texture; }
+
+void UIObject::Destroy() {
   Animator::Terminate(this);
-  for (auto it = UIObjectsManager::objects.begin(); it != UIObjectsManager::objects.end(); ++it) {
+
+  for (auto it = UIObjectsManager::_objects.begin(); it != UIObjectsManager::_objects.end(); ++it) {
     if (*it == this) {
-      UIObjectsManager::objects.erase(it);
+      UIObjectsManager::_objects.erase(it);
       break;
     }
   }
@@ -27,24 +37,12 @@ UIObject::~UIObject() {
   delete this;
 }
 
-Vec2i UIObject::GetImageSize() {
-  if (_hasTexture) {
-    return {_texture.width, _texture.height};
-  }
-  return {0, 0};
-}
-
-Texture &UIObject::GetTexture() {
-  return _texture;
-}
-
 void UIObject::Draw() {
   Vec2f finalPos = position;
   Vec2f finalSize = size;
 
-  // jeśli chcesz zachować proporcję zaokrągleń względem rozmiaru
   float smallerEdge = fmin(size.x, size.y);
-  float scaleFactor = smallerEdge > 0 ? (smallerEdge / smallerEdge) : 1.0f; // teraz zawsze 1.0f
+  float scaleFactor = smallerEdge > 0 ? (smallerEdge / smallerEdge) : 1.0f;
 
   DrawRectangleRounded(
       { finalPos.x, finalPos.y, finalSize.x, finalSize.y },
@@ -107,11 +105,11 @@ bool UIObject::CursorAbove() const {
 }
 
 bool UIObject::Clicked() const {
-  return isActive && CursorAbove() && Utils::MouseClicked();
+  return isActive && CursorAbove() && Utils::MouseReleased();
 }
 
-bool UIObject::ClickReleased() const {
-  return Clicked();
+bool UIObject::ClickedButNotThis() {
+  return isActive && !CursorAbove() && Utils::MouseReleased();
 }
 
 bool UIObject::Pressed() const {

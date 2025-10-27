@@ -26,18 +26,19 @@ public:
   bool          keepRoundness = true;
 
   UIObject();
-  ~UIObject();
+  ~UIObject() = default;
   virtual void Draw();
   bool CursorAbove() const;
   bool Clicked() const;
+  bool ClickedButNotThis();
   bool Pressed() const;
-  bool ClickReleased() const;
   void SetImage(const Texture &texture);
   void SetImage(const Image &image);
   void UpdateTexture();
   Image GetImage();
   Vec2i GetImageSize();
-  Texture & GetTexture();
+  Texture &GetTexture();
+  virtual void Destroy();
 };
 
 // ... animator utility

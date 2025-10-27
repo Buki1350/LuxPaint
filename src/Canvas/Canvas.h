@@ -14,6 +14,7 @@ class Canvas final : public Updatable {
   bool _isDragging = false;
   UIObject* _oBackground = nullptr;
   Tool* _currentTool = nullptr;
+  Color _currentColor = BLACK;
   bool _CanDrag();
   void _HandleZoomAndDrag();
   void _CreateBackground();
@@ -29,4 +30,6 @@ public:
   void Update() override;
   std::vector<UIObject*>& GetImages() { return _oLayers; }
   void SetCurrentTool(Tool* tool);
+  void SetCurrentColor(Color color);
+  Color GetCurrentColor();
 };

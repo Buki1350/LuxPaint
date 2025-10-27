@@ -26,7 +26,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
   float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
 
   if (!oBackground) {
-    oBackground = new UIObject();//UIObjectsManager::Create();
+    oBackground = new UIObject();
     _targetSize = Vec2f::ones() * margin;
     oBackground->color = Utils::LoadColor("miniMenu");
     oBackground->size = {0, 0};
@@ -42,7 +42,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
     if (!e.flexible) {
       rowWidth += e.initialSize.x;
     }
-    rowWidth += margin; // margines ZA każdym elementem
+    rowWidth += margin;
 
 
     rowHeight = std::max(rowHeight, e.initialSize.y);
@@ -61,8 +61,9 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
 
   return this;
 }
+
 MiniMenu::ObjectWithSavedSize MiniMenu::FlexSeparator() {
-  return {new UIObject()/*UIObjectsManager::Create()*/, true};
+  return {new UIObject(), true};
 }
 
 void MiniMenu::_HandleClosing() {
@@ -72,7 +73,6 @@ void MiniMenu::_HandleClosing() {
     if (IsMouseButtonPressed(0)) {
       bool cursorAboveAny = instance->oBackground->CursorAbove();
 
-      // sprawdzamy też wszystkie elementy
       for (auto &e : instance->_oPackedObjects) {
         if (e.object->CursorAbove()) {
           cursorAboveAny = true;
@@ -87,7 +87,6 @@ void MiniMenu::_HandleClosing() {
     }
   }
 }
-
 
 void MiniMenu::_CalculateTransforms() {
     if (!oBackground || _markedForDeletion)
@@ -119,7 +118,7 @@ void MiniMenu::_CalculateTransforms() {
           } else {
             rowWidth += e.initialSize.x;
           }
-          rowWidth += margin; // margines za każdym elementem
+          rowWidth += margin;
 
           rowHeight = std::max(rowHeight, e.initialSize.y);
         }
@@ -150,7 +149,6 @@ void MiniMenu::_CalculateTransforms() {
             xOffset = oBackground->position.x + (postAnimatedSize.x - rowWidthScaled) / 2 + margin * scale.x;
         }
 
-        // dodatkowa przestrzeń na flexy
         float extraSpace = (postAnimatedSize.x - rowWidths[r] * scale.x);
         float flexUnit = (flexCounts[r] > 0) ? extraSpace / flexCounts[r] : 0;
 
@@ -167,7 +165,6 @@ void MiniMenu::_CalculateTransforms() {
         yOffset += rowHeightScaled + margin * scale.y;
     }
 }
-
 
 void MiniMenu::_HandleDeleting() {
   if (_markedForDeletion) {
@@ -193,7 +190,7 @@ void MiniMenu::_HandleDeleting() {
 
       Animator::Terminate(uiObjectsToDelete);
 
-      for (auto o : uiObjectsToDelete) delete o;//{ UIObjectsManager::Destroy(o); }
+      for (auto o : uiObjectsToDelete) { o->Destroy(); }
       _oPackedObjects.clear();
       _onDestructionFunc();
 
@@ -207,6 +204,7 @@ void MiniMenu::Update() {
   _CalculateTransforms();
   _HandleDeleting();
 }
+
 void MiniMenu::OnDestroy(std::function<void()> labdaFunction) {
   _onDestructionFunc = labdaFunction;
 }

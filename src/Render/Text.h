@@ -16,7 +16,6 @@ public:
   void SetParent(UIObject *parent);
   void Draw();
 
-  void operator =(const char* other) {
-    value = other;
-  }
+  void operator=(const char *other) { value = other; }
+  Text &operator=(const std::string & other) { value = other; return *this; }
 };

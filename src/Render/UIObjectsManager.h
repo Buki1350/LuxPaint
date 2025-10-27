@@ -6,8 +6,9 @@
 #include <vector>
 
 class UIObjectsManager {
+  friend class UIObject;
+  static std::vector<UIObject*> _objects;
 public:
-  static std::vector<UIObject*> objects;
   static Shader roundedMask;
   static void Init();
   static void AddUIObject(UIObject *object);

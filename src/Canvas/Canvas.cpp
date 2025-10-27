@@ -75,7 +75,7 @@ void Canvas::_HandleZoomAndDrag() {
 }
 
 void Canvas::_CreateBackground() {
-  _oBackground = new UIObject();// UIObjectsManager::Create();
+  _oBackground = new UIObject();
   _oBackground->SetImage(FilesManager::LoadImage("transparent_background_medium_blend.png"));
   _oBackground->zLayer = 0;
 }
@@ -129,7 +129,7 @@ void Canvas::AddTexture(Texture2D texture) {
   AddImage(LoadImageFromTexture(texture));
 }
 
-void Canvas::SetCurrentTool(Tool* tool) {
-  _currentTool = tool;
-}
+void Canvas::SetCurrentTool(Tool *tool) { _currentTool = tool; }
+void Canvas::SetCurrentColor(Color color) { _currentColor = color; }
+Color Canvas::GetCurrentColor() { return  _currentColor; }
 

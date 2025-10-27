@@ -6,6 +6,7 @@ InputField::InputField() {
     text.SetParent(this);
     text.center = false;
     text.margin = 5;
+    color = WHITE;
 }
 
 void InputField::SetMode(InputMode mode) {

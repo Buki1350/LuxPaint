@@ -10,6 +10,7 @@ class ColorHolder final : public Updatable {
   float _separatorScale = 0.01f;
 
   std::vector<Button*> _buttons;
+  int _numberOfSavedColors = 5;
 
 public:
   void Init();

@@ -6,7 +6,6 @@
 #include "UI/ColorHolder/ColorHolder.h"
 #include "UI/ManagerButton/ManagerButton.h"
 #include "UI/ToolBox/ToolBox.h"
-#include "raylib.h"
 
 class App : public Singleton<App> {
     void Close();

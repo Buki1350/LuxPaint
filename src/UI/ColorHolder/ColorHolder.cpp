@@ -4,6 +4,7 @@
 
 #include "ColorHolder.h"
 
+#include "../../App.h"
 #include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 #include "../ColorPicker/ColorPicker.h"
@@ -18,10 +19,23 @@ void ColorHolder::Init() {
   colorPickButton->color = WHITE;
   colorPickButton->zLayer = _oBackground->zLayer + 1;
   colorPickButton->roundness = _oBackground->roundness;
+  colorPickButton->SetImage(FilesManager::LoadImage("rgb.png"));
+  colorPickButton->imageMarginScale = UIOBJECT_ICON_MARGIN;
   colorPickButton->OnClick([this]() {
     _CreateColorPicker();
   });
   _buttons.push_back(colorPickButton);
+
+  for (int i = 0; i < _numberOfSavedColors; i++) {
+    Button* savedColor = new Button();
+    savedColor->color = WHITE;
+    savedColor->zLayer = _oBackground->zLayer + 1;
+    savedColor->roundness = 1;
+    savedColor->OnClick([this, savedColor]() {
+      App::Instance->canvas.SetCurrentColor(savedColor->color);
+    });
+    _buttons.push_back(savedColor);
+  }
 }
 
 void ColorHolder::Update() {
@@ -48,18 +62,23 @@ void ColorHolder::Update() {
 
 void ColorHolder::_CreateColorPicker() {
   float screenScale = Utils::GetSmallerMonitorEdge();
-  float windowHeight = Utils::GetWindowSize().y;
   float separatorSize = _separatorScale * screenScale;
-  float offset = _offsetScale * screenScale;
-  Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
-
+  // float windowHeight = Utils::GetWindowSize().y;
+  // float offset = _offsetScale * screenScale;
+  // Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
 
   ColorPicker* cp = new ColorPicker();
-  cp->size = Vec2f(300, 300);
   cp->position = Vec2f(
     separatorSize,
-    _oBackground->position.y + separatorSize + cp->size.y
+    _oBackground->position.y - separatorSize - cp->size.y
     );
-  cp->color = WHITE;
-  cp->zLayer = 5;
+
+  cp->SetColor(App::Instance->canvas.GetCurrentColor());
+
+  cp->SetOnColorChange([this](Color newColor) {
+    if (!_buttons.empty()) {
+        _buttons[0]->color = newColor;
+    }
+    App::Instance->canvas.SetCurrentColor(newColor);
+  });
 }

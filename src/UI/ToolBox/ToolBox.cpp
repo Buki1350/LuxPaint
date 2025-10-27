@@ -8,7 +8,7 @@
 #include "../../Tools/PaintTools/BrushTool.h"
 
 void ToolBox::Init() {
-  _oBackground = new UIObject();//UIObjectsManager::Create();
+  _oBackground = new UIObject();
   _oBackground->color = Utils::LoadColor("toolBox");
   _oBackground->roundness = 0.25f;
   _oBackground->zLayer = 3;
@@ -71,20 +71,19 @@ void ToolBox::_ExpandTools(ToolSet* toolSet) {
   new ToolsSetList(this, *toolSet);
 }
 
-
-
 ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 : _toolBox(toolBox), _toolSet(toolSet) {
   toolBox->_toolsSetList_Instances.push_back(this);
-  _oToolSetListBackground = new UIObject();// UIObjectsManager::Create();
+  _oToolSetListBackground = new UIObject();
 
   for (auto tool : toolSet.tools) {
-    Button* newButton = new Button();//UIObjectsManager::CreateButton();
+    Button* newButton = new Button();
     newButton->SetImage(tool->icon);
     newButton->OnClick([tool] {App::Instance->canvas.SetCurrentTool(tool); });
     newButton->color = WHITE;
     newButton->zLayer = _oToolSetListBackground->zLayer + 1;
     newButton->roundness = 1;
+    newButton->imageMarginScale = UIOBJECT_ICON_MARGIN * 2;
     _toolsButtons.push_back(newButton);
   }
 
@@ -115,15 +114,14 @@ std::pair<Vec2f, Vec2f> ToolBox::ToolsSetList::_CalculateTransforms() {
 
 void ToolBox::ToolsSetList::Update() {
   // ... closing toolSetList
-  if (!_oToolSetListBackground->Clicked() && Utils::MouseClicked()) {
+  if (!_oToolSetListBackground->Clicked() && Utils::MouseReleased()) {
     Animator::Reset(_oToolSetListBackground, ANIMATION_POPUP_DURATION);
     new DelayedAction(ANIMATION_POPUP_DURATION, [this](){
         auto& vec = _toolBox->_toolsSetList_Instances;
         auto it = std::find(vec.begin(), vec.end(), this);
         if (it != vec.end()) vec.erase(it);
-        //UIObjectsManager::Destroy(_oToolSetListBackground);
-        delete _oToolSetListBackground;
-        for (auto button : _toolsButtons) delete button; // { UIObjectsManager::Destroy(button); }
+        _oToolSetListBackground->Destroy();
+        for (auto button : _toolsButtons) button->Destroy();
 
         delete this;
     });
