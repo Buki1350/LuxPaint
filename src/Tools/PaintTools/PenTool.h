@@ -5,8 +5,9 @@ class PenTool final : public Tool {
   public:
   explicit PenTool(const std::string& name) : Tool(name) {}
 
-  void PenTool::Apply(UIObject* imageToPaint, Vec2f localPos) override {
-    if (!imageToPaint) return;
+  void PenTool::HandleClick(UIObject *imageToPaint, Vec2f localPos) override {
+    if (!imageToPaint)
+      return;
 
     float relX = localPos.x / imageToPaint->size.x;
     float relY = localPos.y / imageToPaint->size.y;
@@ -14,14 +15,15 @@ class PenTool final : public Tool {
     int imgX = (int)(relX * imageToPaint->GetImageSize().x);
     int imgY = (int)(relY * imageToPaint->GetImageSize().y);
 
-    if (imgX < 0 || imgY < 0 ||
-        imgX >= imageToPaint->GetImageSize().x ||
+    if (imgX < 0 || imgY < 0 || imgX >= imageToPaint->GetImageSize().x ||
         imgY >= imageToPaint->GetImageSize().y)
       return;
 
-    ImageDrawPixel(&imageToPaint->GetImage(), imgX, imgY, App::Instance->canvas.GetCurrentColor());
+    ImageDrawPixel(&imageToPaint->GetImage(), imgX, imgY,
+                   App::Instance->canvas.GetCurrentColor());
 
     imageToPaint->UpdateTexture();
   }
 
+  void HandleRelease(UIObject *imageToPaint, Vec2f vec2) override { }
 };

@@ -12,5 +12,6 @@ class Tool {
   public:
   Texture2D icon;
   Tool(const std::string &name);
-  virtual void Apply(UIObject* imageToPaint, Vec2f vec2) = 0;
+  virtual void HandleClick(UIObject* imageToPaint, Vec2f vec2) = 0;
+  virtual void HandleRelease(UIObject* imageToPaint, Vec2f vec2) = 0;
 };

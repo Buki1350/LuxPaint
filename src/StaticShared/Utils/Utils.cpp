@@ -126,6 +126,8 @@ Image Utils::MatrixToImage(Matx<Color> &matrix) {
 }
 
 bool Utils::MouseReleased() { return IsMouseButtonReleased(0); }
+bool Utils::MousePressed() { return IsMouseButtonPressed(0); }
+bool Utils::MouseDown() { return IsMouseButtonDown(0); }
 
 Color Utils::DarkenColor(const Color& color, float factor) {
   factor = 1 - factor;

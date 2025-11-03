@@ -34,6 +34,8 @@ public:
   static Texture2D MatrixToTexture(Matx<Color>& matrix);
   static Image MatrixToImage(Matx<Color>& matrix);
   static bool MouseReleased();
+  static bool MousePressed();
+  static bool MouseDown();
   static Color DarkenColor(const Color& color, float factor);
 
   void Update() override;

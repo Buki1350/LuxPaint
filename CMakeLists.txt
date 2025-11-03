@@ -70,6 +70,8 @@ add_executable(LuxPaint
         src/UI/ColorPicker/ColorPicker.h
         src/Render/Prefabs/Slider.cpp
         src/Render/Prefabs/Slider.h
+        src/Tools/SelectionTools/RectangleSelection.h
+        src/Tools/SelectionTools/RectangleSelection.cpp
 )
 
 # Linkowanie i include w zależności od systemu

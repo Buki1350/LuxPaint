@@ -1,11 +1,12 @@
 #include "ToolBox.h"
 #include "../../App.h"
-#include "../../Tools/PaintTools/PenTool.h"
 #include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Animator/Animator.h"
 #include "../../StaticShared/DelayedAction/DelayedAction.h"
 #include "../../StaticShared/Utils/Utils.h"
 #include "../../Tools/PaintTools/BrushTool.h"
+#include "../../Tools/PaintTools/PenTool.h"
+#include "../../Tools/SelectionTools/RectangleSelection.h"
 
 void ToolBox::Init() {
   _oBackground = new UIObject();
@@ -15,17 +16,19 @@ void ToolBox::Init() {
 
   _toolSetListColor = Utils::LoadColor("toolSet");
 
+  // ... paint
   Tool* pen_tool = new PenTool("pen_tool");
   Tool* brush_tool = new BrushTool("brush_tool");
-  ToolSet* paint_toolset     = new ToolSet("paint_toolset", std::vector{pen_tool, brush_tool});
-
-  ToolSet* shapes_toolset    = new ToolSet("shapes_toolset", std::vector<Tool*>{});
-
-  ToolSet* fill_toolset      = new ToolSet("fill_toolset", std::vector<Tool*>{});
-
-  ToolSet* selection_toolset = new ToolSet("selection_toolset", std::vector<Tool*>{});
-
-  ToolSet* effects_toolset   = new ToolSet("effects_toolset", std::vector<Tool*>{});
+  ToolSet* paint_toolset      = new ToolSet("paint_toolset", std::vector{pen_tool, brush_tool});
+  // ... shapes
+  ToolSet* shapes_toolset     = new ToolSet("shapes_toolset", std::vector<Tool*>{});
+  // ... fill
+  ToolSet* fill_toolset       = new ToolSet("fill_toolset", std::vector<Tool*>{});
+  // ... selection
+  Tool* selection_tool        = new RectangleSelection("selection_tool");
+  ToolSet* selection_toolset  = new ToolSet("selection_toolset", std::vector{selection_tool});
+  // ... effects
+  ToolSet* effects_toolset    = new ToolSet("effects_toolset", std::vector<Tool*>{});
 
   _toolSets.push_back(paint_toolset);
   _toolSets.push_back(shapes_toolset);
@@ -33,7 +36,10 @@ void ToolBox::Init() {
   _toolSets.push_back(selection_toolset);
   _toolSets.push_back(effects_toolset);
 
-  paint_toolset->button->OnClick([this, paint_toolset](){ _ExpandTools(paint_toolset); });
+  for (auto ts : _toolSets) {
+    ts->button->OnClick([this, ts](){_ExpandTools(ts); });
+  }
+
 }
 
 void ToolBox::Update() {

@@ -18,6 +18,49 @@ void Canvas::Update() {
   //_HandleOutline();
   _HandlePainting();
 }
+void Canvas::SetSelection(const Rectangle& rect) {
+  // jeśli poprzedni target był, usuń marching ants i zwolnij
+  if (_selectionTarget) {
+    MarchingAntsSelector::Instance->StopOn(_selectionTarget);
+    _selectionTarget->Destroy();
+    _selectionTarget = nullptr;
+  }
+
+  _selection = rect;
+
+  if (_selection.width <= 0 || _selection.height <= 0) {
+    return; // puste zaznaczenie
+  }
+
+  // Utwórz tymczasowy UIObject jako "target" dla MarchingAntsSelector.
+  // Ten obiekt nie musi mieć prawdziwej tekstury zawartości, wystarczy tekstura o właściwym rozmiarze.
+  _selectionTarget = new UIObject();
+  // Tworzymy pustą image/texture o rozmiarze selekcji (1:1 w pikselach ekranu).
+  // MarchingAntsSelector używa target->GetTexture() tylko po to by odczytać rozmiar,
+  // ale w Twojej implementacji korzysta z Utils::TextureToMatrix(texture) i jego rozmiaru.
+  // Dlatego tworzymy małą teksturę o rozmiarze _selection.width/_selection.height.
+  int w = (int)ceilf(_selection.width);
+  int h = (int)ceilf(_selection.height);
+  Image tmp = GenImageColor(w, h, BLANK); // pusty obraz
+  _selectionTarget->SetImage(tmp);
+  UnloadImage(tmp); // mamy już teksturę w UIObject (kopię) - jeśli SetImage kopiował
+
+  _selectionTarget->position = { _selection.x, _selection.y };
+  _selectionTarget->size = { _selection.width, _selection.height };
+  _selectionTarget->zLayer = 1000; // na wierzchu
+
+  // Uruchamiamy marching ants na tym targetcie (to utworzy overlay z animacją)
+  MarchingAntsSelector::Instance->StartOn(_selectionTarget);
+}
+
+void Canvas::ClearSelection() {
+  if (_selectionTarget) {
+    MarchingAntsSelector::Instance->StopOn(_selectionTarget);
+    _selectionTarget->Destroy();
+    _selectionTarget = nullptr;
+  }
+  _selection = {0,0,0,0};
+}
 
 bool Canvas::_CanDrag() {
   return IsKeyDown(KEY_SPACE) || IsMouseButtonDown(MOUSE_MIDDLE_BUTTON);
@@ -110,26 +153,64 @@ void Canvas::_HandlePainting() {
 
   // ... calculating hit position
   Vec2f onTextureHitPosition = Utils::GetMousePosition() - hitLayer->position;
-  _currentTool->Apply(hitLayer, onTextureHitPosition);
+  _currentTool->HandleClick(hitLayer, onTextureHitPosition);
 
 }
 
 void Canvas::AddImage(Image image) {
-  UIObject* uiObj = new UIObject();// UIObjectsManager::Create();
-  uiObj->SetImage(image);
-  uiObj->size = {(float)image.width, (float)image.height};
-  uiObj->position = {100, 100};
-  uiObj->zLayer = (int)_oLayers.size();
-  uiObj->color = PURPLE;
-  uiObj->outlineScale = 0.0f;
-  _oLayers.push_back(uiObj);
+  // Jeżeli nie ma płótna -> utwórz nową warstwę/płótno w rozmiarze obrazu
+  if (!_hasCanvas) {
+    UIObject* uiObj = new UIObject();
+    uiObj->SetImage(image);
+    uiObj->size = {(float)image.width, (float)image.height};
+    uiObj->position = {0, 0}; // teraz płótno zaczyna się w (0,0)
+    uiObj->zLayer = 0;
+    uiObj->color = WHITE;
+    _oLayers.push_back(uiObj);
+    _hasCanvas = true;
+    return;
+  }
+
+  // Jeśli mamy płótno - wklejamy obraz do aktywnej warstwy (tu: warstwa 0 lub _oLayers[active])
+  if (_oLayers.empty()) return;
+  UIObject* baseLayer = _oLayers[0]; // lub wskaz do aktywnej warstwy jeśli masz "active"
+
+  // Jeśli jest zaznaczenie - wklejamy obraz przycięty do jej rozmiaru w pozycji zaznaczenia
+  Rectangle sel = GetSelection();
+  if (sel.width <= 0 || sel.height <= 0) {
+    // brak zaznaczenia -> możemy wklejać w (100,100) lub nic nie robić; tu wklejamy w lewy-górny róg
+    ImageDraw(&baseLayer->GetImage(), image,
+              {0, 0, (float)image.width, (float)image.height},
+              {100 - baseLayer->position.x, 100 - baseLayer->position.y, (float)image.width, (float)image.height},
+              WHITE);
+    baseLayer->UpdateTexture();
+    return;
+  }
+
+  // Przytnij źródło i docelowe prostokąty do obszaru zaznaczenia i rozmiaru obrazu
+  // dst w lokalnych współrzędnych obrazu warstwy
+  float dstX = sel.x - baseLayer->position.x;
+  float dstY = sel.y - baseLayer->position.y;
+  int dstW = (int)sel.width;
+  int dstH = (int)sel.height;
+
+  // Wymiary źródła (części obrazu którą wklejamy) - przytnij do rozmiaru image
+  int srcW = fmin(image.width, dstW);
+  int srcH = fmin(image.height, dstH);
+
+  Rectangle srcRec = {0, 0, (float)srcW, (float)srcH};
+  Rectangle dstRec = {dstX, dstY, (float)srcW, (float)srcH};
+
+  ImageDraw(&baseLayer->GetImage(), image, srcRec, dstRec, WHITE);
+  baseLayer->UpdateTexture();
+
+  // po wklejeniu możemy (opcjonalnie) wyczyścić zaznaczenie
+  ClearSelection();
 }
+
+
 
 void Canvas::AddTexture(Texture2D texture) {
   AddImage(LoadImageFromTexture(texture));
 }
-
-void Canvas::SetCurrentTool(Tool *tool) { _currentTool = tool; }
-void Canvas::SetCurrentColor(Color color) { _currentColor = color; }
-Color Canvas::GetCurrentColor() { return  _currentColor; }
 
