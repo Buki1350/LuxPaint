@@ -72,6 +72,9 @@ add_executable(LuxPaint
         src/Render/Prefabs/Slider.h
         src/Tools/SelectionTools/RectangleSelection.h
         src/Tools/SelectionTools/RectangleSelection.cpp
+        src/StaticShared/KeyBindings/KeyBindings.cpp
+        src/StaticShared/KeyBindings/KeyBindings.h
+        src/Render/Extensions/UIFocusOutliner.h
 )
 
 # Linkowanie i include w zależności od systemu

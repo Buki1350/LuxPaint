@@ -141,3 +141,17 @@ Color Utils::DarkenColor(const Color& color, float factor) {
   result.a = color.a;
   return result;
 }
+
+Color Utils::LightenColor(Color color, float factor) {
+  factor = 1 + factor;
+  if (factor < 1.0f) factor = 1.0f;
+  if (factor > 2.0f) factor = 2.0f;
+
+  Color result;
+  result.r = (unsigned char)std::min(255.0f, color.r * factor);
+  result.g = (unsigned char)std::min(255.0f, color.g * factor);
+  result.b = (unsigned char)std::min(255.0f, color.b * factor);
+  result.a = color.a;
+  return result;
+}
+

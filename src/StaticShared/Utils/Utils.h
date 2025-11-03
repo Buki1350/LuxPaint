@@ -37,6 +37,7 @@ public:
   static bool MousePressed();
   static bool MouseDown();
   static Color DarkenColor(const Color& color, float factor);
+  static Color LightenColor(Color color, float x);
 
   void Update() override;
 };

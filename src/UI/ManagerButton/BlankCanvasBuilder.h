@@ -10,17 +10,17 @@ public:
     canvasCreator = MiniMenu::CreateInstance();
     canvasCreator->OnDestroy([](){canvasCreator = nullptr;});
 
-    auto actionName = new UIObject();//UIObjectsManager::Create();
+    auto actionName = new UIObject();
     actionName->size = {500, 20};
     actionName->color = RED;
     actionName->text = "New blank image";
     actionName->text.center = true;
 
-    auto field1Info = new UIObject();//UIObjectsManager::Create();
+    auto field1Info = new UIObject();
     field1Info->text = "Size: ";
     field1Info->size = {50, 20};
 
-    auto field1Value1 = new InputField();//UIObjectsManager::CreateInputField();
+    auto field1Value1 = new InputField();
     field1Value1->color = WHITE;
     field1Value1->size = {75, 20};
 

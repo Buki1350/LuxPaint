@@ -47,6 +47,7 @@ enum UIObjectParameter {
   POSITION,
   SIZE,
   COLOR,
+  OUTLINE,
   IMAGE_ALPHA,
   ROUNDNESS
 };

@@ -23,4 +23,6 @@ public:
   };
 
   void OnClick(std::function<void()> callback) { _onClickCallback = callback; }
+
+  void Invoke() { _onClickCallback(); }
 };

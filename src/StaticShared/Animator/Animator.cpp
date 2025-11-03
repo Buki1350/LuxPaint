@@ -165,6 +165,33 @@ float Animator::AnimateRoundness(UIObject *uiObject, float targetRoundness,
   return start;
 }
 
+float Animator::AnimateOutline(UIObject* uiObject, float targetOutline, float duration, MovementType movementType) {
+    for (auto& anim : Instance->animatedObjectsValues) {
+        if (anim->uiObject == uiObject && anim->objectParameter == OUTLINE) {
+            auto av = static_cast<AnimationValue<float>*>(anim.get());
+
+            if (av->targetValue == targetOutline)
+                return av->savedValue;
+
+            av->startValue   = av->savedValue;
+            av->currentTime  = 0.0f;
+            av->duration     = duration;
+            av->targetValue  = targetOutline;
+            av->movementType = movementType;
+
+            return av->savedValue;
+        }
+    }
+
+    auto newAV = std::make_unique<AnimationValue<float>>(
+        uiObject, uiObject->outlineScale, targetOutline, duration, OUTLINE, movementType
+    );
+    float start = newAV->startValue;
+    Instance->animatedObjectsValues.push_back(std::move(newAV));
+    return start;
+}
+
+
 void Animator::Reset(UIObject *uiObject, float time) {
   if (AnimatorContains(uiObject, NONE))
     return;
