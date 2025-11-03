@@ -3,10 +3,13 @@
 #include "raylib.h"
 
 InputField::InputField() {
-    text.SetParent(this);
-    text.center = false;
-    text.margin = 5;
-    color = WHITE;
+  text.SetParent(this);
+  text.center = false;
+  text.margin = 5;
+  color = WHITE;
+}
+InputField::~InputField() {
+    if (this == _instance) { _instance = nullptr; }
 }
 
 void InputField::SetMode(InputMode mode) {
@@ -18,18 +21,30 @@ std::string InputField::GetValue() const {
 }
 
 void InputField::SetValue(const std::string &v) {
-    _value = v;
-    _cursorPos = (int)_value.size();
+  _value = v;
+  _cursorPos = (int)_value.size();
+}
+void InputField::SetFocused(bool value) {
+    if (value == true) {
+        _queued = this;
+    }
+    else {
+        _instance = nullptr;
+    }
 }
 
 void InputField::Update() {
     if (Clicked()) {
-        _focused = true;
+        _queued = this;
     } else if (IsMouseButtonPressed(0) && !CursorAbove()) {
-        _focused = false;
+        _instance = nullptr;
+    }
+    if (_queued != nullptr) {
+        _instance = _queued;
+        _queued = nullptr;
     }
 
-    if (_focused) {
+    if (this == _instance) {
         int key = GetCharPressed();
         while (key > 0) {
             char c = (char)key;
@@ -94,7 +109,7 @@ void InputField::Draw() {
         text.textColor
     );
 
-    if (_focused && _cursorVisible) {
+    if (this == _instance && _cursorVisible) {
         std::string beforeCursor = _value.substr(0, _cursorPos);
         int cursorX = MeasureText(beforeCursor.c_str(), text.fontSize);
         int x = (int)(finalPos.x + text.margin + cursorX - _scrollOffset);

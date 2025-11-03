@@ -1,7 +1,6 @@
 #pragma once
 #include "../../Automatition/Updatables/Updatable.h"
 #include "../UIObject.h"
-#include "raylib.h"
 
 #include <string>
 
@@ -12,9 +11,10 @@ enum class InputMode {
 };
 
 class InputField final : public UIObject, public Updatable {
+  inline static InputField* _instance = nullptr; // instance -> only one selected
+  inline static InputField* _queued = nullptr; // helper; one doesn't delete another
   std::string _value;
   InputMode _mode = InputMode::LETTERS_AND_NUMBERS;
-  bool _focused = false;
   int _cursorPos = 0;       // pozycja kursora w stringu
   float _cursorTimer = 0.0; // do mrugania
   bool _cursorVisible = true;
@@ -22,13 +22,15 @@ class InputField final : public UIObject, public Updatable {
 
 public:
   InputField();
+  ~InputField() override;
 
   void SetMode(InputMode mode);
   std::string GetValue() const;
   void SetValue(const std::string &v);
+  void SetFocused(bool value);
 
   void Update() override;
   void Draw() override;
 
-  bool IsFocused() const { return _focused; }
+  bool IsFocused() const { return this == _instance; }
 };

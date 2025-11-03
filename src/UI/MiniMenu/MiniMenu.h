@@ -32,6 +32,8 @@ class MiniMenu final : public Updatable {
     std::function<void()> _onDestructionFunc;
     // ... keybindings
     UIObject* _currentSelected = nullptr;
+    std::vector<UIObject*> _buttonsAndInputs;
+
 
     public:
     UIObject* oBackground = nullptr;
@@ -39,6 +41,7 @@ class MiniMenu final : public Updatable {
     static std::vector<MiniMenu*> Instances;
     static MiniMenu* CreateInstance();
     static void DestroyInstance(MiniMenu* miniMenu);
+    void Destroy();
 
     MiniMenu* Pack(UIObject *object);
     MiniMenu* PackRow(std::initializer_list<ObjectWithSavedSize> objects);

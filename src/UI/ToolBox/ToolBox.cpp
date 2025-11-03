@@ -86,7 +86,6 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
     Button* newButton = new Button();
     newButton->SetImage(tool->icon);
     newButton->OnClick([tool] {App::Instance->canvas.SetCurrentTool(tool); });
-    newButton->color = WHITE;
     newButton->zLayer = _oToolSetListBackground->zLayer + 1;
     newButton->roundness = 1;
     newButton->imageMarginScale = UIOBJECT_ICON_MARGIN * 2;

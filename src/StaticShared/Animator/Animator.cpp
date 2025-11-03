@@ -22,7 +22,7 @@ void Animator::Update() {
       animatedObjectsValues.end()
   );
 
-  std::cout << "[Animator] AOV count: " << animatedObjectsValues.size() << std::endl;
+  //std::cout << "[Animator] AOV count: " << animatedObjectsValues.size() << std::endl;
   for (auto& anim : animatedObjectsValues) {
     anim->LocalUpdate();
   }

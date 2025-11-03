@@ -26,7 +26,6 @@ public:
   bool          keepRoundness = true;
 
   UIObject();
-  ~UIObject() = default;
   virtual void Draw();
   bool CursorAbove() const;
   bool Clicked() const;

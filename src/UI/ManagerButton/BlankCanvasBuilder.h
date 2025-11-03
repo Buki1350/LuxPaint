@@ -9,6 +9,7 @@ public:
     if (canvasCreator != nullptr) return;
     canvasCreator = MiniMenu::CreateInstance();
     canvasCreator->OnDestroy([](){canvasCreator = nullptr;});
+    canvasCreator->oBackground->roundness = Utils::GetSmallerMonitorEdge() * 0.00001f;
 
     auto actionName = new UIObject();
     actionName->size = {500, 20};
@@ -36,13 +37,15 @@ public:
     cancelButton->size = {75, 20};
     cancelButton->color = GRAY;
     cancelButton->text = "Cancel";
+    cancelButton->OnClick([]() {
+      canvasCreator->Destroy();
+    });
 
     auto okButton = new Button();
     okButton->size = {50, 20};
     okButton->color = GRAY;
     okButton->text = "Ok";
     okButton->text.center = true;
-
     okButton->OnClick([field1Value1, field1Value2]() {
       std::string sValue1 = field1Value1->GetValue();
       std::string sValue2 = field1Value2->GetValue();
@@ -53,6 +56,8 @@ public:
       blankImageMatrix.fill(WHITE);
       Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);
       App::Instance->canvas.AddTexture(blankImage);
+
+      canvasCreator->Destroy();
     });
 
     canvasCreator->PackRow({actionName});

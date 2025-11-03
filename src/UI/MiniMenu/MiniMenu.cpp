@@ -10,27 +10,28 @@
 std::vector<MiniMenu*> MiniMenu::Instances = {};
 
 MiniMenu *MiniMenu::CreateInstance() {
+  float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
   MiniMenu *newFrontPanel = new MiniMenu();
   Instances.insert(Instances.begin(), newFrontPanel);
+  newFrontPanel->oBackground = new UIObject();
+  newFrontPanel->_targetSize = Vec2f::ones() * margin;
+  newFrontPanel->oBackground->color = Utils::LoadColor("miniMenu");
+  newFrontPanel->oBackground->size = {0, 0};
   return newFrontPanel;
 }
 
-void MiniMenu::DestroyInstance(MiniMenu* miniMenu) {
-  if (!miniMenu || !miniMenu->oBackground) return;
+void MiniMenu::DestroyInstance(MiniMenu *miniMenu) {
+  if (!miniMenu || !miniMenu->oBackground)
+    return;
   miniMenu->_markedForDeletion = true;
 }
 
-MiniMenu* MiniMenu::Pack(UIObject* object) { return PackRow({object}); }
+void MiniMenu::Destroy() { DestroyInstance(this); }
+
+MiniMenu * MiniMenu::Pack(UIObject* object) { return PackRow({object}); }
 
 MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) {
   float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
-
-  if (!oBackground) {
-    oBackground = new UIObject();
-    _targetSize = Vec2f::ones() * margin;
-    oBackground->color = Utils::LoadColor("miniMenu");
-    oBackground->size = {0, 0};
-  }
 
   Row row;
   float rowWidth = margin;
@@ -48,6 +49,10 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
     e.object->size = Vec2f::zero();
 
     _oPackedObjects.push_back(e);
+
+    if (dynamic_cast<Button*>(e.object) || dynamic_cast<InputField*>(e.object)) {
+      _buttonsAndInputs.push_back(e.object);
+    }
   }
 
   _rows.push_back(row);
@@ -59,6 +64,13 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
 }
 
 MiniMenu::ObjectWithSavedSize MiniMenu::FlexSeparator() { return {new UIObject(), true}; }
+
+void MiniMenu::Update() {
+  _HandleClosing();
+  _CalculateTransforms();
+  _HandleDeleting();
+  _HandleKeybindings();
+}
 
 void MiniMenu::_HandleClosing() {
   if (Instances.empty() || this != MiniMenu::Instances[0]) return;
@@ -194,14 +206,10 @@ void MiniMenu::_HandleDeleting() {
 }
 
 void MiniMenu::_HandleKeybindings() {
-  if (Instances.empty() || this != Instances[0] || Instances[0]->_oPackedObjects.empty()) return;
+  if (Instances.empty() || this != Instances[0] || Instances[0]->_buttonsAndInputs.empty()) return;
 
-  if (Keybindings::ActionDetected(MENU_NEXT)) {
-    _FocusNext();
-  }
-  else if (Keybindings::ActionDetected(MENU_PREV)) {
-    _FocusPrevious();
-  }
+  if (Keybindings::ActionDetected(MENU_NEXT)) { _FocusNext(); }
+  else if (Keybindings::ActionDetected(MENU_PREV)) { _FocusPrevious(); }
   else if (Keybindings::ActionDetected(MENU_CONFIRM)) {
     if (_currentSelected) {
       if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
@@ -216,43 +224,57 @@ void MiniMenu::_HandleKeybindings() {
 
 void MiniMenu::_FocusNext() {
   int currentIndex = -1;
-
-  for (int i = 0; i < _oPackedObjects.size(); i++) {
-    if (_oPackedObjects[i].object == _currentSelected) {
-      currentIndex = i;
-      break;
+  if (_currentSelected == nullptr) _currentSelected = _buttonsAndInputs[0];
+  else {
+    for (int i = 0; i < _buttonsAndInputs.size(); i++) {
+      if (_buttonsAndInputs[i] == _currentSelected) {
+        currentIndex = i;
+        break;
+      }
     }
   }
 
-  int nextIndex = (currentIndex + 1) % _oPackedObjects.size();
-  _currentSelected = _oPackedObjects[nextIndex].object;
+  int nextIndex = (currentIndex + 1) % _buttonsAndInputs.size();
+  _currentSelected = _buttonsAndInputs[nextIndex];
+
+  if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
+    input->SetFocused(true);
+  }
+  else if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
+    btn->SetFocused(true);
+  }
 
   UIFocusOutliner::Focus(_currentSelected);
 }
 
 void MiniMenu::_FocusPrevious() {
-  if (_oPackedObjects.empty()) return;
+  if (_buttonsAndInputs.empty()) return;
 
   int currentIndex = -1;
-  for (int i = 0; i < _oPackedObjects.size(); i++) {
-    if (_oPackedObjects[i].object == _currentSelected) {
+
+  for (int i = 0; i < _buttonsAndInputs.size(); i++) {
+    if (_buttonsAndInputs[i] == _currentSelected) {
       currentIndex = i;
       break;
     }
   }
 
-  int prevIndex = (currentIndex - 1 + _oPackedObjects.size()) % _oPackedObjects.size();
-  _currentSelected = _oPackedObjects[prevIndex].object;
+  if (currentIndex == -1) {
+    _currentSelected = _buttonsAndInputs.back();
+  }
+  else {
+    int prevIndex = (currentIndex - 1 + _buttonsAndInputs.size()) % _buttonsAndInputs.size();
+    _currentSelected = _buttonsAndInputs[prevIndex];
+  }
+
+  if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
+    input->SetFocused(true);
+  }
+  else if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
+    btn->SetFocused(true);
+  }
 
   UIFocusOutliner::Focus(_currentSelected);
-}
-
-
-
-void MiniMenu::Update() {
-  _HandleClosing();
-  _CalculateTransforms();
-  _HandleDeleting();
 }
 
 void MiniMenu::OnDestroy(std::function<void()> labdaFunction) {

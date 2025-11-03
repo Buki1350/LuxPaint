@@ -6,7 +6,7 @@
 #include "../../Render/Prefabs/Button.h"
 #include <cmath>
 
-class UIFocusOutliner : public Updatable, public Singleton<UIFocusOutliner> {
+class UIFocusOutliner final : public Updatable, public Singleton<UIFocusOutliner> {
     inline static UIObject* _focused = nullptr;
     inline static float _pulseTime = 0.0f;
     inline static Color _baseColor {};
