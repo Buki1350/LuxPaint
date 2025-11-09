@@ -17,6 +17,7 @@ MiniMenu *MiniMenu::CreateInstance() {
   newFrontPanel->_targetSize = Vec2f::ones() * margin;
   newFrontPanel->oBackground->color = Utils::LoadColor("miniMenu");
   newFrontPanel->oBackground->size = {0, 0};
+  newFrontPanel->oBackground->color = Utils::LoadColor("black");
   return newFrontPanel;
 }
 
@@ -26,7 +27,7 @@ void MiniMenu::DestroyInstance(MiniMenu *miniMenu) {
   miniMenu->_markedForDeletion = true;
 }
 
-void MiniMenu::Destroy() { DestroyInstance(this); }
+void MiniMenu::Destroy() { DestroyInstance(this); } 
 
 MiniMenu * MiniMenu::Pack(UIObject* object) { return PackRow({object}); }
 

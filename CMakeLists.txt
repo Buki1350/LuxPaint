@@ -75,6 +75,8 @@ add_executable(LuxPaint
         src/StaticShared/KeyBindings/KeyBindings.cpp
         src/StaticShared/KeyBindings/KeyBindings.h
         src/Render/Extensions/UIFocusOutliner.h
+        src/UI/ManagerButton/SettingsBuilder.h
+        src/UI/MiniMenu/MiniMenuBuilder.h
 )
 
 # Linkowanie i include w zależności od systemu

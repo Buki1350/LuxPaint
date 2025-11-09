@@ -8,6 +8,7 @@ class Button final : public UIObject, public Updatable {
   std::function<void()> _onClickCallback;
   bool _focused = false;
   bool _lockFocus = false; // for keybindings
+
 public:
   bool allowInteraction = true;
   void SetFocused(bool value) {
@@ -19,6 +20,12 @@ public:
     if (!allowInteraction) return;
     if (CursorAbove()) { _focused = true; }
     else if (!_lockFocus) { _focused = false; }
+    else {
+      _focused = false;
+      Animator::Reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
+    }
+
+    if (CursorAbove() && Utils::MouseReleased()) Animator::Reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
 
     if (_focused) {
       Animator::SizeUp(this);

@@ -81,13 +81,16 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 : _toolBox(toolBox), _toolSet(toolSet) {
   toolBox->_toolsSetList_Instances.push_back(this);
   _oToolSetListBackground = new UIObject();
+  _oToolSetListBackground->roundness = toolBox->_oBackground->roundness;
 
+  // ... tools
   for (auto tool : toolSet.tools) {
     Button* newButton = new Button();
     newButton->SetImage(tool->icon);
     newButton->OnClick([tool] {App::Instance->canvas.SetCurrentTool(tool); });
     newButton->zLayer = _oToolSetListBackground->zLayer + 1;
     newButton->roundness = 1;
+    newButton->color = WHITE;
     newButton->imageMarginScale = UIOBJECT_ICON_MARGIN * 2;
     _toolsButtons.push_back(newButton);
   }

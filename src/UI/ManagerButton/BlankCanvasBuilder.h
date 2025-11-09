@@ -25,21 +25,13 @@ public:
     field1Value1->color = WHITE;
     field1Value1->size = {75, 20};
 
-    auto field1Value2 = new InputField();;
+    auto field1Value2 = new InputField();
     field1Value2->color = WHITE;
     field1Value2->size = {75, 20};
 
     auto slash = new UIObject();
     slash->size = {20, 20};
     slash->text = " /";
-
-    auto cancelButton = new Button();
-    cancelButton->size = {75, 20};
-    cancelButton->color = GRAY;
-    cancelButton->text = "Cancel";
-    cancelButton->OnClick([]() {
-      canvasCreator->Destroy();
-    });
 
     auto okButton = new Button();
     okButton->size = {50, 20};
@@ -57,6 +49,14 @@ public:
       Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);
       App::Instance->canvas.AddTexture(blankImage);
 
+      canvasCreator->Destroy();
+    });
+
+    auto cancelButton = new Button();
+    cancelButton->size = {75, 20};
+    cancelButton->color = GRAY;
+    cancelButton->text = "Cancel";
+    cancelButton->OnClick([]() {
       canvasCreator->Destroy();
     });
 

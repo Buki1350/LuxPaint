@@ -34,6 +34,7 @@ public:
   static float AnimateImageAlpha(UIObject* uiObject, float targetAlpha, float duration, MovementType movementType = GAUSSIAN);
   static float AnimateRoundness(UIObject* uiObject, float targetRoundness, float duration, MovementType movementType = GAUSSIAN);
   static float AnimateOutline(UIObject* uiObject, float targetOutline, float duration, MovementType movementType = GAUSSIAN);
+  static void Reset(UIObject* uiObject, UIObjectParameter parameter, float time = 0.0f);
   static void Reset(UIObject* uiObject, float time = 0.0f);
   static void Apply(UIObject* uiObject);
 
