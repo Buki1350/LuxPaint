@@ -9,6 +9,9 @@ enum InputAction {
     MENU_NEXT,
     MENU_PREV,
     MENU_CONFIRM,
+    MODE_ADD,
+    // ... 1
+    DEBUG_CREATEIMAGE_250x250
 };
 
 class Keybindings {

@@ -27,7 +27,7 @@ public:
         _baseColor = _focused->color;
 
         Animator::AnimateOutline(_focused, UIOBJECT_OUTLINE_SCALE * 2.0f, 0.15f);
-        Animator::AnimateColor(_focused, Utils::LightenColor(_focused->color, 0.15f), 0.15f);
+        Animator::AnimateColor(_focused, Utils::Colors::LightenColor(_focused->color, 0.15f), 0.15f);
         _pulseTime = 0.0f;
     }
 
@@ -41,7 +41,7 @@ public:
     void Update() override {
         if (!_focused) return;
 
-        _pulseTime += Utils::GetDeltaTime();
+        _pulseTime += Utils::Time::GetDeltaTime();
         float pulse = 0.5f + 0.5f * std::sin(_pulseTime * 3.0f);
 
         _focused->outlineScale = UIOBJECT_OUTLINE_SCALE * (1.3f + 0.2f * pulse);

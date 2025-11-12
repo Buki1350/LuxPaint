@@ -10,6 +10,7 @@ void App::Init()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
+
     std::vector<int> windowSize = FilesManager::LoadArray<int>("UserPreferences.dat", "windowSize");
     if (windowSize.empty()) windowSize = {800, 600};
     InitWindow(windowSize[0], windowSize[1], "Lux Paint");
@@ -18,7 +19,7 @@ void App::Init()
     if (!windowPosition.empty()) SetWindowPosition(windowPosition[0], windowPosition[1]);
 
     SetTargetFPS(60);
-    Utils::SetDefaultFont();
+    Utils::Files::SetDefaultFont();
     UIObjectsManager::Init();
     Initializables::InitAll();
     managerButton.Init();

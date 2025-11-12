@@ -11,7 +11,7 @@
 
 void ColorHolder::Init() {
   _oBackground = new UIObject();
-  _oBackground->color = Utils::LoadColor("colorHolderButton");
+  _oBackground->color = Utils::Files::LoadColor("colorHolder");
   _oBackground->roundness = 0.3f;
   _oBackground->zLayer = 1;
 
@@ -39,8 +39,8 @@ void ColorHolder::Init() {
 }
 
 void ColorHolder::Update() {
-  float screenScale = Utils::GetSmallerMonitorEdge();
-  float windowHeight = Utils::GetWindowSize().y;
+  float screenScale = Utils::View::GetSmallerMonitorEdge();
+  float windowHeight = Utils::View::GetWindowSize().y;
   float separatorSize = _separatorScale * screenScale;
   float offset = _offsetScale * screenScale;
   Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
@@ -61,24 +61,21 @@ void ColorHolder::Update() {
 }
 
 void ColorHolder::_CreateColorPicker() {
-  float screenScale = Utils::GetSmallerMonitorEdge();
+  float screenScale = Utils::View::GetSmallerMonitorEdge();
   float separatorSize = _separatorScale * screenScale;
-  // float windowHeight = Utils::GetWindowSize().y;
-  // float offset = _offsetScale * screenScale;
-  // Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
 
-  ColorPicker* cp = new ColorPicker();
-  cp->position = Vec2f(
-    separatorSize,
-    _oBackground->position.y - separatorSize - cp->size.y
-    );
+  ColorPicker *cp = new ColorPicker();
+  cp->position = Vec2f(separatorSize,
+                       _oBackground->position.y - separatorSize - cp->size.y);
 
   cp->SetColor(App::Instance->canvas.GetCurrentColor());
 
-  cp->SetOnColorChange([this](Color newColor) {
+  cp->OnColorChange([this](Color newColor) {
     if (!_buttons.empty()) {
-        _buttons[0]->color = newColor;
+      _buttons[0]->color = newColor;
     }
     App::Instance->canvas.SetCurrentColor(newColor);
   });
 }
+
+void ColorHolder::SetBackgroundColor(Color color) { _oBackground->color = color; }

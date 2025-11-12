@@ -8,17 +8,17 @@ Slider::Slider(ORIENTATION orientation) {
   _orientation = orientation;
 
   _oLine = new UIObject;
-  _oLine->color = Utils::LoadColor("sliderLine");
+  _oLine->color = Utils::Files::LoadColor("sliderLine");
   _oLine->outlineScale = 0;
   _oLine->roundness = 1;
   _oGrab = new UIObject;
-  _oGrab    ->color = Utils::LoadColor("sliderGrab");
+  _oGrab    ->color = Utils::Files::LoadColor("sliderGrab");
   _oGrab->outlineScale = 0;
   _oGrab->roundness = 1;
 }
 
 void Slider::Update() {
-  float scale = Utils::GetSmallerMonitorEdge();
+  float scale = Utils::View::GetSmallerMonitorEdge();
   float lineThickness = SLIDER_LINEWIDTH_SCALE * scale;
   Vec2f grabSize = Vec2f(SLIDER_GRABPOINT_SCALE * scale);
 
@@ -26,7 +26,7 @@ void Slider::Update() {
   _oGrab->zLayer = this->zLayer + 1;
 
   if (_oGrab->Pressed()) _grabbing = true;
-  if (_grabbing && Utils::MouseReleased()) _grabbing = false;
+  if (_grabbing && Utils::Input::MouseReleased()) _grabbing = false;
 
   switch (_orientation) {
     case HORIZONTAL: {
@@ -40,7 +40,7 @@ void Slider::Update() {
       _oGrab->position = {grabPositionX, grabPositionY};
 
       if (_grabbing) {
-        _oGrab->position.x = Utils::GetMousePosition().x - _oGrab->size.x / 2;
+        _oGrab->position.x = Utils::Input::GetMousePosition().x - _oGrab->size.x / 2;
 
         if (_oGrab->position.x < position.x)
           _oGrab->position.x = position.x;

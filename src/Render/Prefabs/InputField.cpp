@@ -73,7 +73,7 @@ void InputField::Update() {
         }
     }
 
-    _cursorTimer += Utils::GetDeltaTime();
+    _cursorTimer += Utils::Time::GetDeltaTime();
     if (_cursorTimer > 0.5f) {
         _cursorVisible = !_cursorVisible;
         _cursorTimer = 0.0f;
@@ -101,7 +101,7 @@ void InputField::Draw() {
     BeginScissorMode((int)finalPos.x, (int)finalPos.y, (int)finalSize.x, (int)finalSize.y);
 
     DrawTextEx(
-        Utils::GetDefaultFont(),
+        Utils::AppData::GetDefaultFont(),
         _value.c_str(),
         { finalPos.x + text.margin - _scrollOffset, finalPos.y + (finalSize.y - text.fontSize) / 2.0f },
         (float)text.fontSize,

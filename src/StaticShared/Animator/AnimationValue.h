@@ -78,7 +78,7 @@ class AnimationValue : public IAnimationValue {
   void LocalUpdate() override {
     if (!currentValue) return;
 
-    currentTime += Utils::GetDeltaTime();
+    currentTime += Utils::Time::GetDeltaTime();
     float t = duration > 0.0f ? currentTime / duration : 1.0f;
     if (t > 1.0f) t = 1.0f;
 

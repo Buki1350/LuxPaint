@@ -2,7 +2,7 @@
 #include "../../App.h"
 #include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Animator/Animator.h"
-#include "../../StaticShared/DelayedAction/DelayedAction.h"
+#include "../../StaticShared/DelayedAction/DelayedActions.h"
 #include "../../StaticShared/Utils/Utils.h"
 #include "../../Tools/PaintTools/BrushTool.h"
 #include "../../Tools/PaintTools/PenTool.h"
@@ -10,25 +10,29 @@
 
 void ToolBox::Init() {
   _oBackground = new UIObject();
-  _oBackground->color = Utils::LoadColor("toolBox");
+  _oBackground->color = Utils::Files::LoadColor("toolbox");
   _oBackground->roundness = 0.25f;
   _oBackground->zLayer = 3;
 
-  _toolSetListColor = Utils::LoadColor("toolSet");
+  _toolSetListColor = Utils::Files::LoadColor("toolSet");
 
   // ... paint
-  Tool* pen_tool = new PenTool("pen_tool");
-  Tool* brush_tool = new BrushTool("brush_tool");
-  ToolSet* paint_toolset      = new ToolSet("paint_toolset", std::vector{pen_tool, brush_tool});
+  Tool *pen_tool = new PenTool("pen_tool");
+  Tool *brush_tool = new BrushTool("brush_tool");
+  ToolSet *paint_toolset =
+      new ToolSet("paint_toolset", std::vector{pen_tool, brush_tool});
   // ... shapes
-  ToolSet* shapes_toolset     = new ToolSet("shapes_toolset", std::vector<Tool*>{});
+  ToolSet *shapes_toolset =
+      new ToolSet("shapes_toolset", std::vector<Tool *>{});
   // ... fill
-  ToolSet* fill_toolset       = new ToolSet("fill_toolset", std::vector<Tool*>{});
+  ToolSet *fill_toolset = new ToolSet("fill_toolset", std::vector<Tool *>{});
   // ... selection
-  Tool* selection_tool        = new RectangleSelection("selection_tool");
-  ToolSet* selection_toolset  = new ToolSet("selection_toolset", std::vector{selection_tool});
+  Tool *selection_tool = new RectangleSelection("selection_tool");
+  ToolSet *selection_toolset =
+      new ToolSet("selection_toolset", std::vector{selection_tool});
   // ... effects
-  ToolSet* effects_toolset    = new ToolSet("effects_toolset", std::vector<Tool*>{});
+  ToolSet *effects_toolset =
+      new ToolSet("effects_toolset", std::vector<Tool *>{});
 
   _toolSets.push_back(paint_toolset);
   _toolSets.push_back(shapes_toolset);
@@ -37,32 +41,36 @@ void ToolBox::Init() {
   _toolSets.push_back(effects_toolset);
 
   for (auto ts : _toolSets) {
-    ts->button->OnClick([this, ts](){_ExpandTools(ts); });
+    ts->button->OnClick([this, ts]() { _ExpandTools(ts); });
   }
 
+  this->_initialized = true;
 }
 
-void ToolBox::Update() {
-  Vec2f monitorSize = Utils::GetCurrentMonitorSize().CastTo<float>();
+bool ToolBox::Initialized() { return this->_initialized; }
 
-  int pixTileHeight      = (int)monitorSize.y * _tilesScale;
-  int pixTileWidth       = (int)pixTileHeight;
-  int pixTileSeparation  = (int)monitorSize.y * _tilesSeparationScale;
-  int pixTileMargin      = (int)monitorSize.y * _marginScale;
-  float pixToolBoxHeight = pixTileSeparation + _toolSets.size() * (pixTileHeight + pixTileSeparation);
-  float pixToolBoxWidth  = pixTileSeparation + pixTileWidth + pixTileSeparation;
+void ToolBox::SetBackgroundColor(Color color) { _oBackground->color = color; }
+
+void ToolBox::Update() {
+  Vec2f monitorSize = Utils::View::GetCurrentMonitorSize().CastTo<float>();
+
+  int pixTileHeight = (int)monitorSize.y * _tilesScale;
+  int pixTileWidth = (int)pixTileHeight;
+  int pixTileSeparation = (int)monitorSize.y * _tilesSeparationScale;
+  int pixTileMargin = (int)monitorSize.y * _marginScale;
+  float pixToolBoxHeight =
+      pixTileSeparation +
+      _toolSets.size() * (pixTileHeight + pixTileSeparation);
+  float pixToolBoxWidth = pixTileSeparation + pixTileWidth + pixTileSeparation;
   float pixToolBoxMargin = monitorSize.x * _uiObjectBorderSeparation;
 
-  _oBackground->position = {
-      pixToolBoxMargin,
-      pixToolBoxMargin
-    };
+  _oBackground->position = {pixToolBoxMargin, pixToolBoxMargin};
 
   _oBackground->size = {pixToolBoxWidth, pixToolBoxHeight};
 
   Vec2f tileStartPosition = {
-    (float)pixToolBoxMargin + pixTileSeparation,
-    (float)pixToolBoxMargin + pixTileSeparation,
+      (float)pixToolBoxMargin + pixTileSeparation,
+      (float)pixToolBoxMargin + pixTileSeparation,
   };
 
   for (int i = 0; i < _toolSets.size(); i++) {
@@ -104,7 +112,7 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 }
 
 std::pair<Vec2f, Vec2f> ToolBox::ToolsSetList::_CalculateTransforms() {
-  float smallerMonitorEdge = Utils::GetSmallerMonitorEdge();
+  float smallerMonitorEdge = Utils::View::GetSmallerMonitorEdge();
   Vec2f tileSize = Vec2f(_toolBox->_tilesScale * smallerMonitorEdge);
   float separator = _toolBox->_tilesSeparationScale * smallerMonitorEdge;
 
@@ -122,9 +130,9 @@ std::pair<Vec2f, Vec2f> ToolBox::ToolsSetList::_CalculateTransforms() {
 
 void ToolBox::ToolsSetList::Update() {
   // ... closing toolSetList
-  if (!_oToolSetListBackground->Clicked() && Utils::MouseReleased()) {
+  if (!_oToolSetListBackground->Clicked() && Utils::Input::MouseReleased()) {
     Animator::Reset(_oToolSetListBackground, ANIMATION_POPUP_DURATION);
-    new DelayedAction(ANIMATION_POPUP_DURATION, [this](){
+    new DelayedAction_inSeconds(ANIMATION_POPUP_DURATION, [this](){
         auto& vec = _toolBox->_toolsSetList_Instances;
         auto it = std::find(vec.begin(), vec.end(), this);
         if (it != vec.end()) vec.erase(it);
@@ -136,7 +144,7 @@ void ToolBox::ToolsSetList::Update() {
     return;
   }
 
-  float smallerMonitorEdge = Utils::GetSmallerMonitorEdge();
+  float smallerMonitorEdge = Utils::View::GetSmallerMonitorEdge();
   Vec2f tileSize = Vec2f(_toolBox->_tilesScale * smallerMonitorEdge);
   float separator = _toolBox->_tilesSeparationScale * smallerMonitorEdge;
 

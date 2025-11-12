@@ -16,4 +16,35 @@ Image FilesManager::LoadImage(const std::string& localPath) {
   return ::LoadImage(path.c_str());
 }
 
-bool FilesManager::Exists(const char* str) { return std::filesystem::exists(str); }
+bool FilesManager::Exists(const char *str) {
+  return std::filesystem::exists(str);
+}
+
+std::vector<std::string> FilesManager::LoadFileLines(const char *path) {
+  std::string path_ = (CreateOrGetDirectory(PATH_DATA) + path).c_str();
+
+  if (!std::filesystem::exists(path_)) {
+    return std::vector<std::string>();
+  }
+  std::ifstream file(path_);
+  std::string line;
+  std::vector<std::string> lines;
+
+  while (std::getline(file, line)) {
+    lines.push_back(line);
+  }
+  return lines;
+}
+
+void FilesManager::SaveFileLines(const std::string& path, const std::vector<std::string>& lines) {
+  std::string path_ = CreateOrGetDirectory(PATH_DATA) + path;
+
+  std::ofstream file(path_, std::ios::out | std::ios::trunc);
+  if (!file.is_open()) {
+    std::cerr << "Nie można zapisać pliku: " << path_ << std::endl;
+    return;
+  }
+  for (const auto& line : lines) { file << line << '\n'; }
+  file.close();
+}
+

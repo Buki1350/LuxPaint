@@ -3,24 +3,26 @@
 
 class BrushTool final : public Tool {
 public:
-    explicit BrushTool(const std::string& name) : Tool(name) {}
+  explicit BrushTool(const std::string& name) : Tool(name) {}
 
-    void BrushTool::HandleClick(UIObject *imageToPaint,
-                                Vec2f localPos) override {
-      if (!imageToPaint)
-        return;
+  void BrushTool::_HandleMousePressed(UIObject *imageToPaint,
+                              Vec2f localPos) override {
+    if (!imageToPaint)
+      return;
 
-      float relX = localPos.x / imageToPaint->size.x;
-      float relY = localPos.y / imageToPaint->size.y;
+    float relX = localPos.x / imageToPaint->size.x;
+    float relY = localPos.y / imageToPaint->size.y;
 
-      int imgX = (int)(relX * imageToPaint->GetImageSize().x);
-      int imgY = (int)(relY * imageToPaint->GetImageSize().y);
+    int imgX = (int)(relX * imageToPaint->GetImageSize().x);
+    int imgY = (int)(relY * imageToPaint->GetImageSize().y);
 
-      int radius = 5;
-      ImageDrawCircle(&imageToPaint->GetImage(), imgX, imgY, radius, BLUE);
+    int radius = 5;
+    ImageDrawCircle(&imageToPaint->GetImage(), imgX, imgY, radius, BLUE);
 
-      imageToPaint->UpdateTexture();
-    }
+    imageToPaint->UpdateTexture();
+  }
 
-    void HandleRelease(UIObject *imageToPaint, Vec2f vec2) override { }
+  void _HandleMouseDown(UIObject *imageToPaint, Vec2f localPos) override { }
+
+  void _HandleMouseRelease(UIObject *imageToPaint, Vec2f vec2) override { }
 };

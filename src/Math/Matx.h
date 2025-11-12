@@ -46,5 +46,5 @@ public:
   std::vector<T>& operator[](size_t row) { return _data[row]; }
   const std::vector<T>& operator[](size_t row) const { return _data[row]; }
 
-  Vec2i size() const { return Vec2i(_rows, _cols); }
+  Vec2i size() const { return Vec2i(_cols, _rows); }
 };

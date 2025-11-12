@@ -7,6 +7,7 @@ class ToolSet {
     public:
     Button* button;
     std::vector<Tool*> tools;
+    std::string name;
 
     ToolSet(const std::string &name, const std::vector<Tool*> &tools);
 };

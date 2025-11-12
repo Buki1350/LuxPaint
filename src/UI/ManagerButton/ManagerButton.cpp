@@ -8,86 +8,92 @@
 #include "../../App.h"
 #include "../../Render/UIObjectsManager.h"
 #include "../../StaticShared/Animator/Animator.h"
-#include "../../StaticShared/DelayedAction/DelayedAction.h"
+#include "../../StaticShared/DelayedAction/DelayedAction_inSeconds.h"
 #include "../../StaticShared/FilesManager/FilesManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 #include "BlankCanvasBuilder.h"
+#include "SettingsBuilder.h"
 
 void ManagerButton::Init() {
-  _uiObject_base = new UIObject(); //UIObjectsManager::Create();
-  _uiObject_base->roundness = _roundness;
-  _uiObject_base->color = Utils::LoadColor("managerButton");
-  _uiObject_base->SetImage(FilesManager::LoadImage("manager_button.png"));
-  _uiObject_base->zLayer = 2;
-  _uiObject_base->imageMarginScale = UIOBJECT_ICON_MARGIN;
+  _oBackground = new UIObject(); //UIObjectsManager::Create();
+  _oBackground->roundness = _roundness;
+  _oBackground->color = Utils::Files::LoadColor("managerButton");
+  _oBackground->SetImage(FilesManager::LoadImage("manager_button.png"));
+  _oBackground->zLayer = 2;
+  _oBackground->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
-  _uiObject_newButton = new Button();//UIObjectsManager::CreateButton();
-  _uiObject_loadButton = new Button();//UIObjectsManager::CreateButton();
-  _uiObject_saveButton = new Button();//UIObjectsManager::CreateButton();
-  _uiObject_settingsButton = new Button();//UIObjectsManager::CreateButton();
+  _oNewButton = new Button();//UIObjectsManager::CreateButton();
+  _oLoadButton = new Button();//UIObjectsManager::CreateButton();
+  _oSaveButton = new Button();//UIObjectsManager::CreateButton();
+  _oSettingsButton = new Button();//UIObjectsManager::CreateButton();
 
-  Color buttonsColor = Utils::LoadColor("managerButton_listButton");
+  Color buttonsColor = Utils::Files::LoadColor("managerButton_listButton");
 
-  _uiObject_newButton->color = buttonsColor;
-  _uiObject_newButton->text = "New";
-  _uiObject_newButton->text.center = true;
-  _uiObject_newButton->OnClick([](){BlankCanvasBuilder::Build();});
-  _uiObject_newButton->allowInteraction = false;
+  _oNewButton->color = buttonsColor;
+  _oNewButton->text = "New";
+  _oNewButton->text.center = true;
+  _oNewButton->OnClick([](){BlankCanvasBuilder::Build();});
+  _oNewButton->allowInteraction = false;
 
-  _uiObject_loadButton->isActive = false;
-  _uiObject_loadButton->color = buttonsColor;
-  _uiObject_loadButton->text = "Load image";
-  _uiObject_loadButton->text.center = true;
-  _uiObject_loadButton->OnClick([this](){_LoadImageFromSystem();});
-  _uiObject_loadButton->allowInteraction = false;
+  _oLoadButton->isActive = false;
+  _oLoadButton->color = buttonsColor;
+  _oLoadButton->text = "Load image";
+  _oLoadButton->text.center = true;
+  _oLoadButton->OnClick([this](){_LoadImageFromSystem();});
+  _oLoadButton->allowInteraction = false;
 
-  _uiObject_saveButton->isActive = false;
-  _uiObject_saveButton->color = buttonsColor;
-  _uiObject_saveButton->text = "Save image";
-  _uiObject_saveButton->text.center = true;
-  _uiObject_saveButton->allowInteraction = false;
+  _oSaveButton->isActive = false;
+  _oSaveButton->color = buttonsColor;
+  _oSaveButton->text = "Save image";
+  _oSaveButton->text.center = true;
+  _oSaveButton->allowInteraction = false;
 
-  _uiObject_settingsButton->isActive = false;
-  _uiObject_settingsButton->color = buttonsColor;
-  _uiObject_settingsButton->text = "Settings";
-  _uiObject_settingsButton->text.center = true;
-  _uiObject_settingsButton->isActive = false;
-  _uiObject_settingsButton->allowInteraction = false;
+  _oSettingsButton->isActive = false;
+  _oSettingsButton->color = buttonsColor;
+  _oSettingsButton->text = "Settings";
+  _oSettingsButton->text.center = true;
+  _oSettingsButton->allowInteraction = false;
+  _oSettingsButton->OnClick([](){ SettingsBuilder::Build(); });
 
-  _uiObject_buttons.push_back(_uiObject_newButton);
-  _uiObject_buttons.push_back(_uiObject_loadButton);
-  _uiObject_buttons.push_back(_uiObject_saveButton);
-  _uiObject_buttons.push_back(_uiObject_settingsButton);
+  _buttons.push_back(_oNewButton);
+  _buttons.push_back(_oLoadButton);
+  _buttons.push_back(_oSaveButton);
+  _buttons.push_back(_oSettingsButton);
 
-  for (auto button : _uiObject_buttons) {
-    button->zLayer = _uiObject_base->zLayer + 1;
+  for (auto button : _buttons) {
+    button->zLayer = _oBackground->zLayer + 1;
   }
 }
 
 void ManagerButton::Update() {
-  if (_uiObject_base->Clicked()) { _listExpanded = true; }
-  if (!_uiObject_base->CursorAbove()) { _listExpanded = false; }
+  if (_oBackground->Clicked()) {
+    _listExpanded = true;
+  }
+  if (!_oBackground->CursorAbove()) {
+    _listExpanded = false;
+  }
   _AdjustSizeAndPosition();
 }
+void ManagerButton::SetBackgroundColor(Color color) {  }
 
 void ManagerButton::_AdjustSizeAndPosition() {
   //... data
-  Vec2f monitorSize     = Utils::GetCurrentMonitorSize().CastTo<float>();
-  Vec2f windowSize      = Utils::GetWindowSize().CastTo<float>();
-  float smallerEdge          = Utils::GetSmallerMonitorEdge();
+  Vec2f monitorSize     = Utils::View::GetCurrentMonitorSize().CastTo<float>();
+  Vec2f windowSize      = Utils::View::GetWindowSize().CastTo<float>();
+  float smallerEdge          = Utils::View::GetSmallerMonitorEdge();
   float listButtonSeparation = smallerEdge * _listElementSeparationScale;
   float listButtonHeight     = smallerEdge * _listElementHeightScale;
   float listButtonWidth      = smallerEdge * _listElementWidthScale;
   float baseButtonMargin     = smallerEdge * _marginScale;
   float listWidth            = smallerEdge * _listElementWidthScale;
-  float listHeight           = smallerEdge * (_uiObject_buttons.size() * (_listElementHeightScale + _listElementSeparationScale) + _listElementSeparationScale);
+  float listHeight           = smallerEdge * (_buttons.size() * (_listElementHeightScale + _listElementSeparationScale) + _listElementSeparationScale);
   Vec2f listSize           = { listWidth, listHeight };
   Vec2f listPos            = { windowSize.x - listSize.x - baseButtonMargin, baseButtonMargin };
 
   //... base
-  _uiObject_base->size = {monitorSize.x * _sizeScale, monitorSize.x * _sizeScale};
-  _uiObject_base->position = {
-    windowSize.x - _uiObject_base->size.x - baseButtonMargin,
+  _oBackground->size = {monitorSize.x * _sizeScale, monitorSize.x * _sizeScale};
+  _oBackground->position = {
+    windowSize.x - _oBackground->size.x - baseButtonMargin,
     baseButtonMargin
   };
 
@@ -97,39 +103,39 @@ void ManagerButton::_AdjustSizeAndPosition() {
   // else if (_uiObject_loadButton->Clicked()) _LoadImageFromSystem();
 
   //... interaction handling
-  Vec2f postAnimatedPosition = _uiObject_base->position;
-  Vec2f postAnimatedSize = _uiObject_base->size;
+  Vec2f postAnimatedPosition = _oBackground->position;
+  Vec2f postAnimatedSize = _oBackground->size;
   if (_listExpanded) {
     float animationTime = 0.15f;
-    postAnimatedPosition  = Animator::AnimatePosition(_uiObject_base, listPos, animationTime, GAUSSIAN);
-    postAnimatedSize      = Animator::AnimateSize(_uiObject_base, listSize, animationTime, GAUSSIAN);
+    postAnimatedPosition  = Animator::AnimatePosition(_oBackground, listPos, animationTime, GAUSSIAN);
+    postAnimatedSize      = Animator::AnimateSize(_oBackground, listSize, animationTime, GAUSSIAN);
 
-    float sizeScale = _uiObject_base->size.x / postAnimatedSize.x;
-    Animator::AnimateRoundness(_uiObject_base, _uiObject_base->roundness * sizeScale, animationTime, GAUSSIAN);
-    Animator::AnimateImageAlpha(_uiObject_base, 0, animationTime, GAUSSIAN);
+    float sizeScale = _oBackground->size.x / postAnimatedSize.x;
+    Animator::AnimateRoundness(_oBackground, _oBackground->roundness * sizeScale, animationTime, GAUSSIAN);
+    Animator::AnimateImageAlpha(_oBackground, 0, animationTime, GAUSSIAN);
 
-    for (auto button : _uiObject_buttons) {
+    for (auto button : _buttons) {
       button->isActive = true;
     }
 
-    new DelayedAction(animationTime, [this]() {
-      for (auto button : _uiObject_buttons) {
+    new DelayedAction_inSeconds(animationTime, [this]() {
+      for (auto button : _buttons) {
         button->allowInteraction = true;
       }
     });
   }
-  else if (_uiObject_base->CursorAbove()) {
-    Animator::SizeUp(_uiObject_base);
+  else if (_oBackground->CursorAbove()) {
+    Animator::SizeUp(_oBackground);
   }
   else {
-    Animator::Reset(_uiObject_base);
-    for (auto button : _uiObject_buttons) { button->isActive = false; button->allowInteraction = false; }
+    Animator::Reset(_oBackground);
+    for (auto button : _buttons) { button->isActive = false; button->allowInteraction = false; }
   }
 
 
   //... buttons
   // scaling buttons to match manager button size
-  int buttonCount = _uiObject_buttons.size();
+  int buttonCount = _buttons.size();
   float totalHeight = postAnimatedSize.y;
   float buttonHeight = (totalHeight - (buttonCount + 1) * listButtonSeparation) / buttonCount;
   Vec2f buttonSize = {
@@ -138,7 +144,7 @@ void ManagerButton::_AdjustSizeAndPosition() {
   };
 
   for (int i = 0; i < buttonCount; i++) {
-    auto button = _uiObject_buttons[i];
+    auto button = _buttons[i];
     button->position = {
       postAnimatedPosition.x + listButtonSeparation,
       postAnimatedPosition.y + listButtonSeparation + (buttonHeight + listButtonSeparation) * i

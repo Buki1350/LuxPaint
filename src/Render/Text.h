@@ -13,6 +13,7 @@ public:
   Color textColor = BLACK;
   bool center = false;
 
+  float GetPixelWidth();
   void SetParent(UIObject *parent);
   void Draw();
 

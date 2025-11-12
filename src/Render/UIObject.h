@@ -10,6 +10,8 @@ class UIObject {
   bool        _hasTexture = false;
   Image       _image;
   bool        _hasImage = false;
+  bool        textFittingEnabled = false;
+  float       textFittingSeparatorScale = 0.005f;
 
 public:
   std::string   name = "";
@@ -24,6 +26,7 @@ public:
   Text          text;
   bool          isActive = true;
   bool          keepRoundness = true;
+  bool          imageStretch = false;
 
   UIObject();
   virtual void Draw();

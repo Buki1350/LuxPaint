@@ -1,16 +1,21 @@
 #include "ColorPicker.h"
+
+#include "../../StaticShared/FilesManager/FilesManager.h"
+
 #include <algorithm>
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 ColorPicker::ColorPicker() {
-  _backgroundColor = Utils::LoadColor("colorPicker");
+  _backgroundColor = Utils::Files::LoadColor("colorPicker");
   this->color = _backgroundColor;
-  this->size = Vec2f(Utils::GetSmallerMonitorEdge() * _overallSizeScale);
-  this->roundness = Utils::GetSmallerMonitorEdge() *  0.00005;
+  this->size = Vec2f(Utils::View::GetSmallerMonitorEdge() * _overallSizeScale);
+  this->roundness = Utils::View::GetSmallerMonitorEdge() *  0.00005;
 
   _oRainbow = new UIObject;
   _oRainbow->outlineScale = 0;
+  _oRainbow->imageStretch = true;
+  _oRainbow->imageMarginScale = 0.0f;
   _GenerateRainbowTexture();
 
   _oDot = new UIObject;
@@ -37,7 +42,7 @@ ColorPicker::ColorPicker() {
     const char *labels = "RGBA";
     UIObject * label = new UIObject;
     label->text = std::string(1, labels[i]);
-    label->color = Utils::LoadColor("colorPickerLabel");
+    label->color = Utils::Files::LoadColor("colorPickerLabel");
     label->outlineScale = 0;
     label->zLayer = this->zLayer + 2;
     _sliderLabels.push_back(label);
@@ -48,7 +53,7 @@ ColorPicker::ColorPicker() {
 }
 
 void ColorPicker::Update() {
-  float scale = Utils::GetSmallerMonitorEdge();
+  float scale = Utils::View::GetSmallerMonitorEdge();
   float margin = _marginScale * scale;
   //float spaceUnderRainbow = _spaceUnderRainbowScale * scale;
 
@@ -100,14 +105,6 @@ void ColorPicker::Update() {
   _UpdateFromRainbow();
   _SyncUI();
 
-  // Kropeczka aktualnego koloru
-  Vector3 values = ColorToHSV(_currentColor);
-  float hue = values.x;
-  float sat = values.y;
-  float x = _oRainbow->position.x + (hue / 360.0f) * _oRainbow->size.x;
-  float y = _oRainbow->position.y + (1.0f - sat) * _oRainbow->size.y;
-  _oDot->position = {x - _oDot->size.x / 2, y - _oDot->size.y / 2};
-
   if (ClickedButNotThis())
     Destroy();
 
@@ -116,7 +113,7 @@ void ColorPicker::Update() {
     _currentColor.g != __previousColor.g ||
     _currentColor.b != __previousColor.b ||
     _currentColor.a != __previousColor.a
-    ) { _onColorChange(_currentColor); }
+    ) { _OnColorChange(_currentColor); }
 
   __previousColor = _currentColor;
 }
@@ -124,20 +121,29 @@ void ColorPicker::Update() {
 void ColorPicker::_GenerateRainbowTexture() {
   constexpr int width = 512;
   constexpr int height = 256;
+
   Image img = GenImageColor(width, height, BLANK);
-  Color* pixels = LoadImageColors(img);
+  Color* pixels = (Color*)img.data;
 
   for (int y = 0; y < height; y++) {
+    float yn = (float)y / (float)(height - 1);
+
+    float value = 1.0f - std::pow(yn, 1.15f);
+
     for (int x = 0; x < width; x++) {
-      float hue = (float)x / width * 360.0f;
-      float sat = 1.0f - ((float)y / height);
-      pixels[y * width + x] = ColorFromHSV(hue, sat, 1.0f);
+      float hue = (float)x / (float)(width - 1) * 360.0f;
+
+      float sat = 1.0f;
+      if (value > 0.9f) sat = (1.0f - value) * 10.0f;
+      else if (value < 0.1f) sat = value * 10.0f;
+      sat = std::clamp(sat, 0.0f, 1.0f);
+
+      pixels[y * width + x] = ColorFromHSV(hue, sat, value);
     }
   }
 
-  Image newImg = {pixels, width, height, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
-  _oRainbow->SetImage(newImg);
-  UnloadImageColors(pixels);
+  _oRainbow->SetImage(img);
+  UnloadImage(img);
 }
 
 void ColorPicker::_UpdateFromSliders() {
@@ -178,21 +184,29 @@ void ColorPicker::_UpdateFromHex() {
 }
 
 void ColorPicker::_UpdateFromRainbow() {
-  if (_oRainbow->Pressed() ||
-      (_oRainbow->CursorAbove() && IsMouseButtonDown(MOUSE_BUTTON_LEFT))) {
+  if (_oRainbow->CursorAbove() && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
     Vector2 mp = GetMousePosition();
-    int x =
-        (int)((mp.x - _oRainbow->position.x) / _oRainbow->size.x * 512);
-    int y =
-        (int)((mp.y - _oRainbow->position.y) / _oRainbow->size.y * 256);
-    x = std::clamp(x, 0, 511);
-    y = std::clamp(y, 0, 255);
 
-    float hue = (float)x / 512.0f * 360.0f;
-    float sat = 1.0f - ((float)y / 256.0f);
-    _currentColor = ColorFromHSV(hue, sat, 1.0f);
+    // przelicz pozycję kursora na lokalne współrzędne obrazka
+    float relX = (mp.x - _oRainbow->position.x) / _oRainbow->size.x; // 0..1
+    float relY = (mp.y - _oRainbow->position.y) / _oRainbow->size.y; // 0..1
+    relX = std::clamp(relX, 0.0f, 1.0f);
+    relY = std::clamp(relY, 0.0f, 1.0f);
+
+    // pobierz kolor z tekstury
+    Image img = _oRainbow->GetImage(); // zakładam, że masz metodę GetImage()
+    int px = (int)(relX * (img.width - 1));
+    int py = (int)(relY * (img.height - 1));
+    Color c = ((Color*)img.data)[py * img.width + px];
+
+    _currentColor = c;
+
+    // ustaw pozycję kropki pod kursorem
+    _oDot->position = {mp.x - _oDot->size.x/2, mp.y - _oDot->size.y/2};
   }
 }
+
+
 
 void ColorPicker::_SyncUI() {
   std::stringstream ss;
@@ -211,12 +225,19 @@ void ColorPicker::Destroy() {
   _oRainbow->Destroy();
   _oDot->Destroy();
   _hexInputField->Destroy();
+
   for (auto &label : _sliderLabels)
-    label->Destroy();
+    if (label) label->Destroy();
+
   for (auto &slider : _sliders)
-    slider->Destroy();
+    if (slider) slider->Destroy();
+
+  if (_OnDestroy)   // <––––– tu!
+    _OnDestroy();
+
   UIObject::Destroy();
 }
+
 
 Color ColorPicker::GetColor() const { return _currentColor; }
 
@@ -226,4 +247,8 @@ void ColorPicker::SetColor(Color color) {
   _SyncUI();
 }
 
-void ColorPicker::SetOnColorChange(std::function<void(Color)> callback) { _onColorChange = callback; }
+void ColorPicker::OnColorChange(std::function<void(Color)> callback) {
+  _OnColorChange = callback;
+}
+
+void ColorPicker::OnDestroy(std::function<void()> labdaFunction) { _OnDestroy = labdaFunction; }

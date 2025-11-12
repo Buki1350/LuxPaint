@@ -3,6 +3,8 @@
 #include "../../Automatition/Updatables/Updatable.h"
 
 class ToolBox final : public Updatable {
+  bool _initialized = false;
+
   UIObject* _oBackground = nullptr;
   Color _toolSetListColor {};
   const ToolSet* _currentToolSet = nullptr;
@@ -16,7 +18,7 @@ class ToolBox final : public Updatable {
 
   void _ExpandTools(ToolSet* toolSet);
 
-  // ... internal helper class
+  // ==== internal helper class
   friend class ToolsSetList;
   class ToolsSetList final : public Updatable
   {
@@ -30,11 +32,15 @@ class ToolBox final : public Updatable {
     ToolsSetList( ToolBox* toolBox, ToolSet& toolSet );
     void Update() override;
   };
+  // ====
+
   std::vector<ToolsSetList*> _toolsSetList_Instances;
 
   ToolsSetList* _activeTools = nullptr;
 
 public:
   void Init();
+  bool Initialized();
+  void SetBackgroundColor(Color color);
   void Update() override;
 };

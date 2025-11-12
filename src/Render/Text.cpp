@@ -7,8 +7,10 @@
 #include "UIObject.h"
 
 #include <iostream>
-void Text::SetParent(UIObject *parent) {
-  uiObject_parent = parent;
+void Text::SetParent(UIObject *parent) { uiObject_parent = parent; }
+
+float Text::GetPixelWidth() {
+  return (float)MeasureText(value.c_str(), fontSize);
 }
 
 void Text::Draw() {
@@ -35,7 +37,7 @@ void Text::Draw() {
       (int)finalSize.y
   );
 
-  DrawTextEx(Utils::GetDefaultFont(), value.c_str(), { x, y }, (float)fontSize, 1.0f, textColor);
+  DrawTextEx(Utils::AppData::GetDefaultFont(), value.c_str(), { x, y }, (float)fontSize, 1.0f, textColor);
 
   EndScissorMode();
 }

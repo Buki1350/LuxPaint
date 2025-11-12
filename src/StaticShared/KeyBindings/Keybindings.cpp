@@ -1,16 +1,13 @@
 #include "Keybindings.h"
+#include "../../StaticShared/Utils/Utils.h"
 
 #include <iostream>
 
 void Keybindings::_Load() {
-    //TODO keybindings from file system
+  actionsDictionary = Utils::Files::LoadActions(); // <--- default actions set here
 
-    actionsDictionary[MENU_NEXT] = { KEY_TAB };
-    actionsDictionary[MENU_PREV] = { KEY_LEFT_SHIFT, KEY_TAB };
-    actionsDictionary[MENU_CONFIRM] = { KEY_ENTER };
 }
 
-//TODO zbuggowane kombinacje!
 bool Keybindings::ActionDetected(InputAction action) {
   if (actionsDictionary.empty()) { _Load(); }
 

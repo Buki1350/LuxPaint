@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../Tools/Shared/Tool.h"
+#include "Selectors/SelectionMask.h"
 
 class Canvas final : public Updatable {
   std::vector<UIObject*> _oLayers;
@@ -14,10 +15,8 @@ class Canvas final : public Updatable {
   bool _isDragging = false;
   bool _hasCanvas = false;
   UIObject* _oBackground = nullptr;
-  Tool* _currentTool = nullptr;
   Color _currentColor = BLACK;
-  Rectangle _selection{0,0,0,0};
-  UIObject* _selectionTarget = nullptr;
+  Tool* _currentTool = nullptr;
 
   bool _CanDrag();
   void _HandleZoomAndDrag();
@@ -32,13 +31,11 @@ public:
   void AddImage(Image image);
   void AddTexture(Texture2D texture);
   void Update() override;
-  void SetSelection(const Rectangle& rect);
   void ClearSelection();
 
-  std::vector<UIObject*>& GetImages() { return _oLayers; }
-  void SetCurrentColor(Color color)   { _currentColor = color; }
-  Color GetCurrentColor()             { return _currentColor; }
-  void SetCurrentTool(Tool* tool)     { _currentTool = tool; }
-  Rectangle GetSelection() const      { return _selection; }
-  bool HasCanvas() const              { return _hasCanvas; }
+  std::vector<UIObject*>& GetImages();
+  void SetCurrentColor(Color color);
+  Color GetCurrentColor();
+  void SetCurrentTool(Tool* tool);
+  bool HasCanvas() const;
 };

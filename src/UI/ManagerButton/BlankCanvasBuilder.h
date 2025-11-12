@@ -1,16 +1,11 @@
 #pragma once
 #include "../../Render/UIObjectsManager.h"
 #include "../../UI/MiniMenu/MiniMenu.h"
+#include "../MiniMenu/MiniMenuBuilder.h"
 
-class BlankCanvasBuilder {
+class BlankCanvasBuilder : public MiniMenuBuilderBase<BlankCanvasBuilder> {
 public:
-  inline static MiniMenu* canvasCreator = nullptr;
-  static void Build() {
-    if (canvasCreator != nullptr) return;
-    canvasCreator = MiniMenu::CreateInstance();
-    canvasCreator->OnDestroy([](){canvasCreator = nullptr;});
-    canvasCreator->oBackground->roundness = Utils::GetSmallerMonitorEdge() * 0.00001f;
-
+  void BuildContext() {
     auto actionName = new UIObject();
     actionName->size = {500, 20};
     actionName->color = RED;
@@ -46,10 +41,10 @@ public:
       Vec2f size = Vec2f(stof(sValue1), stof(sValue2));
       Matx<Color> blankImageMatrix(size.CastTo<int>());
       blankImageMatrix.fill(WHITE);
-      Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);
+      Texture2D blankImage = Utils::Convert::MatrixToTexture(blankImageMatrix);
       App::Instance->canvas.AddTexture(blankImage);
 
-      canvasCreator->Destroy();
+      menu->Destroy();
     });
 
     auto cancelButton = new Button();
@@ -57,12 +52,12 @@ public:
     cancelButton->color = GRAY;
     cancelButton->text = "Cancel";
     cancelButton->OnClick([]() {
-      canvasCreator->Destroy();
+      menu->Destroy();
     });
 
-    canvasCreator->PackRow({actionName});
+    menu->PackRow({actionName});
 
-    canvasCreator->PackRow({
+    menu->PackRow({
       field1Info,
       MiniMenu::FlexSeparator(),
       field1Value1,
@@ -72,19 +67,19 @@ public:
 
     auto separator = new UIObject();
     separator->size = {50, 40};
-    canvasCreator->PackRow({separator});
+    menu->PackRow({separator});
 
-    canvasCreator->PackRow({
+    menu->PackRow({
       cancelButton,
       MiniMenu::FlexSeparator(),
       okButton,
     });
   }
 
-  void _CreateBlank(Vec2i size) {
+  static void CreateBlank(Vec2i size) {
     Matx<Color> blankImageMatrix(size);
     blankImageMatrix.fill(WHITE);
-    Texture2D blankImage = Utils::MatrixToTexture(blankImageMatrix);
+    Texture2D blankImage = Utils::Convert::MatrixToTexture(blankImageMatrix);
     App::Instance->canvas.AddTexture(blankImage);
   }
 };

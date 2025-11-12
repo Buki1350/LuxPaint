@@ -13,8 +13,10 @@ struct MarchingSelection {
 };
 
 class MarchingAntsSelector final : public Initializable, public Updatable, public Singleton<MarchingAntsSelector> {
+  Texture _GetAntTextureTextureStep(Texture& texture, int step);
 public:
   std::vector<MarchingSelection> selections;
+
   float offset = 0.0f;
   Image gridImage;
   int _frameStep = 0;
@@ -22,7 +24,6 @@ public:
 
   void Init() override;
   void Update() override;
-  void StartOn(UIObject* obj);
-  void StopOn(UIObject *obj);
-  Texture GetAntTextureTextureStep(Texture& texture, int step);
+  static void StartOn(UIObject* obj);
+  static void StopOn(UIObject *obj);
 };

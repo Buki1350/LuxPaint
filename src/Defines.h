@@ -12,3 +12,4 @@
 #define MINIMENU_MARGIN_SCALE           0.01f
 #define SLIDER_LINEWIDTH_SCALE          0.005f
 #define SLIDER_GRABPOINT_SCALE          0.01f
+#define TEXT_DEFAULT_MARGIN             0.5f

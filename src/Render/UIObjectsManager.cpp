@@ -3,9 +3,14 @@
 std::vector<UIObject*> UIObjectsManager::_objects;
 Shader UIObjectsManager::roundedMask;
 
+bool UIObjectsManager::IsInitialized() {
+  return _initialized;
+}
+
 void UIObjectsManager::Init() {
   _objects = std::vector<UIObject*>();
   roundedMask = LoadShader(nullptr, "../Shaders/rounded_mask.fs");
+  _initialized = true;
 }
 
 void UIObjectsManager::AddUIObject(UIObject *object) {
@@ -13,6 +18,7 @@ void UIObjectsManager::AddUIObject(UIObject *object) {
 }
 
 void UIObjectsManager::DrawAll() {
+  auto cp = _objects;
   int objectDrawn = 0;
   int currentZLayer = 0;
   while (objectDrawn < _objects.size()) {

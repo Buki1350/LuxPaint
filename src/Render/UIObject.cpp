@@ -52,7 +52,7 @@ void UIObject::Draw() {
   );
 
   if (outlineScale != 0) {
-    float outlineThickness = outlineScale * Utils::GetSmallerMonitorEdge();
+    float outlineThickness = outlineScale * Utils::View::GetSmallerMonitorEdge();
     Color outlineColor {
       (unsigned char)(color.r * UIOBJECT_OUTLINE_DARKENING),
       (unsigned char)(color.g * UIOBJECT_OUTLINE_DARKENING),
@@ -70,27 +70,43 @@ void UIObject::Draw() {
   }
 
   if (_hasTexture) {
-    float scaleX = finalSize.x / (float)_texture.width;
-    float scaleY = finalSize.y / (float)_texture.height;
-    float scale = fmin(scaleX, scaleY);
-    float margin = imageMarginScale * Utils::GetSmallerMonitorEdge();
+    float margin = imageMarginScale * Utils::View::GetSmallerMonitorEdge();
 
-    float destW = _texture.width * scale;
-    float destH = _texture.height * scale;
+    if (imageStretch) {
+      DrawTexturePro(
+          _texture,
+          { 0, 0, (float)_texture.width, (float)_texture.height },
+          {
+              finalPos.x + margin,
+              finalPos.y + margin,
+              finalSize.x - 2*margin,
+              finalSize.y - 2*margin
+          },
+          { 0, 0 },
+          0.0f,
+          Fade(WHITE, imageAlpha)
+      );
+    } else {
+      float scaleX = finalSize.x / (float)_texture.width;
+      float scaleY = finalSize.y / (float)_texture.height;
+      float scale = fmin(scaleX, scaleY);
 
-    DrawTexturePro(
-        _texture,
-        { 0, 0, (float)_texture.width, (float)_texture.height }, // zawsze cały obraz
-        {
-            finalPos.x + margin,
-            finalPos.y + margin,
-            destW - 2 * margin,
-            destH - 2 * margin
-        },
-        { 0, 0 },
-        0.0f,
-        Fade(WHITE, imageAlpha)
-    );
+      float destW = _texture.width * scale;
+      float destH = _texture.height * scale;
+      DrawTexturePro(
+          _texture,
+          { 0, 0, (float)_texture.width, (float)_texture.height },
+          {
+              finalPos.x + margin,
+              finalPos.y + margin,
+              destW - 2 * margin,
+              destH - 2 * margin
+          },
+          { 0, 0 },
+          0.0f,
+          Fade(WHITE, imageAlpha)
+      );
+    }
   }
   text.Draw();
 }
@@ -105,11 +121,11 @@ bool UIObject::CursorAbove() const {
 }
 
 bool UIObject::Clicked() const {
-  return isActive && CursorAbove() && Utils::MouseReleased();
+  return isActive && CursorAbove() && Utils::Input::MouseReleased();
 }
 
 bool UIObject::ClickedButNotThis() {
-  return isActive && !CursorAbove() && Utils::MouseReleased();
+  return isActive && !CursorAbove() && Utils::Input::MouseReleased();
 }
 
 bool UIObject::Pressed() const {
@@ -133,6 +149,7 @@ void UIObject::UpdateTexture() {
     ::UpdateTexture(_texture, _image.data);
   }
 }
+
 Image UIObject::GetImage() {
   return _image;
 }

@@ -6,12 +6,12 @@ class Button;
 class App;
 
 class ManagerButton final : public Updatable {
-  UIObject* _uiObject_base = nullptr;
-  Button* _uiObject_newButton = nullptr;
-  Button* _uiObject_saveButton = nullptr;
-  Button* _uiObject_loadButton = nullptr;
-  Button* _uiObject_settingsButton = nullptr;
-  std::vector<Button*> _uiObject_buttons;
+  UIObject* _oBackground = nullptr;
+  Button* _oNewButton = nullptr;
+  Button* _oSaveButton = nullptr;
+  Button* _oLoadButton = nullptr;
+  Button* _oSettingsButton = nullptr;
+  std::vector<Button*> _buttons;
 
   float _roundness = 0.2f;
   float _marginScale = 0.01f;
@@ -23,8 +23,9 @@ class ManagerButton final : public Updatable {
 
   void _LoadImageFromSystem();
   void _AdjustSizeAndPosition();
-  void _CreateBlank(Vec2i size);
+
 public:
   void Init();
   void Update() override;
+  void SetBackgroundColor(Color color);
 };

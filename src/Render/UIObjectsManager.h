@@ -8,7 +8,9 @@
 class UIObjectsManager {
   friend class UIObject;
   static std::vector<UIObject*> _objects;
+  inline static bool _initialized = false;
 public:
+  static bool IsInitialized();
   static Shader roundedMask;
   static void Init();
   static void AddUIObject(UIObject *object);

@@ -1,9 +1,12 @@
 #pragma once
 
+///
+/// [IMPORTANT] Requires declaration of static type in .cpp file.
+///
 template <typename T>
 class Singleton {
 public:
-  inline static T* Instance = nullptr; // działa od razu
+  inline static T* Instance = nullptr;
 
 protected:
     Singleton() {

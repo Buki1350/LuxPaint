@@ -25,11 +25,11 @@ public:
       Animator::Reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
     }
 
-    if (CursorAbove() && Utils::MouseReleased()) Animator::Reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
+    if (CursorAbove() && Utils::Input::MouseReleased()) Animator::Reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
 
     if (_focused) {
       Animator::SizeUp(this);
-      if (IsMouseButtonPressed(0)) Animator::AnimateColor(this, Utils::DarkenColor(color, .3f), ANIMATION_SIZEUP_DURATION);
+      if (IsMouseButtonPressed(0)) Animator::AnimateColor(this, Utils::Colors::DarkenColor(color, .3f), ANIMATION_SIZEUP_DURATION);
     }
     else
       Animator::Reset(this);

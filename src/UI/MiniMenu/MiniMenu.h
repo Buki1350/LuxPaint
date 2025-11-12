@@ -1,12 +1,41 @@
 #pragma once
+#include <functional>
+#include <vector>
 
 #include "../../Automatition/Updatables/Updatable.h"
 #include "../../Render/UIObject.h"
 
-#include <functional>
-#include <vector>
-
 class MiniMenu final : public Updatable {
+    template <typename T> friend class MiniMenuBuilderBase;
+    struct ObjectWithSavedSize; // predef
+
+    UIObject* _oBackground = nullptr;
+    Vec2f _targetSize;
+
+    // ... for multiple objects in one row
+    using Row = std::vector<ObjectWithSavedSize>;
+    std::vector<Row> _rows;
+    std::vector<ObjectWithSavedSize> _oPackedObjects;
+
+    // ... same time as popup, but time is saved to delete pointer after animation
+    const float _deletingDuration = ANIMATION_POPUP_DURATION;
+    float _deletingElapsed = 0.0f;
+    bool _markedForDeletion = false;
+    std::function<void()> _onDestructionFunc;
+
+    // ... keybindings
+    UIObject* _currentSelected = nullptr;
+    std::vector<UIObject*> _buttonsAndInputs;
+
+    // ... helper for not closing when clicked not on this uiObject
+    bool _disableClosing = false;
+
+    void _HandleClosing();
+    void _CalculateTransforms();
+    void _HandleDeleting();
+    void _HandleKeybindings();
+    void _FocusNext();
+    void _FocusPrevious();
 
     struct ObjectWithSavedSize {
         UIObject* object;
@@ -20,38 +49,20 @@ class MiniMenu final : public Updatable {
         : object(obj), initialSize(obj->size), flexible(flex) {}
     };
 
-    Vec2f _targetSize;
-    // ... for multiple objects in one row
-    using Row = std::vector<ObjectWithSavedSize>;
-    std::vector<Row> _rows;
-    std::vector<ObjectWithSavedSize> _oPackedObjects;
-    // ... same time as popup, but time is saved to delete pointer after animation
-    const float _deletingDuration = ANIMATION_POPUP_DURATION;
-    float _deletingElapsed = 0.0f;
-    bool _markedForDeletion = false;
-    std::function<void()> _onDestructionFunc;
-    // ... keybindings
-    UIObject* _currentSelected = nullptr;
-    std::vector<UIObject*> _buttonsAndInputs;
-
-
-    public:
-    UIObject* oBackground = nullptr;
+public:
+    static std::vector<MiniMenu*> instances;
     bool centerElements = false;
-    static std::vector<MiniMenu*> Instances;
     static MiniMenu* CreateInstance();
     static void DestroyInstance(MiniMenu* miniMenu);
     void Destroy();
 
     MiniMenu* Pack(UIObject *object);
-    MiniMenu* PackRow(std::initializer_list<ObjectWithSavedSize> objects);
+    MiniMenu *PackRow(std::initializer_list<ObjectWithSavedSize> objects);
     static ObjectWithSavedSize FlexSeparator();
-    void _HandleClosing();
-    void _CalculateTransforms();
-    void _HandleDeleting();
-    void _HandleKeybindings();
-    void _FocusNext();
-    void _FocusPrevious();
     void Update() override;
     void OnDestroy(std::function<void()> labdaFunction);
+    void DisableClosing();
+    void EnableClosing();
+
+    static void SetBackgroundColorForAll(Color color);
 };

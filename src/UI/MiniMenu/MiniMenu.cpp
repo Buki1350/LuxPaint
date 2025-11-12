@@ -7,22 +7,22 @@
 #include "../../StaticShared/KeyBindings/Keybindings.h"
 #include "../../StaticShared/Utils/Utils.h"
 
-std::vector<MiniMenu*> MiniMenu::Instances = {};
+std::vector<MiniMenu*> MiniMenu::instances = {};
 
 MiniMenu *MiniMenu::CreateInstance() {
-  float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
+  float margin = MINIMENU_MARGIN_SCALE * Utils::View::GetSmallerMonitorEdge();
   MiniMenu *newFrontPanel = new MiniMenu();
-  Instances.insert(Instances.begin(), newFrontPanel);
-  newFrontPanel->oBackground = new UIObject();
+  instances.insert(instances.begin(), newFrontPanel);
+  newFrontPanel->_oBackground = new UIObject();
   newFrontPanel->_targetSize = Vec2f::ones() * margin;
-  newFrontPanel->oBackground->color = Utils::LoadColor("miniMenu");
-  newFrontPanel->oBackground->size = {0, 0};
-  newFrontPanel->oBackground->color = Utils::LoadColor("black");
+  newFrontPanel->_oBackground->color = Utils::Files::LoadColor("miniMenu");
+  newFrontPanel->_oBackground->size = {0, 0};
+  newFrontPanel->_oBackground->color = Utils::Files::LoadColor("black");
   return newFrontPanel;
 }
 
 void MiniMenu::DestroyInstance(MiniMenu *miniMenu) {
-  if (!miniMenu || !miniMenu->oBackground)
+  if (!miniMenu || !miniMenu->_oBackground)
     return;
   miniMenu->_markedForDeletion = true;
 }
@@ -32,7 +32,7 @@ void MiniMenu::Destroy() { DestroyInstance(this); }
 MiniMenu * MiniMenu::Pack(UIObject* object) { return PackRow({object}); }
 
 MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) {
-  float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
+  float margin = MINIMENU_MARGIN_SCALE * Utils::View::GetSmallerMonitorEdge();
 
   Row row;
   float rowWidth = margin;
@@ -45,8 +45,8 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
     rowWidth += margin;
     rowHeight = std::max(rowHeight, e.initialSize.y);
 
-    e.object->zLayer = oBackground->zLayer + 1;
-    e.object->position = oBackground->position + oBackground->size / 2;
+    e.object->zLayer = _oBackground->zLayer + 1;
+    e.object->position = _oBackground->position + _oBackground->size / 2;
     e.object->size = Vec2f::zero();
 
     _oPackedObjects.push_back(e);
@@ -74,11 +74,14 @@ void MiniMenu::Update() {
 }
 
 void MiniMenu::_HandleClosing() {
-  if (Instances.empty() || this != MiniMenu::Instances[0]) return;
+  if (
+    instances.empty() ||
+    this != MiniMenu::instances[0] ||
+    _disableClosing) return;
 
-  for (auto instance : Instances) {
+  for (auto instance : instances) {
     if (IsMouseButtonPressed(0)) {
-      bool cursorAboveAny = instance->oBackground->CursorAbove();
+      bool cursorAboveAny = instance->_oBackground->CursorAbove();
 
       for (auto &e : instance->_oPackedObjects) {
         if (e.object->CursorAbove()) {
@@ -96,17 +99,17 @@ void MiniMenu::_HandleClosing() {
 }
 
 void MiniMenu::_CalculateTransforms() {
-    if (!oBackground || _markedForDeletion)
+    if (!_oBackground || _markedForDeletion)
         return;
 
-    float margin = MINIMENU_MARGIN_SCALE * Utils::GetSmallerMonitorEdge();
+    float margin = MINIMENU_MARGIN_SCALE * Utils::View::GetSmallerMonitorEdge();
 
     Vec2f postAnimatedSize = Animator::AnimateSize(
-        oBackground, _targetSize, ANIMATION_POPUP_DURATION, GAUSSIAN
+        _oBackground, _targetSize, ANIMATION_POPUP_DURATION, GAUSSIAN
     );
 
-    Vec2f windowSize = Utils::GetWindowSize().CastTo<float>();
-    oBackground->position = windowSize / 2 - postAnimatedSize / 2;
+    Vec2f windowSize = Utils::View::GetWindowSize().CastTo<float>();
+    _oBackground->position = windowSize / 2 - postAnimatedSize / 2;
 
     float totalHeight = margin;
     float maxRowWidth = 0;
@@ -151,9 +154,9 @@ void MiniMenu::_CalculateTransforms() {
         float rowWidthScaled = rowWidths[r] * scale.x;
         float rowHeightScaled = rowHeights[r] * scale.y;
 
-        float xOffset = oBackground->position.x + margin * scale.x;
+        float xOffset = _oBackground->position.x + margin * scale.x;
         if (centerElements) {
-            xOffset = oBackground->position.x + (postAnimatedSize.x - rowWidthScaled) / 2 + margin * scale.x;
+            xOffset = _oBackground->position.x + (postAnimatedSize.x - rowWidthScaled) / 2 + margin * scale.x;
         }
 
         float extraSpace = (postAnimatedSize.x - rowWidths[r] * scale.x);
@@ -164,7 +167,7 @@ void MiniMenu::_CalculateTransforms() {
             float objHeightScaled = e.initialSize.y * scale.y;
 
             e.object->size = {objWidthScaled, objHeightScaled};
-            e.object->position = {xOffset, oBackground->position.y + yOffset};
+            e.object->position = {xOffset, _oBackground->position.y + yOffset};
 
             xOffset += objWidthScaled + margin * scale.x;
         }
@@ -176,23 +179,23 @@ void MiniMenu::_CalculateTransforms() {
 void MiniMenu::_HandleDeleting() {
   if (_markedForDeletion) {
     if (_deletingElapsed < _deletingDuration + ANIMATION_TOLERANCE) {
-      _deletingElapsed += Utils::GetDeltaTime();
-      Animator::AnimateSize(oBackground, {0, 0}, _deletingDuration);
-      Animator::AnimatePosition(oBackground, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
+      _deletingElapsed += Utils::Time::GetDeltaTime();
+      Animator::AnimateSize(_oBackground, {0, 0}, _deletingDuration);
+      Animator::AnimatePosition(_oBackground, Utils::View::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
 
       for (auto &e : _oPackedObjects) {
         Animator::AnimateSize(e.object, {0, 0}, _deletingDuration);
-        Animator::AnimatePosition(e.object, Utils::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
+        Animator::AnimatePosition(e.object, Utils::View::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
       }
       return;
     }
 
-    if (!Animator::AnimatorContains(oBackground, NONE)) {
-      auto it = std::find(Instances.begin(), Instances.end(), this);
-      if (it != Instances.end()) Instances.erase(it);
+    if (!Animator::AnimatorContains(_oBackground, NONE)) {
+      auto it = std::find(instances.begin(), instances.end(), this);
+      if (it != instances.end()) instances.erase(it);
 
       std::vector<UIObject*> uiObjectsToDelete;
-      uiObjectsToDelete.push_back(oBackground);
+      uiObjectsToDelete.push_back(_oBackground);
       for (auto o : _oPackedObjects) { uiObjectsToDelete.push_back(o.object); }
 
       Animator::Terminate(uiObjectsToDelete);
@@ -207,7 +210,7 @@ void MiniMenu::_HandleDeleting() {
 }
 
 void MiniMenu::_HandleKeybindings() {
-  if (Instances.empty() || this != Instances[0] || Instances[0]->_buttonsAndInputs.empty()) return;
+  if (instances.empty() || this != instances[0] || instances[0]->_buttonsAndInputs.empty()) return;
 
   if (Keybindings::ActionDetected(MENU_NEXT)) { _FocusNext(); }
   else if (Keybindings::ActionDetected(MENU_PREV)) { _FocusPrevious(); }
@@ -280,6 +283,18 @@ void MiniMenu::_FocusPrevious() {
 
 void MiniMenu::OnDestroy(std::function<void()> labdaFunction) {
   _onDestructionFunc = labdaFunction;
+}
+
+void MiniMenu::DisableClosing() {
+  _disableClosing = true;
+}
+
+void MiniMenu::EnableClosing() { _disableClosing = false; }
+
+void MiniMenu::SetBackgroundColorForAll(Color color) {
+  for (auto i : instances) {
+    i->_oBackground->color = color;
+  }
 }
 
 

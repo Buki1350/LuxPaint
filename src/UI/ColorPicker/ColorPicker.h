@@ -37,7 +37,8 @@ class ColorPicker final : public UIObject, public Updatable {
   void _UpdateFromHex();
   void _UpdateFromRainbow();
   void _SyncUI();
-  std::function<void(Color)> _onColorChange;
+  std::function<void(Color)> _OnColorChange;
+  std::function<void()> _OnDestroy;
 
 public:
   ColorPicker();
@@ -45,6 +46,7 @@ public:
   void Destroy() override;
   Color GetColor() const;
   void SetColor(Color color);
-  void SetOnColorChange(std::function<void(Color)> callback);
+  void OnColorChange(std::function<void(Color)> callback);
+  void OnDestroy(std::function<void()> labdaFunction);
 
 };

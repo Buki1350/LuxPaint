@@ -6,12 +6,15 @@
 #include <string>
 
 class Tool {
+  friend class Canvas; // only canvas can use tools
+
   protected:
-  std::string toolName;
+  std::string _name;
+  virtual void _HandleMousePressed(UIObject* imageToPaint, Vec2f vec2) = 0;
+  virtual void _HandleMouseDown(UIObject* imageToPaint, Vec2f vec2) = 0;
+  virtual void _HandleMouseRelease(UIObject* imageToPaint, Vec2f vec2) = 0;
 
   public:
   Texture2D icon;
   Tool(const std::string &name);
-  virtual void HandleClick(UIObject* imageToPaint, Vec2f vec2) = 0;
-  virtual void HandleRelease(UIObject* imageToPaint, Vec2f vec2) = 0;
 };

@@ -3,32 +3,35 @@
 #include "../../StaticShared/FilesManager/FilesManager.h"
 #include "../../StaticShared/Utils/Utils.h"
 
-static MarchingAntsSelector _;
+[[maybe_unused]]
+static MarchingAntsSelector instance;
 
 void MarchingAntsSelector::Init() {
   gridImage = FilesManager::LoadImage("Grids/checker.png");
 }
 
 void MarchingAntsSelector::StartOn(UIObject* obj) {
-  for (auto &sel : selections)
+  for (auto &sel : Instance->selections)
     if (sel.target == obj) return;
 
   MarchingSelection newSel;
   newSel.target = obj;
 
   for (int i = 0; i < 8; i++) {
-    newSel.MAImages[i] = GetAntTextureTextureStep(obj->GetTexture(), i);
+    newSel.MAImages[i] = Instance->_GetAntTextureTextureStep(obj->GetTexture(), i);
   }
 
-  newSel.overlay = new UIObject();// UIObjectsManager::Create();
+  newSel.overlay = new UIObject();
   newSel.overlay->SetImage(newSel.MAImages[0]);
-  newSel.overlay->size = obj->size * 0.01f;
-  newSel.overlay->zLayer = obj->zLayer;
+  newSel.overlay->size = obj->size;
+  newSel.overlay->position = obj->position;
+  newSel.overlay->zLayer = obj->zLayer + 1;
   newSel.overlay->imageAlpha = 1.0f;
   newSel.overlay->outlineScale = 0.0f;
 
-  selections.push_back(newSel);
+  Instance->selections.push_back(newSel);
 }
+
 
 
 void MarchingAntsSelector::Update() {
@@ -50,32 +53,32 @@ void MarchingAntsSelector::Update() {
 
 
 void MarchingAntsSelector::StopOn(UIObject* obj) {
-  for (auto it = selections.begin(); it != selections.end(); ++it) {
+  if (Instance == nullptr) return;
+
+  for (auto it = Instance->selections.begin(); it != Instance->selections.end(); ++it) {
     if (it->target == obj) {
       it->overlay->isActive = false;
 
-      // zwalniamy klatki z GPU
       for (int i = 0; i < 8; i++) {
         UnloadTexture(it->MAImages[i]);
       }
 
-      selections.erase(it);
+      Instance->selections.erase(it);
       break;
     }
   }
 }
 
-Texture MarchingAntsSelector::GetAntTextureTextureStep(Texture& texture, int step) {
-  Matx<Color> textureMatrix = Utils::TextureToMatrix(texture);
+Texture MarchingAntsSelector::_GetAntTextureTextureStep(Texture& texture, int step) {
+  Matx<Color> textureMatrix = Utils::Convert::TextureToMatrix(texture);
   Vec2i size = textureMatrix.size();
 
   int borderThickness = 2;
-  int patternLength   = 64;   // "długość" całego wzoru
+  int patternLength   = 16;   // "długość" całego wzoru
   int totalFrames     = 8;    // liczba klatek animacji
   Color c1 = BLACK;
-  Color c2 = WHITE;
+  Color c2 = BLANK;
 
-  // przeskalowanie kroku do długości wzoru
   int phase = (step * patternLength) / totalFrames;
 
   for (int y = 0; y < size.y; y++) {
@@ -95,7 +98,7 @@ Texture MarchingAntsSelector::GetAntTextureTextureStep(Texture& texture, int ste
     }
   }
 
-  Texture2D newTexture = Utils::MatrixToTexture(textureMatrix);
+  Texture2D newTexture = Utils::Convert::MatrixToTexture(textureMatrix);
   return newTexture;
 }
 

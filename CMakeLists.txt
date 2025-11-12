@@ -51,8 +51,8 @@ add_executable(LuxPaint
         src/Automatition/Initializables/Initializables.h
         src/Automatition/Initializables/Initializable.cpp
         src/Automatition/Initializables/Initializables.cpp
-        src/Canvas/MarchingAntsSelector/MarchingAntsSelector.cpp
-        src/Canvas/MarchingAntsSelector/MarchingAntsSelector.h
+        src/Canvas/Selectors/MarchingAntsSelector.cpp
+        src/Canvas/Selectors/MarchingAntsSelector.h
         src/StaticShared/Singleton/Singleton.h
         src/Math/Matx.h
         src/UI/MiniMenu/MiniMenu.cpp
@@ -64,7 +64,7 @@ add_executable(LuxPaint
         src/Render/Prefabs/InputField.cpp
         src/Render/Prefabs/InputField.h
         src/Render/Prefabs/Button.h
-        src/StaticShared/DelayedAction/DelayedAction.h
+        src/StaticShared/DelayedAction/DelayedAction_inSeconds.h
         src/Tools/PaintTools/BrushTool.h
         src/UI/ColorPicker/ColorPicker.cpp
         src/UI/ColorPicker/ColorPicker.h
@@ -77,7 +77,16 @@ add_executable(LuxPaint
         src/Render/Extensions/UIFocusOutliner.h
         src/UI/ManagerButton/SettingsBuilder.h
         src/UI/MiniMenu/MiniMenuBuilder.h
+        src/StaticShared/DelayedAction/DelayedActions.h
+        src/StaticShared/DelayedAction/DelayedAction_until.h
+        src/Canvas/Selectors/SelectionMask.cpp
+        src/Canvas/Selectors/SelectionMask.h
+        src/StaticShared/InputManager/InputManager.cpp
+        src/StaticShared/InputManager/InputManager.h
+        src/StaticShared/KeyBindings/KeyNames.h
 )
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
 
 # Linkowanie i include w zależności od systemu
 if (WIN32)

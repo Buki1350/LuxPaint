@@ -16,4 +16,6 @@ public:
   void Init();
   void Update() override;
   void _CreateColorPicker();
+
+  void SetBackgroundColor(Color color);
 };

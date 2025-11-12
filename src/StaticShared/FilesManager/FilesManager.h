@@ -19,14 +19,12 @@ class FilesManager {
   static std::string CreateOrGetDirectory(std::string path);
 
 public:
-  // ---- Load ----
   template <typename T>
   static T Load(std::string path, const std::string &token);
 
   template <typename T>
   static std::vector<T> LoadArray(std::string path, const std::string &token);
 
-  // ---- Save ----
   template <typename T>
   static void Save(std::string path, const std::string &token, const T &value);
 
@@ -34,9 +32,10 @@ public:
   static void SaveArray(std::string path, const std::string &token,
                         const std::vector<T> &data);
 
-  // ---- Other ----
+  static std::vector<std::string> LoadFileLines(const char *path);
+  static void SaveFileLines(const std::string& path, const std::vector<std::string> & lines);
   static Image LoadImage(const std::string &localPath);
-  static bool Exists(const char* str);
+  static bool Exists(const char *str);
 };
 
 

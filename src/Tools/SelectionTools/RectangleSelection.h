@@ -5,18 +5,20 @@
 
 // prosty tool do zaznaczania prostokątnego
 class RectangleSelection final : public Tool {
-public:
-  explicit RectangleSelection(const std::string& name) : Tool(name) {}
 
-  bool selecting = false;
-  Vec2f startPos{0, 0};
-  Vec2f endPos{0, 0};
+  bool _selecting = false;
+  std::vector<UIObject*> _selections;
+  UIObject* _currentSelection = nullptr;
+  Vec2f _startPos{0, 0};
+  Vec2f _endPos{0, 0};
+  Vec2f _prevPos{0, 0};
 
-  // Start/drag - reagujemy na klik i trzymanie
-  void HandleClick(UIObject* imageToPaint, Vec2f localPos) override;
-
-  // Release - kończymy selekcję
-  void HandleRelease(UIObject* imageToPaint, Vec2f localPos) override;
+  void _HandleMousePressed(UIObject* imageToPaint, Vec2f localPos) override;
+  void _HandleMouseDown(UIObject* imageToPaint, Vec2f localPos) override;
+  void _HandleMouseRelease(UIObject* imageToPaint, Vec2f localPos) override;
 
   Rectangle GetSelectionRect() const;
+
+public:
+  explicit RectangleSelection(const std::string& name) : Tool(name) {}
 };
