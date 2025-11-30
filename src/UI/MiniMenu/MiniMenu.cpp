@@ -1,11 +1,11 @@
 #include "../../UI/MiniMenu/MiniMenu.h"
 
-#include "../../Render/UIObjectsManager.h"
-#include "../../Render/Extensions/UIFocusOutliner.h"
-#include "../../StaticShared/Animator/Animator.h"
-#include "../../StaticShared/FilesManager/FilesManager.h"
-#include "../../StaticShared/KeyBindings/Keybindings.h"
-#include "../../StaticShared/Utils/Utils.h"
+#include "../../Shared/Animator/Animator.h"
+#include "../../Shared/FilesManager/FilesManager.h"
+#include "../../Shared/KeyBindings/Keybindings.h"
+#include "../../Shared/Utils/Utils.h"
+#include "../../Shared/UIObjects/Extensions/UIFocusOutliner.h"
+#include "../../Shared/UIObjects/UIObjectsManager.h"
 
 std::vector<MiniMenu*> MiniMenu::instances = {};
 
@@ -15,7 +15,7 @@ MiniMenu *MiniMenu::CreateInstance() {
   instances.insert(instances.begin(), newFrontPanel);
   newFrontPanel->_oBackground = new UIObject();
   newFrontPanel->_targetSize = Vec2f::ones() * margin;
-  newFrontPanel->_oBackground->color = Utils::Files::LoadColor("miniMenu");
+  newFrontPanel->_oBackground->color = Utils::Files::LoadColor("miniMenu", "uiGlobal");
   newFrontPanel->_oBackground->size = {0, 0};
   newFrontPanel->_oBackground->color = Utils::Files::LoadColor("black");
   return newFrontPanel;

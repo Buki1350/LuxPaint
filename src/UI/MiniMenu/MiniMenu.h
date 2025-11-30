@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../../Automatition/Updatables/Updatable.h"
-#include "../../Render/UIObject.h"
+#include "../../Shared/UIObjects/UIObject.h"
 
 class MiniMenu final : public Updatable {
     template <typename T> friend class MiniMenuBuilderBase;

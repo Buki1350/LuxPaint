@@ -19,19 +19,19 @@ add_executable(LuxPaint
         #../otherLibs/nfd/nfd_cocoa.m
         src/main.cpp
         src/App.cpp
-        src/StaticShared/FilesManager/FilesManager.cpp
+        src/Shared/FilesManager/FilesManager.cpp
         src/Tools/Shared/Tool.cpp
         src/Tools/Shared/Tool.h
         src/Tools/ToolSet/ToolSet.cpp
-        src/Render/UIObjectsManager.cpp
-        src/Render/UIObjectsManager.h
-        src/Render/UIObject.cpp
-        src/Render/UIObject.h
+        src/Shared/UIObjects/UIObjectsManager.cpp
+        src/Shared/UIObjects/UIObjectsManager.h
+        src/Shared/UIObjects/UIObject.cpp
+        src/Shared/UIObjects/UIObject.h
         src/Tools/PaintTools/PenTool.h
         src/UI/ToolBox/ToolBox.h
         src/UI/ToolBox/ToolBox.cpp
-        src/StaticShared/Utils/Utils.cpp
-        src/StaticShared/Utils/Utils.h
+        src/Shared/Utils/Utils.cpp
+        src/Shared/Utils/Utils.h
         src/UI/ManagerButton/ManagerButton.cpp
         src/UI/ManagerButton/ManagerButton.h
         src/UI/ColorHolder/ColorHolder.cpp
@@ -39,51 +39,66 @@ add_executable(LuxPaint
         src/Automatition/Updatables/Updatable.h
         src/Automatition/Updatables/UpdatablesManager.h
         src/Automatition/Updatables/UpdatablesManager.cpp
-        src/StaticShared/Animator/Animator.cpp
-        src/StaticShared/Animator/Animator.h
+        src/Shared/Animator/Animator.cpp
+        src/Shared/Animator/Animator.h
         src/Defines.h
-        src/Render/Text.cpp
-        src/Render/Text.h
+        src/Shared/UIObjects/Text.cpp
+        src/Shared/UIObjects/Text.h
         src/Canvas/Canvas.cpp
         src/Canvas/Canvas.h
-        src/Math/Vec2.h
+        src/Math/vec2.h
         src/Automatition/Initializables/Initializable.h
         src/Automatition/Initializables/Initializables.h
         src/Automatition/Initializables/Initializable.cpp
         src/Automatition/Initializables/Initializables.cpp
         src/Canvas/Selectors/MarchingAntsSelector.cpp
         src/Canvas/Selectors/MarchingAntsSelector.h
-        src/StaticShared/Singleton/Singleton.h
-        src/Math/Matx.h
+        src/Shared/Singleton/Singleton.h
+        src/Math/Matrx.h
         src/UI/MiniMenu/MiniMenu.cpp
         src/UI/MiniMenu/MiniMenu.h
         src/UI/ManagerButton/BlankCanvasBuilder.h
-        src/StaticShared/Animator/AnimationValue.h
-        src/StaticShared/Animator/AnimationValue.tpp
+        src/Shared/Animator/AnimationValue.h
+        src/Shared/Animator/AnimationValue.tpp
         src/Macros.h
-        src/Render/Prefabs/InputField.cpp
-        src/Render/Prefabs/InputField.h
-        src/Render/Prefabs/Button.h
-        src/StaticShared/DelayedAction/DelayedAction_inSeconds.h
+        src/Shared/UIObjects/Prefabs/InputField.cpp
+        src/Shared/UIObjects/Prefabs/InputField.h
+        src/Shared/UIObjects/Prefabs/Button.h
+        src/Shared/DelayedAction/DelayedAction_inSeconds.h
         src/Tools/PaintTools/BrushTool.h
         src/UI/ColorPicker/ColorPicker.cpp
         src/UI/ColorPicker/ColorPicker.h
-        src/Render/Prefabs/Slider.cpp
-        src/Render/Prefabs/Slider.h
+        src/Shared/UIObjects/Prefabs/Slider.cpp
+        src/Shared/UIObjects/Prefabs/Slider.h
         src/Tools/SelectionTools/RectangleSelection.h
         src/Tools/SelectionTools/RectangleSelection.cpp
-        src/StaticShared/KeyBindings/KeyBindings.cpp
-        src/StaticShared/KeyBindings/KeyBindings.h
-        src/Render/Extensions/UIFocusOutliner.h
+        src/Shared/KeyBindings/KeyBindings.cpp
+        src/Shared/KeyBindings/KeyBindings.h
+        src/Shared/UIObjects/Extensions/UIFocusOutliner.h
         src/UI/ManagerButton/SettingsBuilder.h
         src/UI/MiniMenu/MiniMenuBuilder.h
-        src/StaticShared/DelayedAction/DelayedActions.h
-        src/StaticShared/DelayedAction/DelayedAction_until.h
+        src/Shared/DelayedAction/DelayedActions.h
+        src/Shared/DelayedAction/DelayedAction_until.h
         src/Canvas/Selectors/SelectionMask.cpp
         src/Canvas/Selectors/SelectionMask.h
-        src/StaticShared/InputManager/InputManager.cpp
-        src/StaticShared/InputManager/InputManager.h
-        src/StaticShared/KeyBindings/KeyNames.h
+        src/Shared/InputManager/InputManager.cpp
+        src/Shared/InputManager/InputManager.h
+        src/Shared/KeyBindings/KeyNames.h
+        src/Debug/Debug.cpp
+        src/Debug/Debug.h
+        src/Tools/PaintTools/BucketTool.h
+        src/Tools/ShapesTools/RectangleTool.h
+        src/Tools/ShapesTools/CircleTool.h
+        src/UI/ToolSizeSlider/ToolSizeSlider.cpp
+        src/UI/ToolSizeSlider/ToolSizeSlider.h
+        src/Shared/Calculations/Calc.h
+        src/Shared/Calculations/CalcUIO.cpp
+        src/Shared/Utils/UtilsColors.cpp
+        src/Shared/Utils/UtilsFiles.cpp
+        src/Shared/Utils/UtilsView.cpp
+        src/Shared/Utils/UtilsInput.cpp
+        src/Shared/Utils/UtilsAppdata.cpp
+        src/Shared/Utils/UtilsConvert.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)

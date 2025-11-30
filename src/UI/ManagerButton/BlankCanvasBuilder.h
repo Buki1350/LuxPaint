@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Render/UIObjectsManager.h"
 #include "../../UI/MiniMenu/MiniMenu.h"
+#include "../../Shared/UIObjects/UIObjectsManager.h"
 #include "../MiniMenu/MiniMenuBuilder.h"
 
 class BlankCanvasBuilder : public MiniMenuBuilderBase<BlankCanvasBuilder> {
@@ -39,7 +39,7 @@ public:
       if (sValue1.empty() || sValue2.empty()) return;
 
       Vec2f size = Vec2f(stof(sValue1), stof(sValue2));
-      Matx<Color> blankImageMatrix(size.CastTo<int>());
+      Matrx<Color> blankImageMatrix(size.CastTo<int>());
       blankImageMatrix.fill(WHITE);
       Texture2D blankImage = Utils::Convert::MatrixToTexture(blankImageMatrix);
       App::Instance->canvas.AddTexture(blankImage);
@@ -77,7 +77,7 @@ public:
   }
 
   static void CreateBlank(Vec2i size) {
-    Matx<Color> blankImageMatrix(size);
+    Matrx<Color> blankImageMatrix(size);
     blankImageMatrix.fill(WHITE);
     Texture2D blankImage = Utils::Convert::MatrixToTexture(blankImageMatrix);
     App::Instance->canvas.AddTexture(blankImage);

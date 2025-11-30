@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Render/Prefabs/Button.h"
-#include "../../StaticShared/FilesManager/FilesManager.h"
+#include "../../Shared/FilesManager/FilesManager.h"
+#include "../../Shared/UIObjects/Prefabs/Button.h"
 #include "raylib.h"
 
 #include <string>
@@ -10,11 +10,17 @@ class Tool {
 
   protected:
   std::string _name;
-  virtual void _HandleMousePressed(UIObject* imageToPaint, Vec2f vec2) = 0;
-  virtual void _HandleMouseDown(UIObject* imageToPaint, Vec2f vec2) = 0;
-  virtual void _HandleMouseRelease(UIObject* imageToPaint, Vec2f vec2) = 0;
+  float size = 0;
+  virtual void HandleMousePressed(UIObject* imageToPaint) = 0;
+  virtual void HandleMouseDown(UIObject* imageToPaint) = 0;
+  virtual void HandleMouseRelease(UIObject* imageToPaint) = 0;
 
   public:
   Texture2D icon;
+
+  virtual bool CanSizeBeChanged() const = 0;
+  void SetSize(float val) { size = val; }
+  float GetSize() { return size; }
+
   Tool(const std::string &name);
 };

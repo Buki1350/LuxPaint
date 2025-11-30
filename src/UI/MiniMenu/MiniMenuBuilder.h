@@ -1,6 +1,6 @@
 #pragma once
+#include "../../Shared/Utils/Utils.h"
 #include "MiniMenu.h"
-#include "../../StaticShared/Utils/Utils.h"
 
 // ... === CRTP (Curiously Recurring Template Pattern) ===
 // ... Wymuszenie implementacji statycznych metod w klasach pochodnych

@@ -2,27 +2,23 @@
 #include "../Shared/Tool.h"
 
 class BrushTool final : public Tool {
+protected:
+  bool CanSizeBeChanged() const override { return true; };
+
 public:
   explicit BrushTool(const std::string& name) : Tool(name) {}
 
-  void BrushTool::_HandleMousePressed(UIObject *imageToPaint,
-                              Vec2f localPos) override {
-    if (!imageToPaint)
-      return;
+  void BrushTool::HandleMousePressed(UIObject* img) override {
+    Vec2i p = img->GetOnImageCursorPosition();
+    if (p.x < 0) return;
 
-    float relX = localPos.x / imageToPaint->size.x;
-    float relY = localPos.y / imageToPaint->size.y;
-
-    int imgX = (int)(relX * imageToPaint->GetImageSize().x);
-    int imgY = (int)(relY * imageToPaint->GetImageSize().y);
-
-    int radius = 5;
-    ImageDrawCircle(&imageToPaint->GetImage(), imgX, imgY, radius, BLUE);
-
-    imageToPaint->UpdateTexture();
+    ImageDrawCircle(&img->GetImage(), p.x, p.y, 5, BLUE);
+    img->UpdateTexture();
   }
 
-  void _HandleMouseDown(UIObject *imageToPaint, Vec2f localPos) override { }
 
-  void _HandleMouseRelease(UIObject *imageToPaint, Vec2f vec2) override { }
+  void HandleMouseDown(UIObject *imageToPaint) override { }
+
+  void HandleMouseRelease(UIObject *imageToPaint) override {}
+
 };

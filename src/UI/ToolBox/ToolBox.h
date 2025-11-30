@@ -2,10 +2,9 @@
 #include "../../Tools/ToolSet/ToolSet.h"
 #include "../../Automatition/Updatables/Updatable.h"
 
-class ToolBox final : public Updatable {
+class ToolBox final : public UIObject, public Updatable {
   bool _initialized = false;
 
-  UIObject* _oBackground = nullptr;
   Color _toolSetListColor {};
   const ToolSet* _currentToolSet = nullptr;
   std::vector<ToolSet*> _toolSets;

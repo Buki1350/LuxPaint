@@ -1,16 +1,15 @@
 #pragma once
-#include "../../Render/UIObject.h"
 #include "../../Automatition/Updatables/Updatable.h"
-#include "../../Render/Prefabs/Button.h"
+#include "../../Shared/UIObjects/Prefabs/Button.h"
+#include "../../Shared/UIObjects/UIObject.h"
 
-class ColorHolder final : public Updatable {
-  UIObject* _oBackground = nullptr;
+class ColorHolder final : public UIObject, public Updatable {
   float _offsetScale = 0.01f;
   float _buttonScale = 0.05f;
   float _separatorScale = 0.01f;
 
   std::vector<Button*> _buttons;
-  int _numberOfSavedColors = 5;
+  int _numberOfSavedColors = 0;
 
 public:
   void Init();

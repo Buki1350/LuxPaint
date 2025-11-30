@@ -1,6 +1,6 @@
 #include "ColorPicker.h"
 
-#include "../../StaticShared/FilesManager/FilesManager.h"
+#include "../../Shared/FilesManager/FilesManager.h"
 
 #include <algorithm>
 #include <iomanip>
@@ -10,7 +10,6 @@ ColorPicker::ColorPicker() {
   _backgroundColor = Utils::Files::LoadColor("colorPicker");
   this->color = _backgroundColor;
   this->size = Vec2f(Utils::View::GetSmallerMonitorEdge() * _overallSizeScale);
-  this->roundness = Utils::View::GetSmallerMonitorEdge() *  0.00005;
 
   _oRainbow = new UIObject;
   _oRainbow->outlineScale = 0;
@@ -42,7 +41,7 @@ ColorPicker::ColorPicker() {
     const char *labels = "RGBA";
     UIObject * label = new UIObject;
     label->text = std::string(1, labels[i]);
-    label->color = Utils::Files::LoadColor("colorPickerLabel");
+    label->color = Utils::Files::LoadColor("colorPickerLabel", "uiGlobal");
     label->outlineScale = 0;
     label->zLayer = this->zLayer + 2;
     _sliderLabels.push_back(label);
@@ -56,6 +55,8 @@ void ColorPicker::Update() {
   float scale = Utils::View::GetSmallerMonitorEdge();
   float margin = _marginScale * scale;
   //float spaceUnderRainbow = _spaceUnderRainbowScale * scale;
+
+  this->roundness = Utils::View::GetSmallerMonitorEdge() *  UI_WIDGETS_ROUNDNESS;
 
   float oRainbowWidth = this->size.x - 2 * margin;
   float oRainbowHeight = this->size.y * 0.5f; // panoramiczne
@@ -119,32 +120,46 @@ void ColorPicker::Update() {
 }
 
 void ColorPicker::_GenerateRainbowTexture() {
-  constexpr int width = 512;
-  constexpr int height = 256;
-
-  Image img = GenImageColor(width, height, BLANK);
+  constexpr int size = 512;
+  Image img = GenImageColor(size, size, BLANK);
   Color* pixels = (Color*)img.data;
 
-  for (int y = 0; y < height; y++) {
-    float yn = (float)y / (float)(height - 1);
+  float cx = size / 2.0f;
+  float cy = size / 2.0f;
 
-    float value = 1.0f - std::pow(yn, 1.15f);
+  float radiusX = size / 2.0f;
+  float radiusY = size / 2.0f;
 
-    for (int x = 0; x < width; x++) {
-      float hue = (float)x / (float)(width - 1) * 360.0f;
+  for (int y = 0; y < size; y++) {
+    for (int x = 0; x < size; x++) {
 
-      float sat = 1.0f;
-      if (value > 0.9f) sat = (1.0f - value) * 10.0f;
-      else if (value < 0.1f) sat = value * 10.0f;
-      sat = std::clamp(sat, 0.0f, 1.0f);
+      // NORMALIZACJA DO ELIPSY (działa też dla koła)
+      float dx = (x - cx) / radiusX;
+      float dy = (y - cy) / radiusY;
 
-      pixels[y * width + x] = ColorFromHSV(hue, sat, value);
+      float r = sqrtf(dx*dx + dy*dy);
+
+      if (r > 1.0f) {
+        pixels[y * size + x] = {0,0,0,0};
+        continue;
+      }
+
+      float angle = atan2f(dy, dx);
+      float hue = angle * 180.0f / PI;
+      if (hue < 0) hue += 360.0f;
+
+      float saturation = r;
+      float value = powf(1.0f - r, 0.40f);
+
+      pixels[y * size + x] = ColorFromHSV(hue, saturation, value);
     }
   }
 
   _oRainbow->SetImage(img);
   UnloadImage(img);
 }
+
+
 
 void ColorPicker::_UpdateFromSliders() {
   if (!_sRSlider || !_sGSlider || !_sBSlider || !_sASlider)
@@ -185,23 +200,32 @@ void ColorPicker::_UpdateFromHex() {
 
 void ColorPicker::_UpdateFromRainbow() {
   if (_oRainbow->CursorAbove() && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+
     Vector2 mp = GetMousePosition();
+    float relX = (mp.x - _oRainbow->position.x);
+    float relY = (mp.y - _oRainbow->position.y);
 
-    // przelicz pozycję kursora na lokalne współrzędne obrazka
-    float relX = (mp.x - _oRainbow->position.x) / _oRainbow->size.x; // 0..1
-    float relY = (mp.y - _oRainbow->position.y) / _oRainbow->size.y; // 0..1
-    relX = std::clamp(relX, 0.0f, 1.0f);
-    relY = std::clamp(relY, 0.0f, 1.0f);
+    float cx = _oRainbow->size.x / 2.0f;
+    float cy = _oRainbow->size.y / 2.0f;
 
-    // pobierz kolor z tekstury
-    Image img = _oRainbow->GetImage(); // zakładam, że masz metodę GetImage()
-    int px = (int)(relX * (img.width - 1));
-    int py = (int)(relY * (img.height - 1));
-    Color c = ((Color*)img.data)[py * img.width + px];
+    // normalizacja do elipsy
+    float dx = (relX - cx) / cx;
+    float dy = (relY - cy) / cy;
 
-    _currentColor = c;
+    float r = sqrtf(dx*dx + dy*dy);
+    if (r > 1.0f)
+      return; // klik poza elipsą
 
-    // ustaw pozycję kropki pod kursorem
+    float angle = atan2f(dy, dx);
+    float hue = angle * 180.0f / PI;
+    if (hue < 0) hue += 360.0f;
+
+    // dokładnie tak samo jak w generatorze
+    float saturation = r;
+    float value = powf(1.0f - r, 0.75f);
+
+    _currentColor = ColorFromHSV(hue, saturation, value);
+
     _oDot->position = {mp.x - _oDot->size.x/2, mp.y - _oDot->size.y/2};
   }
 }

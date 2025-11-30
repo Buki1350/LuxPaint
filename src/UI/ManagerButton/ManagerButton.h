@@ -1,19 +1,17 @@
 #pragma once
 #include "../../Automatition/Updatables/Updatable.h"
-#include "../../Render/UIObject.h"
+#include "../../Shared/UIObjects/UIObject.h"
 
 class Button;
 class App;
 
-class ManagerButton final : public Updatable {
-  UIObject* _oBackground = nullptr;
+class ManagerButton final : public UIObject, public Updatable {
   Button* _oNewButton = nullptr;
   Button* _oSaveButton = nullptr;
   Button* _oLoadButton = nullptr;
   Button* _oSettingsButton = nullptr;
   std::vector<Button*> _buttons;
 
-  float _roundness = 0.2f;
   float _marginScale = 0.01f;
   float _sizeScale = 0.025f;
   float _listElementWidthScale = 0.15f;

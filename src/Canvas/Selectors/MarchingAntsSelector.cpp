@@ -1,7 +1,7 @@
 #include "MarchingAntsSelector.h"
-#include "../../Render/UIObjectsManager.h"
-#include "../../StaticShared/FilesManager/FilesManager.h"
-#include "../../StaticShared/Utils/Utils.h"
+#include "../../Shared/FilesManager/FilesManager.h"
+#include "../../Shared/Utils/Utils.h"
+#include "../../Shared/UIObjects/UIObjectsManager.h"
 
 [[maybe_unused]]
 static MarchingAntsSelector instance;
@@ -70,7 +70,7 @@ void MarchingAntsSelector::StopOn(UIObject* obj) {
 }
 
 Texture MarchingAntsSelector::_GetAntTextureTextureStep(Texture& texture, int step) {
-  Matx<Color> textureMatrix = Utils::Convert::TextureToMatrix(texture);
+  Matrx<Color> textureMatrix = Utils::Convert::TextureToMatrix(texture);
   Vec2i size = textureMatrix.size();
 
   int borderThickness = 2;

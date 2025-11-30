@@ -1,8 +1,9 @@
 #include "App.h"
 #include "Automatition/Initializables/Initializables.h"
-#include "Render/UIObjectsManager.h"
-#include "StaticShared/Animator/Animator.h"
-#include "StaticShared/FilesManager/FilesManager.h"
+#include "Debug/Debug.h"
+#include "Shared/Animator/Animator.h"
+#include "Shared/FilesManager/FilesManager.h"
+#include "Shared/UIObjects/UIObjectsManager.h"
 
 static App _;
 
@@ -22,23 +23,30 @@ void App::Init()
     Utils::Files::SetDefaultFont();
     UIObjectsManager::Init();
     Initializables::InitAll();
+    toolSizeSlider.Init();
     managerButton.Init();
     colorHolder.Init();
     toolBox.Init();
     canvas.Init();
 }
 
-void App::Update()
+void App::_Update()
 {
     UpdatablesManager::UpdateAll();
 }
 
-void App::Draw()
-{
-    BeginDrawing();
-    ClearBackground(GRAY);
-    UIObjectsManager::DrawAll();
-    EndDrawing();
+void App::_Draw() {
+  BeginDrawing();
+  ClearBackground(GRAY);
+  UIObjectsManager::DrawAll();
+#ifdef DEBUG
+    _HandleDebugDrawing();
+#endif
+  EndDrawing();
+}
+
+void App::_HandleDebugDrawing() {
+    Debug::DrawAll();
 }
 
 void App::Close() {
@@ -56,8 +64,8 @@ void App::Run()
 {
     while (!WindowShouldClose())
     {
-        Update();
-        Draw();
+        _Update();
+        _Draw();
     }
     Close();
 }

@@ -6,21 +6,18 @@
 
 #include "../../../otherLibs/nfd/nfd.h"
 #include "../../App.h"
-#include "../../Render/UIObjectsManager.h"
-#include "../../StaticShared/Animator/Animator.h"
-#include "../../StaticShared/DelayedAction/DelayedAction_inSeconds.h"
-#include "../../StaticShared/FilesManager/FilesManager.h"
-#include "../../StaticShared/Utils/Utils.h"
+#include "../../Shared/Animator/Animator.h"
+#include "../../Shared/DelayedAction/DelayedAction_inSeconds.h"
+#include "../../Shared/FilesManager/FilesManager.h"
+#include "../../Shared/Utils/Utils.h"
 #include "BlankCanvasBuilder.h"
 #include "SettingsBuilder.h"
 
 void ManagerButton::Init() {
-  _oBackground = new UIObject(); //UIObjectsManager::Create();
-  _oBackground->roundness = _roundness;
-  _oBackground->color = Utils::Files::LoadColor("managerButton");
-  _oBackground->SetImage(FilesManager::LoadImage("manager_button.png"));
-  _oBackground->zLayer = 2;
-  _oBackground->imageMarginScale = UIOBJECT_ICON_MARGIN;
+  this->color = Utils::Files::LoadColor("managerButton", "uiGlobal");
+  this->SetImage(FilesManager::LoadImage("manager_button.png"));
+  this->zLayer = 2;
+  this->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
   _oNewButton = new Button();//UIObjectsManager::CreateButton();
   _oLoadButton = new Button();//UIObjectsManager::CreateButton();
@@ -61,20 +58,19 @@ void ManagerButton::Init() {
   _buttons.push_back(_oSettingsButton);
 
   for (auto button : _buttons) {
-    button->zLayer = _oBackground->zLayer + 1;
+    button->zLayer = this->zLayer + 1;
   }
 }
 
 void ManagerButton::Update() {
-  if (_oBackground->Clicked()) {
+  if (this->Clicked()) {
     _listExpanded = true;
   }
-  if (!_oBackground->CursorAbove()) {
+  if (!this->CursorAbove()) {
     _listExpanded = false;
   }
   _AdjustSizeAndPosition();
 }
-void ManagerButton::SetBackgroundColor(Color color) {  }
 
 void ManagerButton::_AdjustSizeAndPosition() {
   //... data
@@ -82,37 +78,32 @@ void ManagerButton::_AdjustSizeAndPosition() {
   Vec2f windowSize      = Utils::View::GetWindowSize().CastTo<float>();
   float smallerEdge          = Utils::View::GetSmallerMonitorEdge();
   float listButtonSeparation = smallerEdge * _listElementSeparationScale;
-  float listButtonHeight     = smallerEdge * _listElementHeightScale;
-  float listButtonWidth      = smallerEdge * _listElementWidthScale;
   float baseButtonMargin     = smallerEdge * _marginScale;
   float listWidth            = smallerEdge * _listElementWidthScale;
   float listHeight           = smallerEdge * (_buttons.size() * (_listElementHeightScale + _listElementSeparationScale) + _listElementSeparationScale);
   Vec2f listSize           = { listWidth, listHeight };
   Vec2f listPos            = { windowSize.x - listSize.x - baseButtonMargin, baseButtonMargin };
 
+  this->roundness = UI_WIDGETS_ROUNDNESS * Utils::View::GetSmallerMonitorEdge();
+
   //... base
-  _oBackground->size = {monitorSize.x * _sizeScale, monitorSize.x * _sizeScale};
-  _oBackground->position = {
-    windowSize.x - _oBackground->size.x - baseButtonMargin,
+  this->size = {monitorSize.x * _sizeScale, monitorSize.x * _sizeScale};
+  this->position = {
+    windowSize.x - this->size.x - baseButtonMargin,
     baseButtonMargin
   };
 
-  //... buttons interactions
-  // before others, cuz "isActive" overrides click
-  // if (_uiObject_newButton->Clicked()) BlankCanvasBuilder::Build();
-  // else if (_uiObject_loadButton->Clicked()) _LoadImageFromSystem();
-
   //... interaction handling
-  Vec2f postAnimatedPosition = _oBackground->position;
-  Vec2f postAnimatedSize = _oBackground->size;
+  Vec2f postAnimatedPosition = this->position;
+  Vec2f postAnimatedSize = this->size;
   if (_listExpanded) {
-    float animationTime = 0.15f;
-    postAnimatedPosition  = Animator::AnimatePosition(_oBackground, listPos, animationTime, GAUSSIAN);
-    postAnimatedSize      = Animator::AnimateSize(_oBackground, listSize, animationTime, GAUSSIAN);
+    float animationTime = ANIMATION_POPUP_DURATION;
+    postAnimatedPosition  = Animator::AnimatePosition(this, listPos, animationTime, GAUSSIAN);
+    postAnimatedSize      = Animator::AnimateSize(this, listSize, animationTime, GAUSSIAN);
 
-    float sizeScale = _oBackground->size.x / postAnimatedSize.x;
-    Animator::AnimateRoundness(_oBackground, _oBackground->roundness * sizeScale, animationTime, GAUSSIAN);
-    Animator::AnimateImageAlpha(_oBackground, 0, animationTime, GAUSSIAN);
+    float sizeScale = this->size.x / postAnimatedSize.x;
+    Animator::AnimateRoundness(this, this->roundness * sizeScale, animationTime, GAUSSIAN);
+    Animator::AnimateImageAlpha(this, 0, animationTime, GAUSSIAN);
 
     for (auto button : _buttons) {
       button->isActive = true;
@@ -124,11 +115,11 @@ void ManagerButton::_AdjustSizeAndPosition() {
       }
     });
   }
-  else if (_oBackground->CursorAbove()) {
-    Animator::SizeUp(_oBackground);
+  else if (this->CursorAbove()) {
+    Animator::SizeUp(this);
   }
   else {
-    Animator::Reset(_oBackground);
+    Animator::Reset(this);
     for (auto button : _buttons) { button->isActive = false; button->allowInteraction = false; }
   }
 
@@ -171,7 +162,6 @@ void ManagerButton::_LoadImageFromSystem() {
 
   if (result == NFD_OKAY) {
     Image img = LoadImage(outPath);
-    Texture2D tex = LoadTextureFromImage(img);
     App::Instance->canvas.AddImage(img);
     UnloadImage(img);
 

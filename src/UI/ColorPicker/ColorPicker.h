@@ -1,9 +1,8 @@
 #pragma once
-#include "../../Render/Prefabs/InputField.h"
-#include "../../Render/Prefabs/Slider.h"
-#include "../../Render/UIObject.h"
-#include "../../Render/UIObjectsManager.h"
-#include "../../StaticShared/Utils/Utils.h"
+#include "../../Shared/UIObjects/Prefabs/InputField.h"
+#include "../../Shared/UIObjects/Prefabs/Slider.h"
+#include "../../Shared/UIObjects/UIObject.h"
+#include "../../Shared/UIObjects/UIObjectsManager.h"
 #include "raylib.h"
 
 class ColorPicker final : public UIObject, public Updatable {

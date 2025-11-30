@@ -35,7 +35,7 @@ public:
   Vec2& operator/=(T scalar) { x /= scalar; y /= scalar; return *this; }
 
   bool operator!=(const Vec2& other) const { return x != other.x || y != other.y; }
-  bool operator==(const Vec2 & vec2) const { return x == vec2.x && y == vec2.y; };
+  bool operator==(const Vec2 & vec2) const { return x == vec2.x && y == vec2.y; }
 
   template <typename U> Vec2<U> CastTo() {
     return Vec2<U>(static_cast<U>(x), static_cast<U>(y));
