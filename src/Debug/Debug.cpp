@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+void Debug::Print(std::string text) {
+  std::cout << text << "\n";
+}
 void Debug::DrawPoint(Vec2f position, Color color) {
   _debugPoints.push_back({position, color});
 }

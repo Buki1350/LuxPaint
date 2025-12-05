@@ -27,7 +27,10 @@ void Slider::Update() {
     Vec2f globalPos = this->position;
 
     if (_oGrab->Pressed()) _grabbing = true;
-    if (_grabbing && Utils::Input::MouseReleased()) _grabbing = false;
+    if (_grabbing && Utils::Input::MouseReleased()) {
+        if (_onReleaseFunc != nullptr) _onReleaseFunc();
+        _grabbing = false;
+    }
 
     if (isnan(_value)) _value = 0.0f;
 
@@ -84,18 +87,24 @@ void Slider::Update() {
             break;
         }
     }
+
+    static float previousValue = 0.0f;
+    if (previousValue != _value) {
+        if (_onChangeFunc != nullptr) _onChangeFunc();
+        previousValue = _value;
+    }
 }
 
 void Slider::OnValueChanged(std::function<void()> lambdaFunction) {
-    if (lambdaFunction) lambdaFunction();
+    _onChangeFunc = lambdaFunction;
 }
 
-float Slider::GetValue() {
-    return _value;
-}
+float Slider::GetValue() { return _value; }
 
-void Slider::SetValue(float value) {
-    _value = value;
+void Slider::SetValue(float value) { _value = value; }
+
+void Slider::OnRelease(std::function<void()> lambdaFunction) {
+    _onReleaseFunc = lambdaFunction;
 }
 
 void Slider::Destroy() {

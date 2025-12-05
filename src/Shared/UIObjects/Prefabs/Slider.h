@@ -9,11 +9,12 @@ enum ORIENTATION {
   VERTICAL = 1
 };
 
-class Slider final : public UIObject, public Updatable {
+class  Slider final : public UIObject, public Updatable {
   ORIENTATION _orientation;
   UIObject* _oLine;
   UIObject* _oGrab;
   std::function<void()> _onChangeFunc;
+  std::function<void()> _onReleaseFunc;
   float _value = 0.0f;
   bool _grabbing = false;
 
@@ -23,5 +24,6 @@ public:
   void OnValueChanged(std::function<void()> lambdaFunction);
   float GetValue();
   void SetValue(float value);
+  void OnRelease(std::function<void()> lambdaFunction);
   void Destroy() override;
 };

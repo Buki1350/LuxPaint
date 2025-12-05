@@ -9,8 +9,7 @@ static App _;
 
 void App::Init()
 {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_WINDOW_TRANSPARENT | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
 
     std::vector<int> windowSize = FilesManager::LoadArray<int>("UserPreferences.dat", "windowSize");
     if (windowSize.empty()) windowSize = {800, 600};
@@ -36,9 +35,9 @@ void App::_Update()
 }
 
 void App::_Draw() {
-  BeginDrawing();
-  ClearBackground(GRAY);
-  UIObjectsManager::DrawAll();
+    BeginDrawing();
+    ClearBackground(Color{127, 127, 127, 127});
+    UIObjectsManager::DrawAll();
 #ifdef DEBUG
     _HandleDebugDrawing();
 #endif

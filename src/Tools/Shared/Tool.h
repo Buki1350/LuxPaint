@@ -10,7 +10,7 @@ class Tool {
 
   protected:
   std::string _name;
-  float size = 0;
+  int size = 0;
   virtual void HandleMousePressed(UIObject* imageToPaint) = 0;
   virtual void HandleMouseDown(UIObject* imageToPaint) = 0;
   virtual void HandleMouseRelease(UIObject* imageToPaint) = 0;
@@ -19,8 +19,8 @@ class Tool {
   Texture2D icon;
 
   virtual bool CanSizeBeChanged() const = 0;
-  void SetSize(float val) { size = val; }
-  float GetSize() { return size; }
+  void SetSize(float val);
+  int GetSize() { return size; }
 
   Tool(const std::string &name);
 };

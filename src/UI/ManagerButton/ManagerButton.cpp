@@ -19,10 +19,10 @@ void ManagerButton::Init() {
   this->zLayer = 2;
   this->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
-  _oNewButton = new Button();//UIObjectsManager::CreateButton();
-  _oLoadButton = new Button();//UIObjectsManager::CreateButton();
-  _oSaveButton = new Button();//UIObjectsManager::CreateButton();
-  _oSettingsButton = new Button();//UIObjectsManager::CreateButton();
+  _oNewButton = new Button();
+  _oLoadButton = new Button();
+  _oSaveButton = new Button();
+  _oSettingsButton = new Button();
 
   Color buttonsColor = Utils::Files::LoadColor("managerButton_listButton");
 
@@ -44,6 +44,7 @@ void ManagerButton::Init() {
   _oSaveButton->text = "Save image";
   _oSaveButton->text.center = true;
   _oSaveButton->allowInteraction = false;
+  _oSaveButton->OnClick([this](){ _SaveImageToSystem(); });
 
   _oSettingsButton->isActive = false;
   _oSettingsButton->color = buttonsColor;
@@ -169,6 +170,40 @@ void ManagerButton::_LoadImageFromSystem() {
   }
   else if (result == NFD_CANCEL) {
     // użytkownik anulował
+  }
+  else {
+    printf("NFD Error: %s\n", NFD_GetError());
+  }
+}
+
+void ManagerButton::_SaveImageToSystem() {
+  char* outPath = nullptr;
+
+  nfdu8filteritem_t filters[2] = {
+    { "PNG Image", "png" },
+    { "JPG Image", "jpg,jpeg" }
+  };
+
+  nfdresult_t result = NFD_SaveDialog(
+          &outPath,
+          filters,
+          2,
+          nullptr,
+          "canvas.png"
+  );
+
+  if (result == NFD_OKAY) {
+
+    Image img = App::Instance->canvas.ExportAsImage();
+
+    // raylib sam rozpoznaje format po rozszerzeniu
+    ExportImage(img, outPath);
+
+    UnloadImage(img);
+    NFD_FreePath(outPath);
+  }
+  else if (result == NFD_CANCEL) {
+    // anulowano
   }
   else {
     printf("NFD Error: %s\n", NFD_GetError());

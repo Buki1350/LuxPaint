@@ -10,11 +10,12 @@
 
 class App : public Singleton<App> {
     void Close();
-
     void _Update();
     void _Draw();
     void _HandleDebugDrawing();
+
 public:
+    // TODO: backgroundColor;
     Canvas canvas;
     UIObjectsManager UIObjectManager;
     ToolSizeSlider toolSizeSlider;

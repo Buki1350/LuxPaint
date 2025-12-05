@@ -1,7 +1,8 @@
 #pragma once
-#include "../UIObject.h"
 #include "../../../Automatition/Updatables/Updatable.h"
+#include "../UIObject.h"
 
+#include <functional>
 #include <string>
 
 enum class InputMode {
@@ -19,6 +20,7 @@ class InputField final : public UIObject, public Updatable {
   float _cursorTimer = 0.0; // do mrugania
   bool _cursorVisible = true;
   float _scrollOffset = 0;  // przesunięcie tekstu w lewo gdy jest długi
+  std::function<void()> _onValueChangedCallback = nullptr;
 
 public:
   InputField();
@@ -33,4 +35,5 @@ public:
   void Draw() override;
 
   bool IsFocused() const { return this == _instance; }
+  void OnValueChanged(std::function<void()> lambdaFunc);
 };

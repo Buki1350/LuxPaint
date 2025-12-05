@@ -171,6 +171,7 @@ void UIObject::Draw() {
       );
     }
   }
+
   text.Draw();
 }
 

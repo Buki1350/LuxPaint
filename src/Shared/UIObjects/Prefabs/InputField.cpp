@@ -90,32 +90,40 @@ void InputField::Update() {
     } else {
         _scrollOffset = 0;
     }
+
+    static std::string previousValue = _value;
+    if (previousValue != _value) {
+        previousValue = _value;
+        if (_onValueChangedCallback != nullptr) {
+            _onValueChangedCallback();
+        }
+    }
 }
 
 void InputField::Draw() {
-    UIObject::Draw();
+  UIObject::Draw();
 
-    Vec2f finalPos = position;
-    Vec2f finalSize = size;
+  Vec2f finalPos = position;
+  Vec2f finalSize = size;
 
-    BeginScissorMode((int)finalPos.x, (int)finalPos.y, (int)finalSize.x, (int)finalSize.y);
+  BeginScissorMode((int)finalPos.x, (int)finalPos.y, (int)finalSize.x,
+                   (int)finalSize.y);
 
-    DrawTextEx(
-        Utils::AppData::GetDefaultFont(),
-        _value.c_str(),
-        { finalPos.x + text.margin - _scrollOffset, finalPos.y + (finalSize.y - text.fontSize) / 2.0f },
-        (float)text.fontSize,
-        1.0f,
-        text.textColor
-    );
+  DrawTextEx(Utils::AppData::GetDefaultFont(), _value.c_str(),
+             {finalPos.x + text.margin - _scrollOffset,
+              finalPos.y + (finalSize.y - text.fontSize) / 2.0f},
+             (float)text.fontSize, 1.0f, text.textColor);
 
-    if (this == _instance && _cursorVisible) {
-        std::string beforeCursor = _value.substr(0, _cursorPos);
-        int cursorX = MeasureText(beforeCursor.c_str(), text.fontSize);
-        int x = (int)(finalPos.x + text.margin + cursorX - _scrollOffset);
-        int y = (int)(finalPos.y + (finalSize.y - text.fontSize) / 2.0f);
-        DrawRectangle(x, y, 2, text.fontSize, text.textColor);
-    }
+  if (this == _instance && _cursorVisible) {
+    std::string beforeCursor = _value.substr(0, _cursorPos);
+    int cursorX = MeasureText(beforeCursor.c_str(), text.fontSize);
+    int x = (int)(finalPos.x + text.margin + cursorX - _scrollOffset);
+    int y = (int)(finalPos.y + (finalSize.y - text.fontSize) / 2.0f);
+    DrawRectangle(x, y, 2, text.fontSize, text.textColor);
+  }
 
-    EndScissorMode();
+  EndScissorMode();
+}
+void InputField::OnValueChanged(std::function<void()> lambdaFunc) {
+    _onValueChangedCallback = lambdaFunc;
 }

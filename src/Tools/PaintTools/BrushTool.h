@@ -8,17 +8,29 @@ protected:
 public:
   explicit BrushTool(const std::string& name) : Tool(name) {}
 
-  void BrushTool::HandleMousePressed(UIObject* img) override {
+  void HandleMousePressed(UIObject* img) override {
+    Draw(img);
+  }
+
+  void HandleMouseDown(UIObject* img) override {
+    Draw(img);
+  }
+
+  void HandleMouseRelease(UIObject *img) override {}
+
+private:
+  void Draw(UIObject* img) {
+    if (!img) return;
     Vec2i p = img->GetOnImageCursorPosition();
     if (p.x < 0) return;
 
-    ImageDrawCircle(&img->GetImage(), p.x, p.y, 5, BLUE);
+    Image im = img->GetImage();
+    Color c = App::Instance->canvas.GetCurrentColor();
+
+    int radius = std::max(size, 1);
+
+    ImageDrawCircle(&im, p.x, p.y, radius, c);
+
     img->UpdateTexture();
   }
-
-
-  void HandleMouseDown(UIObject *imageToPaint) override { }
-
-  void HandleMouseRelease(UIObject *imageToPaint) override {}
-
 };

@@ -7,24 +7,23 @@ class PenTool final : public Tool {
 public:
   explicit PenTool(const std::string& name) : Tool(name) {}
 
-  void HandleMousePressed(UIObject* imageToPaint) override {
+  void HandleMousePressed(UIObject* img) override {
     _lastPixel = {-1, -1};
   }
 
-  void HandleMouseDown(UIObject* imageToPaint) override {
-    if (!imageToPaint) return;
+  void HandleMouseDown(UIObject* img) override {
+    if (!img) return;
 
-    Vec2i p = imageToPaint->GetOnImageCursorPosition();
-    if (p.x < 0) return; // poza obrazem
+    Vec2i p = img->GetOnImageCursorPosition();
+    if (p.x < 0) return;
 
-    Image img = imageToPaint->GetImage();
-    Color color = App::Instance->canvas.GetCurrentColor();
+    Image im = img->GetImage();
+    Color col = App::Instance->canvas.GetCurrentColor();
+    int radius = std::max(size, 1);   // grubość linii
 
-    // Jeśli mamy poprzedni punkt — rysujemy linię interpolowaną
     if (_lastPixel.x >= 0) {
       int dx = p.x - _lastPixel.x;
       int dy = p.y - _lastPixel.y;
-
       int steps = std::max(abs(dx), abs(dy));
       if (steps == 0) steps = 1;
 
@@ -32,18 +31,19 @@ public:
         float t = (float)i / steps;
         int x = (int)(_lastPixel.x + dx * t);
         int y = (int)(_lastPixel.y + dy * t);
-        ImageDrawPixel(&img, x, y, color);
+
+        ImageDrawCircle(&im, x, y, radius, col);
       }
     }
     else {
-      ImageDrawPixel(&img, p.x, p.y, color);
+      ImageDrawCircle(&im, p.x, p.y, radius, col);
     }
 
-    imageToPaint->UpdateTexture();
+    img->UpdateTexture();
     _lastPixel = p;
   }
 
-  void HandleMouseRelease(UIObject *imageToPaint) override {
+  void HandleMouseRelease(UIObject *img) override {
     _lastPixel = {-1, -1};
   }
 

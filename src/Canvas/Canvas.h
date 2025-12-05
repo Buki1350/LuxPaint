@@ -8,7 +8,7 @@
 #include "../Tools/Shared/Tool.h"
 #include "Selectors/SelectionMask.h"
 
-class Canvas final : public Updatable {
+class Canvas final : public UIObject, public Updatable {
   // ... first layer works as base for other layers
   std::vector<UIObject*> _oLayers;
   // ... active layer
@@ -16,8 +16,6 @@ class Canvas final : public Updatable {
   // ... for moving around
   Vec2f _dragOffset {0,0};
   bool _isDragging = false;
-  // ... regular app background
-  UIObject* _oBackground = nullptr;
   // ... drawing utility
   Color _currentColor = BLACK;
   Tool* _currentTool = nullptr;
@@ -51,5 +49,6 @@ public:
   Color GetCurrentColor();
   void SetCurrentTool(Tool *tool);
   const Tool *GetCurrentToolRO();
-  Tool* GetCurrentTool();
+  Tool *GetCurrentTool();
+  Image ExportAsImage();
 };

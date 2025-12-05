@@ -78,16 +78,15 @@ void Canvas::_HandleZoomAndDrag() {
 }
 
 void Canvas::_CreateBackground() {
-  _oBackground = new UIObject();
-  _oBackground->SetImage(FilesManager::LoadImage("transparent_background_medium_blend.png"));
-  _oBackground->zLayer = 0;
+  this->color = BLANK;
+  this->imageAlpha = 0;
+  this->outlineScale = 0;
 }
 
 void Canvas::_UpdateBackground() {
-  if (!_oBackground) { return; }
   Vec2f monitorSize = Utils::View::GetCurrentMonitorSize().CastTo<float>();
-  _oBackground->size = {(float)monitorSize.x, (float)monitorSize.y};
-  _oBackground->position = {0, 0};
+  this->size = {(float)monitorSize.x, (float)monitorSize.y};
+  this->position = {0, 0};
 }
 
 void Canvas::_HandleOutline() {
@@ -286,6 +285,34 @@ void Canvas::AddImage(Image image) {
   baseLayer->UpdateTexture();
 }
 
+Image Canvas::ExportAsImage() {
+  if (_oLayers.empty()) {
+    return GenImageColor(1, 1, BLANK);
+  }
+
+  UIObject* first = _oLayers[0];
+  Image result = ImageCopy(first->GetImage());
+
+  for (int i = 1; i < _oLayers.size(); i++) {
+    UIObject* layer = _oLayers[i];
+    Image layerImg = layer->GetImage();
+
+    if (layerImg.data == nullptr)
+      continue;
+
+    Vec2f pos = layer->position - first->position;
+
+    Rectangle src = {0, 0, (float)layerImg.width, (float)layerImg.height};
+    Rectangle dst = {pos.x, pos.y, (float)layerImg.width, (float)layerImg.height};
+
+    ImageDraw(&result, layerImg, src, dst, WHITE);
+  }
+
+  return result;
+}
+
+
+
 void Canvas::AddTexture(Texture2D texture) { AddImage(LoadImageFromTexture(texture)); }
 
 std::vector<UIObject *> &Canvas::GetImages() { return _oLayers; }
@@ -297,4 +324,6 @@ Color Canvas::GetCurrentColor() { return _currentColor; }
 void Canvas::SetCurrentTool(Tool *tool) { _currentTool = tool; }
 const Tool *Canvas::GetCurrentToolRO() { return _currentTool; }
 Tool *Canvas::GetCurrentTool() { return _currentTool; }
+
+
 

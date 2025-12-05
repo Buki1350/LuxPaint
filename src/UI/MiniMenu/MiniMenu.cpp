@@ -17,7 +17,6 @@ MiniMenu *MiniMenu::CreateInstance() {
   newFrontPanel->_targetSize = Vec2f::ones() * margin;
   newFrontPanel->_oBackground->color = Utils::Files::LoadColor("miniMenu", "uiGlobal");
   newFrontPanel->_oBackground->size = {0, 0};
-  newFrontPanel->_oBackground->color = Utils::Files::LoadColor("black");
   return newFrontPanel;
 }
 
@@ -54,6 +53,12 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
     if (dynamic_cast<Button*>(e.object) || dynamic_cast<InputField*>(e.object)) {
       _buttonsAndInputs.push_back(e.object);
     }
+
+    Color textCol = Utils::Colors::GetDynamicTextColorFor(_oBackground);
+    for (auto &el : _oPackedObjects) {
+      el.object->text.textColor = textCol;
+    }
+
   }
 
   _rows.push_back(row);
@@ -294,6 +299,9 @@ void MiniMenu::EnableClosing() { _disableClosing = false; }
 void MiniMenu::SetBackgroundColorForAll(Color color) {
   for (auto i : instances) {
     i->_oBackground->color = color;
+    for (auto p : i->_oPackedObjects) {
+      p.object->text.textColor = Utils::Colors::GetDynamicTextColorFor(i->_oBackground);
+    }
   }
 }
 

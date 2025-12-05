@@ -26,4 +26,5 @@ public:
   void Init();
   void Update() override;
   void SetBackgroundColor(Color color);
+  void _SaveImageToSystem();
 };

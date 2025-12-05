@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 
+class UIObject;
 class Utils final : public Singleton<Utils>, public Updatable {
   static Vec2i _GetCurrentMonitorSize();
   static float _GetSmallerMonitorEdge();
@@ -39,6 +40,8 @@ public:
     static std::string ColorToHex(const Color &color, bool includeAlpha = false);
     static Color DarkenColor(const Color& color, float factor);
     static Color LightenColor(Color color, float x);
+    static float GetColorLuminance(Color c);
+    static Color GetDynamicTextColorFor(UIObject* backgroundUIO);
   };
   class Input final {
     public:

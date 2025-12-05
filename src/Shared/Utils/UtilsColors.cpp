@@ -1,4 +1,5 @@
 #pragma once
+#include "../UIObjects/UIObject.h"
 #include "Utils.h"
 
 Color Utils::Colors::HexToColor(const std::string hex) {
@@ -60,4 +61,21 @@ Color Utils::Colors::LightenColor(Color color, float factor) {
   result.b = (unsigned char)std::min(255.0f, color.b * factor);
   result.a = color.a;
   return result;
+}
+
+float Utils::Colors::GetColorLuminance(Color c) {
+  float alpha = c.a / 255.0f;
+
+  float bg = 255.0f;
+
+  float r = c.r * alpha + bg * (1.0f - alpha);
+  float g = c.g * alpha + bg * (1.0f - alpha);
+  float b = c.b * alpha + bg * (1.0f - alpha);
+
+  return 0.2126f * r + 0.7152f * g + 0.0722f * b;
+}
+
+// returns black or whhite depending on UIObject luminance
+Color Utils::Colors::GetDynamicTextColorFor(UIObject* backgroundUIO) {
+  return GetColorLuminance(backgroundUIO->color) < 160.0f? WHITE : BLACK;
 }
