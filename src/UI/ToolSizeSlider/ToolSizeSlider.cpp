@@ -1,9 +1,6 @@
 #include "ToolSizeSlider.h"
 #include "../../App.h"
 #include "../../Shared/Utils/Utils.h"
-
-#include "ToolSizeSlider.h"
-
 #include "../../Shared/DelayedAction/DelayedAction_until.h"
 
 #include <iostream>
@@ -39,7 +36,7 @@ void ToolSizeSlider::Init() {
 
     this->position = Vec2f(0, 25);
     this->color = Utils::Files::LoadColor("ToolSizeSlider", "uiGlobal");
-    this->zLayer = 100;
+    this->SetZLayer(LAYER_WIDGETS);
     this->name = "ToolSizeSlider";
 }
 
@@ -60,17 +57,17 @@ void ToolSizeSlider::_UpdateSliderFromInput() {
     float sliderValue = (float)(newVal - minVal) / (maxVal - minVal);
     _slider->SetValue(sliderValue);
 
-    _currentTool->SetSize(newVal);
+    _currentTool->SetSize((float)newVal);
 }
 
 
 void ToolSizeSlider::_UpdateInputFromSlider(float sliderValue) {
     if (!_currentTool) return;
 
-    int newVal = std::round(sliderValue * 100) / 100 * maxVal / 2;
+    int newVal = (int)(std::round(sliderValue * 100) / 100 * maxVal / 2);
     newVal = std::max(newVal, 1);
     _inputField->SetValue(std::to_string(newVal));
-    _currentTool->SetSize(newVal);
+    _currentTool->SetSize((float)newVal);
     _slider->SetValue(.5f);
     //std::cout << sliderValue << std::endl;
 }
@@ -110,14 +107,14 @@ void ToolSizeSlider::Update() {
     // --- input field ---
     _inputField->position = this->position + Vec2f(margin, margin);
     _inputField->size = Vec2f(size.x - 2 * margin, 25);
-    _inputField->zLayer = zLayer + 1;
+    _inputField->SetZLayer(GetZLayer() + 1);
 
     // --- slider and values ---
     if ((minVal == -1 || maxVal == -1) && _currentTool != nullptr) {
         float sliderVal = _slider->GetValue();
         if ((minVal == -1 || maxVal == -1) && sliderVal != 0) {
-            maxVal = sliderVal * 5;
-            minVal = sliderVal / 5;
+            maxVal = (int)sliderVal * 5;
+            minVal = (int)sliderVal / 5;
         }
 
         _inputField->SetValue("1");
@@ -126,7 +123,7 @@ void ToolSizeSlider::Update() {
 
     _slider->position = position + Vec2f(0, _inputField->size.y + margin * 2);
     _slider->size = size - Vec2f(0, _inputField->size.y + margin * 3);
-    _slider->zLayer = zLayer + 1;
+    _slider->SetZLayer(GetZLayer() + 1);
 
 
     // --- show/hide logic ---

@@ -3,7 +3,7 @@
 #include "Tool.h"
 #include <iostream>
 
-void Tool::SetSize(float val) { size = val; }
+void Tool::SetSize(int val) { size = val; }
 
 Tool::Tool(const std::string &name) {
   this->_name = name;

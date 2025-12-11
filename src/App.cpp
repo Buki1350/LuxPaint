@@ -36,7 +36,7 @@ void App::_Update()
 
 void App::_Draw() {
     BeginDrawing();
-    ClearBackground(Color{127, 127, 127, 127});
+    ClearBackground(Color{66, 66, 66, 127});
     UIObjectsManager::DrawAll();
 #ifdef DEBUG
     _HandleDebugDrawing();

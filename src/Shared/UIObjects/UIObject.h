@@ -12,6 +12,7 @@ class UIObject {
   bool        _hasImage = false;
   bool        textFittingEnabled = false;
   float       textFittingSeparatorScale = 0.005f;
+  int         _zLayer = 0;
 
 public:
   bool          isActive = true;
@@ -20,7 +21,6 @@ public:
   Vec2f         size {0,0};
   Color         color {};
   float         roundness = 0;
-  unsigned int  zLayer = 0;
   Text          text;
   // ... style
   float         outlineScale = UIOBJECT_OUTLINE_SCALE;
@@ -32,6 +32,8 @@ public:
 
   UIObject();
   virtual void Draw();
+  void SetZLayer(int newZLayer);
+  int GetZLayer();
   bool CursorAbove() const;
   bool Clicked() const;
   bool ClickedButNotThis();

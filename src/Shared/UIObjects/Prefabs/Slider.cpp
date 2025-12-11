@@ -21,8 +21,8 @@ void Slider::Update() {
     float lineThickness = SLIDER_LINEWIDTH_SCALE * scale;
     Vec2f grabSize = Vec2f(SLIDER_GRABPOINT_SCALE * scale);
 
-    _oLine->zLayer = this->zLayer + 1;
-    _oGrab->zLayer = this->zLayer + 1;
+    _oLine->SetZLayer(this->GetZLayer() + 1);
+    _oGrab->SetZLayer(this->GetZLayer() + 1);
 
     Vec2f globalPos = this->position;
 

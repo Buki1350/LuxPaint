@@ -1,38 +1,47 @@
 #include "UIObjectsManager.h"
 
-std::vector<UIObject*> UIObjectsManager::_objects;
-Shader UIObjectsManager::roundedMask;
+void UIObjectsManager::_UpdateRenderOrderList() {
+  if (_pendingUIObjects.empty()) return;
+
+  for (UIObject* obj : _pendingUIObjects) {
+    auto it = _objectsInRenderOrder.begin();
+    for (; it != _objectsInRenderOrder.end(); ++it) {
+      if ((*it)->GetZLayer() > obj->GetZLayer()) break;
+    }
+    _objectsInRenderOrder.insert(it, obj);
+  }
+
+  _pendingUIObjects.clear();
+}
+
 
 bool UIObjectsManager::IsInitialized() {
   return _initialized;
 }
 
 void UIObjectsManager::Init() {
-  _objects = std::vector<UIObject*>();
-  roundedMask = LoadShader(nullptr, "../Shaders/rounded_mask.fs");
+  _pendingUIObjects = std::vector<UIObject*>();
+  _objectsInRenderOrder = std::list<UIObject*>();
+
   _initialized = true;
 }
 
 void UIObjectsManager::AddUIObject(UIObject *object) {
-  _objects.push_back(object);
+  _pendingUIObjects.push_back(object);
 }
 
 void UIObjectsManager::DrawAll() {
-  auto cp = _objects;
-  int objectDrawn = 0;
-  int currentZLayer = 0;
-  while (objectDrawn < _objects.size()) {
-    for (const auto o : _objects) {
-      if (currentZLayer == o->zLayer) {
-        if (o->isActive) { o->Draw(); }
-        objectDrawn++;
-      }
-    }
-    currentZLayer++;
+  _UpdateRenderOrderList();
+
+  auto snapshot = _objectsInRenderOrder;
+  for (UIObject* obj : _objectsInRenderOrder) {
+    if (obj->isActive)
+      obj->Draw();
   }
 }
+
 UIObject *UIObjectsManager::GetObjectByName(std::string name) {
-  for (auto &object : _objects) {
+  for (auto &object : _objectsInRenderOrder) {
     if (object->name == name) return object;
   }
   return nullptr;

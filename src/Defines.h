@@ -5,13 +5,22 @@
 #define ANIMATION_ICON_SIZEUP_SCALE     0.1f
 #define ANIMATION_POPUP_DURATION        0.05f //0.15f
 #define ANIMATION_OVERSHOOT_STRENGTH    1.70158f
+
 #define UIOBJECT_ICON_MARGIN            0.005f
 #define UIOBJECT_OUTLINE_DARKENING      0.7f
 #define UIOBJECT_OUTLINE_SCALE          0.0f//0.0025f
+
 #define UI_WIDGETS_ROUNDNESS            0.00015f
+
 #define FRONTPANEL_BORDER_SIZE_SCALE    0.005f
 #define FRONTPANEL_SIZEUP_DURATION      1.2f
+
 #define MINIMENU_MARGIN_SCALE           0.01f
+
 #define SLIDER_LINEWIDTH_SCALE          0.005f
 #define SLIDER_GRABPOINT_SCALE          0.01f
+
 #define TEXT_DEFAULT_MARGIN             0.5f
+
+#define LAYER_WIDGETS                   1000
+#define LAYER_COLORPICKER               1100 // ... picker above anything else; widgets have its own objects inside with different layers. Added 100 layers for each widget.

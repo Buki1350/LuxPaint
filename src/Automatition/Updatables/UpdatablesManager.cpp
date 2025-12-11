@@ -14,9 +14,9 @@ void UpdatablesManager::UpdateAll() {
 
   auto snapshot = updatables;
 
-  for (Updatable* u : snapshot) {
-    if (u && !u->markedForDeletion) {
-      u->Update();
+  for (Updatable* updatable : snapshot) {
+    if (updatable != nullptr && !updatable->markedForDeletion) {
+      updatable->Update();
     }
   }
 }

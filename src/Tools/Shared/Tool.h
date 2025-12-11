@@ -19,7 +19,7 @@ class Tool {
   Texture2D icon;
 
   virtual bool CanSizeBeChanged() const = 0;
-  void SetSize(float val);
+  void SetSize(int val);
   int GetSize() { return size; }
 
   Tool(const std::string &name);

@@ -10,11 +10,13 @@ ColorPicker::ColorPicker() {
   _backgroundColor = Utils::Files::LoadColor("colorPicker");
   this->color = _backgroundColor;
   this->size = Vec2f(Utils::View::GetSmallerMonitorEdge() * _overallSizeScale);
+  this->SetZLayer(LAYER_COLORPICKER);
 
   _oRainbow = new UIObject;
   _oRainbow->outlineScale = 0;
   _oRainbow->imageStretch = true;
   _oRainbow->imageMarginScale = 0.0f;
+  _oRainbow->SetZLayer(GetZLayer() + 1);
   _GenerateRainbowTexture();
 
   _oDot = new UIObject;
@@ -34,7 +36,7 @@ ColorPicker::ColorPicker() {
   _sliders = {_sRSlider, _sGSlider, _sBSlider, _sASlider};
 
   for (auto slider : _sliders)
-    slider->zLayer = this->zLayer + 1;
+    slider->SetZLayer(this->GetZLayer() + 1);
 
   // Etykiety R G B A
   for (int i = 0; i < 4; i++) {
@@ -43,7 +45,7 @@ ColorPicker::ColorPicker() {
     label->text = std::string(1, labels[i]);
     label->color = Utils::Files::LoadColor("colorPickerLabel", "uiGlobal");
     label->outlineScale = 0;
-    label->zLayer = this->zLayer + 2;
+    label->SetZLayer(this->GetZLayer() + 2);
     _sliderLabels.push_back(label);
   }
 
@@ -62,11 +64,11 @@ void ColorPicker::Update() {
   float oRainbowHeight = this->size.y * 0.5f; // panoramiczne
   _oRainbow->size = {oRainbowWidth, oRainbowHeight};
   _oRainbow->position = this->position + Vec2f(margin, margin);
-  _oRainbow->zLayer = this->zLayer + 1;
+  _oRainbow->SetZLayer(this->GetZLayer() + 1);
 
   float dotSize = 0.01f * scale;
   _oDot->size = {dotSize, dotSize};
-  _oDot->zLayer = this->zLayer + 3;
+  _oDot->SetZLayer(this->GetZLayer() + 3);
 
   float hexInputFieldWidth = this->size.x / 2;
   float hexInputFieldHeight = 0.03f * scale;
@@ -74,9 +76,8 @@ void ColorPicker::Update() {
   _hexInputField->position = {
       _oRainbow->position.x,
       _oRainbow->position.y + _oRainbow->size.y + margin};
-  _hexInputField->zLayer = this->zLayer + 1;
+  _hexInputField->SetZLayer(this->GetZLayer() + 1);
 
-  // Slidery RGBA + etykiety
   float availableHeight =
       this->size.y - _oRainbow->size.y - _hexInputField->size.y - 7 * margin;
   float sliderHeight = availableHeight / _sliders.size();

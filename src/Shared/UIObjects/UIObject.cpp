@@ -12,7 +12,7 @@ UIObject::UIObject() {
   new DelayedAction_until(
       []() { return UIObjectsManager::IsInitialized; },
       [this]() {
-          UIObjectsManager::_objects.push_back(this);
+          UIObjectsManager::_pendingUIObjects.push_back(this);
       }
   );
 }
@@ -85,20 +85,18 @@ Texture &UIObject::GetTexture() { return _texture; }
 void UIObject::Destroy() {
   Animator::Terminate(this);
 
-  for (auto it = UIObjectsManager::_objects.begin(); it != UIObjectsManager::_objects.end(); ++it) {
-    if (*it == this) {
-      UIObjectsManager::_objects.erase(it);
-      break;
-    }
-  }
+  // ... remove from ordered list
+  UIObjectsManager::_objectsInRenderOrder.remove(this);
 
+  // ... remove from updatables
   if (auto up = dynamic_cast<Updatable*>(this)) {
-    auto &vec = UpdatablesManager::updatables;
-    vec.erase(std::remove(vec.begin(), vec.end(), up), vec.end());
+    auto& upvec = UpdatablesManager::updatables;
+    upvec.erase(std::remove(upvec.begin(), upvec.end(), up), upvec.end());
   }
 
   delete this;
 }
+
 
 void UIObject::Draw() {
   Vec2f finalPos = position;
@@ -174,6 +172,15 @@ void UIObject::Draw() {
 
   text.Draw();
 }
+
+void UIObject::SetZLayer(int newZLayer) {
+  UIObjectsManager::_objectsInRenderOrder.remove(this);
+  this->_zLayer = newZLayer;
+  UIObjectsManager::_objectsInRenderOrder.push_back(this);
+  UIObjectsManager::_UpdateRenderOrderList();
+}
+
+int UIObject::GetZLayer() { return this->_zLayer; }
 
 bool UIObject::CursorAbove() const {
   return

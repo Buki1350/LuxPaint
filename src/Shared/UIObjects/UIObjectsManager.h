@@ -8,10 +8,12 @@
 class UIObjectsManager {
   friend class UIObject;
   inline static bool _initialized = false;
+  inline static std::vector<UIObject*> _pendingUIObjects;
+  inline static std::list<UIObject*> _objectsInRenderOrder;
+  static void _UpdateRenderOrderList();
+
 public:
-  static std::vector<UIObject*> _objects;
   static bool IsInitialized();
-  static Shader roundedMask;
   static void Init();
   static void AddUIObject(UIObject *object);
   static void DrawAll();

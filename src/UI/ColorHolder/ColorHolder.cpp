@@ -11,11 +11,11 @@
 
 void ColorHolder::Init() {
   this->color = Utils::Files::LoadColor("colorHolder", "uiGlobal");
-  this->zLayer = 1;
+  this->SetZLayer(LAYER_WIDGETS);
 
   Button* colorPickButton = new Button();
   colorPickButton->color = WHITE;
-  colorPickButton->zLayer = this->zLayer + 1;
+  colorPickButton->SetZLayer(this->GetZLayer() + 1);
   colorPickButton->roundness = this->roundness;
   colorPickButton->SetImage(FilesManager::LoadImage("rgb.png"));
   colorPickButton->imageMarginScale = UIOBJECT_ICON_MARGIN;
@@ -27,7 +27,7 @@ void ColorHolder::Init() {
   for (int i = 0; i < _numberOfSavedColors; i++) {
     Button* savedColor = new Button();
     savedColor->color = WHITE;
-    savedColor->zLayer = this->zLayer + 1;
+    savedColor->SetZLayer(this->GetZLayer() + 1);
     savedColor->roundness = 1;
     savedColor->OnClick([this, savedColor]() {
       App::Instance->canvas.SetCurrentColor(savedColor->color);

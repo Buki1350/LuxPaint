@@ -25,7 +25,7 @@ void MarchingAntsSelector::StartOn(UIObject* obj) {
   newSel.overlay->SetImage(newSel.MAImages[0]);
   newSel.overlay->size = obj->size;
   newSel.overlay->position = obj->position;
-  newSel.overlay->zLayer = obj->zLayer + 1;
+  newSel.overlay->SetZLayer(obj->GetZLayer() + 1);
   newSel.overlay->imageAlpha = 1.0f;
   newSel.overlay->outlineScale = 0.0f;
 

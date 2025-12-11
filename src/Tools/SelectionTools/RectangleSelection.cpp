@@ -23,7 +23,7 @@ void RectangleSelection::HandleMousePressed(UIObject*) {
         _currentSelection->SetImage(tmp);
         UnloadImage(tmp);
 
-        _currentSelection->zLayer = 1000;
+        _currentSelection->SetZLayer(1000);
 
         // Efekt "marching ants"
         MarchingAntsSelector::StartOn(_currentSelection);

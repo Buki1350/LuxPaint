@@ -155,7 +155,7 @@ void Canvas::_HandleCropping() {
     _oResizePreview->color.a = 255/2; // ... for semi transparency
     _oResizePreview->position = firstLayer->position;
     _oResizePreview->size = firstLayer->size;
-    _oResizePreview->zLayer = lastLayer->zLayer + 1;
+    _oResizePreview->SetZLayer(lastLayer->GetZLayer() + 1);
   }
 
   // ... new size calculating
@@ -266,9 +266,10 @@ void Canvas::AddImage(Image image) {
     uiObj->SetImage(image);
     uiObj->size = {(float)image.width, (float)image.height};
     uiObj->position = Utils::View::GetWindowSize().CastTo<float>() / 2 - uiObj->size / 2;
-    uiObj->zLayer = 2;
+    uiObj->SetZLayer(2);
     uiObj->color = WHITE;
     uiObj->outlineScale = 0;
+    uiObj->name = "newCanvas";
     _oLayers.push_back(uiObj);
     return;
   }

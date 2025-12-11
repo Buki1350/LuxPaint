@@ -44,7 +44,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
     rowWidth += margin;
     rowHeight = std::max(rowHeight, e.initialSize.y);
 
-    e.object->zLayer = _oBackground->zLayer + 1;
+    e.object->SetZLayer(_oBackground->GetZLayer() + 1);
     e.object->position = _oBackground->position + _oBackground->size / 2;
     e.object->size = Vec2f::zero();
 
@@ -272,7 +272,7 @@ void MiniMenu::_FocusPrevious() {
     _currentSelected = _buttonsAndInputs.back();
   }
   else {
-    int prevIndex = (currentIndex - 1 + _buttonsAndInputs.size()) % _buttonsAndInputs.size();
+    int prevIndex = (int)(currentIndex - 1 + _buttonsAndInputs.size()) % _buttonsAndInputs.size();
     _currentSelected = _buttonsAndInputs[prevIndex];
   }
 

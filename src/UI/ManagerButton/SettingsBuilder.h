@@ -43,7 +43,7 @@ class SettingsBuilder : public MiniMenuBuilderBase<SettingsBuilder> {
             menu->EnableClosing();
         });
 
-        cp->zLayer = colorButton->zLayer + 1;
+        cp->SetZLayer(colorButton->GetZLayer() + 1);
     });
 
     menu->PackRow({ colorLabel, MiniMenu::FlexSeparator(), colorButton });

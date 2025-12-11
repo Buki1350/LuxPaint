@@ -16,7 +16,7 @@
 void ManagerButton::Init() {
   this->color = Utils::Files::LoadColor("managerButton", "uiGlobal");
   this->SetImage(FilesManager::LoadImage("manager_button.png"));
-  this->zLayer = 2;
+  this->SetZLayer(LAYER_WIDGETS);
   this->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
   _oNewButton = new Button();
@@ -59,7 +59,7 @@ void ManagerButton::Init() {
   _buttons.push_back(_oSettingsButton);
 
   for (auto button : _buttons) {
-    button->zLayer = this->zLayer + 1;
+    button->SetZLayer(this->GetZLayer() + 1);
   }
 }
 

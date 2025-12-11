@@ -13,7 +13,7 @@
 
 void ToolBox::Init() {
   this->color = Utils::Files::LoadColor("toolbox", "uiGlobal");
-  this->zLayer = 3;
+  this->SetZLayer(LAYER_WIDGETS);
 
   _toolSetListColor = Utils::Files::LoadColor("toolSet");
 
@@ -54,14 +54,14 @@ void ToolBox::SetBackgroundColor(Color color) { this->color = color; }
 void ToolBox::Update() {
   Vec2f monitorSize = Utils::View::GetCurrentMonitorSize().CastTo<float>();
 
-  int pixTileHeight = (int)monitorSize.y * _tilesScale;
-  int pixTileWidth = (int)pixTileHeight;
-  int pixTileSeparation = (int)monitorSize.y * _tilesSeparationScale;
-  int pixTileMargin = (int)monitorSize.y * _marginScale;
-  float pixToolBoxHeight =
+  int pixTileHeight = static_cast<int>(monitorSize.y * _tilesScale);
+  int pixTileWidth = pixTileHeight;
+  int pixTileSeparation = static_cast<int>(monitorSize.y * _tilesSeparationScale);
+  int pixTileMargin = static_cast<int>(monitorSize.y * _marginScale);
+  float pixToolBoxHeight = static_cast<float>(
       pixTileSeparation +
-      _toolSets.size() * (pixTileHeight + pixTileSeparation);
-  float pixToolBoxWidth = pixTileSeparation + pixTileWidth + pixTileSeparation;
+      _toolSets.size() * (pixTileHeight + pixTileSeparation));
+  float pixToolBoxWidth = static_cast<float>(pixTileSeparation + pixTileWidth + pixTileSeparation);
   float pixToolBoxMargin = monitorSize.x * _uiObjectBorderSeparation;
 
   this->roundness = UI_WIDGETS_ROUNDNESS * Utils::View::GetSmallerMonitorEdge();
@@ -99,7 +99,7 @@ void ToolBox::_ExpandTools(ToolSet* toolSet) {
       Button* newButton = new Button();
       newButton->SetImage(tool->icon);
       newButton->OnClick([tool] {App::Instance->canvas.SetCurrentTool(tool); });
-      newButton->zLayer = _oToolSetListBackground->zLayer + 1;
+      newButton->SetZLayer(_oToolSetListBackground->GetZLayer() + 1);
       newButton->roundness = 1;
       newButton->color = WHITE;
       newButton->imageMarginScale = UIOBJECT_ICON_MARGIN * 2;
@@ -119,7 +119,7 @@ void ToolBox::_ExpandTools(ToolSet* toolSet) {
     Vec2f tileSize = Vec2f(_toolBox->_tilesScale * smallerMonitorEdge);
     float separator = _toolBox->_tilesSeparationScale * smallerMonitorEdge;
 
-    int cols = 1 + _toolSet.tools.size() / (_toolBox->_toolSets.size() + 1);
+    int cols = static_cast<int>(1 + _toolSet.tools.size() / (_toolBox->_toolSets.size() + 1));
     float targetWidth = separator + cols * (tileSize.x + separator);
     float targetHeight = _toolSet.tools.size() > _toolBox->_toolSets.size()?
       separator + _toolBox->_toolSets.size() * (tileSize.y + separator) :
