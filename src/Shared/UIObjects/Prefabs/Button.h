@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Automatition/Updatables/Updatable.h"
-#include "../../Shared/Animator/Animator.h"
+#include "../../../Automatition/Updatables/Updatable.h"
+#include "../../../Shared/Animator/Animator.h"
 #include "../UIObject.h"
 
 #include <functional>

@@ -3,6 +3,7 @@
 #include "Prefabs/InputField.h"
 #include "UIObject.h"
 
+#include <list>
 #include <vector>
 
 class UIObjectsManager {

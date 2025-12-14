@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(LuxPaint VERSION 0.1.0 LANGUAGES C CXX)
 
+find_package(PkgConfig REQUIRED)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -12,11 +14,19 @@ elseif(UNIX)
     find_package(raylib 4.0 REQUIRED) # Wymaga: sudo apt install libraylib-dev
 endif()
 
+file( GLOB NFD_HEADER otherLibs/nfd/nfd.h )
+if (WIN32)
+    file( GLOB NFD_SOURCE otherLibs/nfd/nfd_win.cpp )
+else(UNIX)
+    file( GLOB NFD_SOURCE otherLibs/nfd/nfd_gtk.cpp )
+#else()
+#    file( NFD_SOURCE ../otherLibs/nfd/nfd_cocoa.m )
+endif()
+
 # Tworzymy plik wykonywalny
 add_executable(LuxPaint
-        ../otherLibs/nfd/nfd_win.cpp
-        #../otherLibs/nfd/nfd_gtk.c
-        #../otherLibs/nfd/nfd_cocoa.m
+        ${NFD_HEADER}
+        ${NFD_SOURCE}
         src/main.cpp
         src/App.cpp
         src/Shared/FilesManager/FilesManager.cpp
@@ -46,7 +56,7 @@ add_executable(LuxPaint
         src/Shared/UIObjects/Text.h
         src/Canvas/Canvas.cpp
         src/Canvas/Canvas.h
-        src/Math/vec2.h
+        src/Math/Vec2.h
         src/Automatition/Initializables/Initializable.h
         src/Automatition/Initializables/Initializables.h
         src/Automatition/Initializables/Initializable.cpp
@@ -72,8 +82,8 @@ add_executable(LuxPaint
         src/Shared/UIObjects/Prefabs/Slider.h
         src/Tools/SelectionTools/RectangleSelection.h
         src/Tools/SelectionTools/RectangleSelection.cpp
-        src/Shared/KeyBindings/KeyBindings.cpp
-        src/Shared/KeyBindings/KeyBindings.h
+        src/Shared/KeyBindings/Keybindings.cpp
+        src/Shared/KeyBindings/Keybindings.h
         src/Shared/UIObjects/Extensions/UIFocusOutliner.h
         src/UI/ManagerButton/SettingsBuilder.h
         src/UI/MiniMenu/MiniMenuBuilder.h
@@ -97,9 +107,14 @@ add_executable(LuxPaint
         src/Shared/Utils/UtilsFiles.cpp
         src/Shared/Utils/UtilsView.cpp
         src/Shared/Utils/UtilsInput.cpp
-        src/Shared/Utils/UtilsAppdata.cpp
+        src/Shared/Utils/UtilsAppData.cpp
         src/Shared/Utils/UtilsConvert.cpp
 )
+
+target_include_directories(LuxPaint PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+)
+
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
 
@@ -112,7 +127,7 @@ if (WIN32)
     # Ukrycie konsoli, ale zachowanie main()
 #    set_target_properties(LuxPaint PROPERTIES
 #        LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
-#    )
+#    )  
 
     # Kopiowanie DLL po buildzie
     add_custom_command(
@@ -124,5 +139,21 @@ if (WIN32)
     )
 
 elseif(UNIX)
-    target_link_libraries(LuxPaint PRIVATE raylib m pthread dl GL)
+    find_package(raylib REQUIRED)
+
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+    target_include_directories(LuxPaint PRIVATE
+        ${GTK3_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/otherLibs/nfd
+    )
+
+    target_compile_options(LuxPaint PRIVATE
+        ${GTK3_CFLAGS_OTHER}
+    )
+
+    target_link_libraries(LuxPaint PRIVATE
+        raylib
+        ${GTK3_LIBRARIES}
+    )
 endif()

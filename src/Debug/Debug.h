@@ -1,7 +1,6 @@
 #pragma once
 #include "../Math/Vec2.h"
 
-#include <__msvc_ostream.hpp>
 #include <iostream>
 #include <string>
 #include <vector>

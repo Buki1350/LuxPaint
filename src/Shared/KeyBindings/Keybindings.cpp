@@ -2,9 +2,10 @@
 #include "../../Shared/Utils/Utils.h"
 
 #include <iostream>
+#include <algorithm>
 
 void Keybindings::_Load() {
-  actionsDictionary = Utils::Files::LoadActions(); // <--- default actions set here
+  actionsDictionary = Utils::Files::LoadActions();
 
 }
 

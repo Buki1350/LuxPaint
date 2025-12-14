@@ -1,8 +1,8 @@
 #include "UIObject.h"
 
 #include "../../Defines.h"
-#include "../Shared/../DelayedAction/DelayedAction_until.h"
-#include "../Shared/../Utils/Utils.h"
+#include "../DelayedAction/DelayedAction_until.h"
+#include "../Utils/Utils.h"
 #include "UIObjectsManager.h"
 #include "raylib.h"
 

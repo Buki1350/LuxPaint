@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Shared/Animator/Animator.h"
-#include "../../Shared/Utils/Utils.h"
+#include "../../Animator/Animator.h"
+#include "../../Utils/Utils.h"
 #include "../../UIObjects/Prefabs/Button.h"
 #include "../../UIObjects/Prefabs/InputField.h"
 #include "../../UIObjects/UIObject.h"

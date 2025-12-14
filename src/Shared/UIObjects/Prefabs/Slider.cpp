@@ -32,7 +32,7 @@ void Slider::Update() {
         _grabbing = false;
     }
 
-    if (isnan(_value)) _value = 0.0f;
+    if (std::isnan(_value)) _value = 0.0f;
 
     switch (_orientation) {
         case HORIZONTAL: {

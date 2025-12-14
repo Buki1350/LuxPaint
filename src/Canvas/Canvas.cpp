@@ -279,11 +279,11 @@ void Canvas::AddImage(Image image) {
   UIObject* baseLayer = _oLayers[0]; // lub wskaz do aktywnej warstwy jeśli masz "active"
 
   // Jeśli jest zaznaczenie - wklejamy obraz przycięty do jej rozmiaru w pozycji zaznaczenia
-  ImageDraw(&baseLayer->GetImage(), image,
-            {0, 0, (float)image.width, (float)image.height},
-            {100 - baseLayer->position.x, 100 - baseLayer->position.y, (float)image.width, (float)image.height},
-            WHITE);
-  baseLayer->UpdateTexture();
+  // ImageDraw(&baseLayer->GetImage(), image,
+  //           {0, 0, (float)image.width, (float)image.height},
+  //           {100 - baseLayer->position.x, 100 - baseLayer->position.y, (float)image.width, (float)image.height},
+  //           WHITE);
+  // baseLayer->UpdateTexture();
 }
 
 Image Canvas::ExportAsImage() {
