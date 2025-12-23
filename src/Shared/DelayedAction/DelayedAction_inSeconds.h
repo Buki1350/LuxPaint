@@ -21,8 +21,8 @@ public:
     _actions.push_back(this);
   }
 
-  void Update() override {
-    _timeLeft -= Utils::Time::GetDeltaTime();
+  void update() override {
+    _timeLeft -= uti::time::getDeltaTime();
     if (_timeLeft <= 0) {
       _callback();
       markedForDeletion = true;

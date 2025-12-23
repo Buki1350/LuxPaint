@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Shared/Utils/Utils.h"
 #include "MiniMenu.h"
+#include "Shared/Utils/View/utiView.h"
 
 // ... === CRTP (Curiously Recurring Template Pattern) ===
 // ... Wymuszenie implementacji statycznych metod w klasach pochodnych
@@ -13,9 +13,9 @@ protected:
   inline static MiniMenuBuilderBase* baseInstance = nullptr;
   static void _Build() {
     if (menu != nullptr) return;
-    menu = MiniMenu::CreateInstance();
-    menu->OnDestroy([](){menu = nullptr;});
-    menu->_oBackground->roundness = Utils::View::GetSmallerMonitorEdge() * 0.00001f;
+    menu = MiniMenu::createInstance();
+    menu->onDestroy([](){menu = nullptr;});
+    menu->_oBackground->roundness = uti::view::getSmallerMonitorEdge() * 0.00001f;
 
     static_cast<T*>(nullptr)->BuildContext();
   }

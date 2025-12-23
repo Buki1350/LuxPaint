@@ -31,21 +31,21 @@ class ColorPicker final : public UIObject, public Updatable {
   float _value = 1.0f;
   float _alpha = 1.0f;
 
-  void _GenerateRainbowTexture();
-  void _UpdateFromSliders();
-  void _UpdateFromHex();
-  void _UpdateFromRainbow();
-  void _SyncUI();
+  void _generateRainbowTexture();
+  void _updateFromSliders();
+  void _updateFromHex();
+  void _updateFromRainbow();
+  void _syncUI();
   std::function<void(Color)> _OnColorChange;
   std::function<void()> _OnDestroy;
 
 public:
   ColorPicker();
-  void Update() override;
-  void Destroy() override;
-  Color GetColor() const;
-  void SetColor(Color color);
-  void OnColorChange(std::function<void(Color)> callback);
-  void OnDestroy(std::function<void()> labdaFunction);
+  void update() override;
+  void destroy() override;
+  Color getColor() const;
+  void setColor(Color color);
+  void onColorChange(std::function<void(Color)> callback);
+  void onDestroy(std::function<void()> labdaFunction);
 
 };

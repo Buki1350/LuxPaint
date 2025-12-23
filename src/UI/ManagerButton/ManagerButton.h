@@ -19,12 +19,11 @@ class ManagerButton final : public UIObject, public Updatable {
   float _listElementSeparationScale = 0.005f;
   bool _listExpanded = false;
 
-  void _LoadImageFromSystem();
-  void _AdjustSizeAndPosition();
+  void _loadImageFromSystem();
+  void _adjustSizeAndPosition();
 
 public:
-  void Init();
-  void Update() override;
-  void SetBackgroundColor(Color color);
-  void _SaveImageToSystem();
+  void init();
+  void update() override;
+  void _saveImageToSystem();
 };

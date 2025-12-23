@@ -2,29 +2,31 @@
 
 #include "../../Defines.h"
 #include "../DelayedAction/DelayedAction_until.h"
-#include "../Utils/Utils.h"
+#include "Shared/Utils/Colors/Colors.h"
+#include "Shared/Utils/Input/Input.h"
+#include "Shared/Utils/View/utiView.h"
 #include "UIObjectsManager.h"
 #include "raylib.h"
 
 UIObject::UIObject() {
-  text.SetParent(this);
+  text.setParent(this);
   
   new DelayedAction_until(
-      []() { return UIObjectsManager::IsInitialized; },
+      []() { return UIObjectsManager::isInitialized; },
       [this]() {
           UIObjectsManager::_pendingUIObjects.push_back(this);
       }
   );
 }
 
-Vec2i UIObject::GetImageSize() {
+Vec2i UIObject::getImageSize() {
   if (_hasTexture) {
     return {_texture.width, _texture.height};
   }
   return {0, 0};
 }
 
-Vec2i UIObject::GetOnImageCursorPosition() {
+Vec2i UIObject::getOnImageCursorPosition() {
   if (!_hasTexture) return {-1, -1};
 
   Vec2f mouse = GetMousePosition();
@@ -80,10 +82,10 @@ Vec2i UIObject::GetOnImageCursorPosition() {
 }
 
 
-Texture &UIObject::GetTexture() { return _texture; }
+Texture &UIObject::getTexture() { return _texture; }
 
-void UIObject::Destroy() {
-  Animator::Terminate(this);
+void UIObject::destroy() {
+  Animator::terminate(this);
 
   // ... remove from ordered list
   UIObjectsManager::_objectsInRenderOrder.remove(this);
@@ -98,7 +100,7 @@ void UIObject::Destroy() {
 }
 
 
-void UIObject::Draw() {
+void UIObject::draw() {
   Vec2f finalPos = position;
   Vec2f finalSize = size;
 
@@ -113,25 +115,31 @@ void UIObject::Draw() {
   );
 
   if (outlineScale != 0) {
-    float outlineThickness = outlineScale * Utils::View::GetSmallerMonitorEdge();
-    Color outlineColor {
-      (unsigned char)(color.r * UIOBJECT_OUTLINE_DARKENING),
-      (unsigned char)(color.g * UIOBJECT_OUTLINE_DARKENING),
-      (unsigned char)(color.b * UIOBJECT_OUTLINE_DARKENING),
-      (unsigned char)(color.a * UIOBJECT_OUTLINE_DARKENING)
-  };
+    float outlineThickness = outlineScale * uti::view::getSmallerMonitorEdge();
+
+    Color outlineColorUsed = {};
+    if (uti::colors::areColorsEqual(outlineColor, Color{0, 0, 0, 0})) {
+      outlineColorUsed = Color {
+        (unsigned char)(color.r * UIOBJECT_OUTLINE_DARKENING),
+        (unsigned char)(color.g * UIOBJECT_OUTLINE_DARKENING),
+        (unsigned char)(color.b * UIOBJECT_OUTLINE_DARKENING),
+        (unsigned char)(color.a * UIOBJECT_OUTLINE_DARKENING)
+      };
+    } else {
+      outlineColorUsed = outlineColor;
+    }
 
     DrawRectangleRoundedLinesEx(
         { finalPos.x, finalPos.y, finalSize.x, finalSize.y },
         keepRoundness ? roundness * scaleFactor : roundness,
         20,
         outlineThickness,
-        outlineColor
+        outlineColorUsed
     );
   }
 
   if (_hasTexture) {
-    float margin = imageMarginScale * Utils::View::GetSmallerMonitorEdge();
+    float margin = imageMarginScale * uti::view::getSmallerMonitorEdge();
 
     if (imageStretch) {
       DrawTexturePro(
@@ -170,19 +178,19 @@ void UIObject::Draw() {
     }
   }
 
-  text.Draw();
+  text.draw();
 }
 
-void UIObject::SetZLayer(int newZLayer) {
+void UIObject::setZLayer(int newZLayer) {
   UIObjectsManager::_objectsInRenderOrder.remove(this);
   this->_zLayer = newZLayer;
   UIObjectsManager::_objectsInRenderOrder.push_back(this);
-  UIObjectsManager::_UpdateRenderOrderList();
+  UIObjectsManager::_updateRenderOrderList();
 }
 
-int UIObject::GetZLayer() { return this->_zLayer; }
+int UIObject::getZLayer() { return this->_zLayer; }
 
-bool UIObject::CursorAbove() const {
+bool UIObject::cursorAbove() const {
   return
       isActive &&
       GetMousePosition().x >= position.x &&
@@ -191,37 +199,37 @@ bool UIObject::CursorAbove() const {
       GetMousePosition().y <= position.y + size.y;
 }
 
-bool UIObject::Clicked() const {
-  return isActive && CursorAbove() && Utils::Input::MouseReleased();
+bool UIObject::clicked() const {
+  return isActive && cursorAbove() && uti::input::mouseReleased();
 }
 
-bool UIObject::ClickedButNotThis() {
-  return isActive && !CursorAbove() && Utils::Input::MouseReleased();
+bool UIObject::clickedButNotThis() {
+  return isActive && !cursorAbove() && uti::input::mouseReleased();
 }
 
-bool UIObject::Pressed() const {
-  return isActive && CursorAbove() && IsMouseButtonPressed(0);
+bool UIObject::pressed() const {
+  return isActive && cursorAbove() && IsMouseButtonPressed(0);
 }
 
-void UIObject::SetImage(const Texture &texture) {
+void UIObject::setImage(const Texture &texture) {
   _texture = texture;
   _hasTexture = true;
 }
 
-void UIObject::SetImage(const Image &image) {
+void UIObject::setImage(const Image &image) {
   _image = ImageCopy(image);
   _texture = LoadTextureFromImage(_image);
   _hasTexture = true;
   _hasImage = true;
 }
 
-void UIObject::UpdateTexture() {
+void UIObject::updateTexture() {
   if (_hasImage && _hasTexture) {
     ::UpdateTexture(_texture, _image.data);
   }
 }
 
-Image UIObject::GetImage() {
+Image UIObject::getImage() {
   return _image;
 }
 

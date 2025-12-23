@@ -5,18 +5,18 @@
 #include "ManagerButton.h"
 
 #include "../../../otherLibs/nfd/nfd.h"
-#include "../../App.h"
+#include "../../App/App.h"
 #include "../../Shared/Animator/Animator.h"
 #include "../../Shared/DelayedAction/DelayedAction_inSeconds.h"
-#include "../../Shared/FilesManager/FilesManager.h"
-#include "../../Shared/Utils/Utils.h"
+#include "../../Shared/Serializer/Serializer.h"
 #include "BlankCanvasBuilder.h"
-#include "SettingsBuilder.h"
+#include "Settings/SettingsBuilder.h"
+#include "Shared/Utils/Files/utiFiles.h"
 
-void ManagerButton::Init() {
-  this->color = Utils::Files::LoadColor("managerButton", "uiGlobal");
-  this->SetImage(FilesManager::LoadImage("manager_button.png"));
-  this->SetZLayer(LAYER_WIDGETS);
+void ManagerButton::init() {
+  this->color = uti::files::loadColor("managerButton", "uiGlobal");
+  this->setImage(Serializer::LoadImage("manager_button.png"));
+  this->setZLayer(LAYER_WIDGETS);
   this->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
   _oNewButton = new Button();
@@ -24,19 +24,19 @@ void ManagerButton::Init() {
   _oSaveButton = new Button();
   _oSettingsButton = new Button();
 
-  Color buttonsColor = Utils::Files::LoadColor("managerButton_listButton");
+  Color buttonsColor = uti::files::loadColor("managerButton_listButton");
 
   _oNewButton->color = buttonsColor;
   _oNewButton->text = "New";
   _oNewButton->text.center = true;
-  _oNewButton->OnClick([](){BlankCanvasBuilder::Build();});
+  _oNewButton->onClick([](){BlankCanvasBuilder::Build();});
   _oNewButton->allowInteraction = false;
 
   _oLoadButton->isActive = false;
   _oLoadButton->color = buttonsColor;
   _oLoadButton->text = "Load image";
   _oLoadButton->text.center = true;
-  _oLoadButton->OnClick([this](){_LoadImageFromSystem();});
+  _oLoadButton->onClick([this](){_loadImageFromSystem();});
   _oLoadButton->allowInteraction = false;
 
   _oSaveButton->isActive = false;
@@ -44,14 +44,14 @@ void ManagerButton::Init() {
   _oSaveButton->text = "Save image";
   _oSaveButton->text.center = true;
   _oSaveButton->allowInteraction = false;
-  _oSaveButton->OnClick([this](){ _SaveImageToSystem(); });
+  _oSaveButton->onClick([this](){ _saveImageToSystem(); });
 
   _oSettingsButton->isActive = false;
   _oSettingsButton->color = buttonsColor;
   _oSettingsButton->text = "Settings";
   _oSettingsButton->text.center = true;
   _oSettingsButton->allowInteraction = false;
-  _oSettingsButton->OnClick([](){ SettingsBuilder::Build(); });
+  _oSettingsButton->onClick([](){ SettingsBuilder::Build(); });
 
   _buttons.push_back(_oNewButton);
   _buttons.push_back(_oLoadButton);
@@ -59,25 +59,25 @@ void ManagerButton::Init() {
   _buttons.push_back(_oSettingsButton);
 
   for (auto button : _buttons) {
-    button->SetZLayer(this->GetZLayer() + 1);
+    button->setZLayer(this->getZLayer() + 1);
   }
 }
 
-void ManagerButton::Update() {
-  if (this->Clicked()) {
+void ManagerButton::update() {
+  if (this->clicked()) {
     _listExpanded = true;
   }
-  if (!this->CursorAbove()) {
+  if (!this->cursorAbove()) {
     _listExpanded = false;
   }
-  _AdjustSizeAndPosition();
+  _adjustSizeAndPosition();
 }
 
-void ManagerButton::_AdjustSizeAndPosition() {
+void ManagerButton::_adjustSizeAndPosition() {
   //... data
-  Vec2f monitorSize     = Utils::View::GetCurrentMonitorSize().CastTo<float>();
-  Vec2f windowSize      = Utils::View::GetWindowSize().CastTo<float>();
-  float smallerEdge          = Utils::View::GetSmallerMonitorEdge();
+  Vec2f monitorSize     = uti::view::getCurrentMonitorSize().CastTo<float>();
+  Vec2f windowSize      = uti::view::getWindowSize().CastTo<float>();
+  float smallerEdge          = uti::view::getSmallerMonitorEdge();
   float listButtonSeparation = smallerEdge * _listElementSeparationScale;
   float baseButtonMargin     = smallerEdge * _marginScale;
   float listWidth            = smallerEdge * _listElementWidthScale;
@@ -85,7 +85,7 @@ void ManagerButton::_AdjustSizeAndPosition() {
   Vec2f listSize           = { listWidth, listHeight };
   Vec2f listPos            = { windowSize.x - listSize.x - baseButtonMargin, baseButtonMargin };
 
-  this->roundness = UI_WIDGETS_ROUNDNESS * Utils::View::GetSmallerMonitorEdge();
+  this->roundness = UI_WIDGETS_ROUNDNESS * uti::view::getSmallerMonitorEdge();
 
   //... base
   this->size = {monitorSize.x * _sizeScale, monitorSize.x * _sizeScale};
@@ -99,12 +99,12 @@ void ManagerButton::_AdjustSizeAndPosition() {
   Vec2f postAnimatedSize = this->size;
   if (_listExpanded) {
     float animationTime = ANIMATION_POPUP_DURATION;
-    postAnimatedPosition  = Animator::AnimatePosition(this, listPos, animationTime, GAUSSIAN);
-    postAnimatedSize      = Animator::AnimateSize(this, listSize, animationTime, GAUSSIAN);
+    postAnimatedPosition  = Animator::animatePosition(this, listPos, animationTime, GAUSSIAN);
+    postAnimatedSize      = Animator::animateSize(this, listSize, animationTime, GAUSSIAN);
 
     float sizeScale = this->size.x / postAnimatedSize.x;
-    Animator::AnimateRoundness(this, this->roundness * sizeScale, animationTime, GAUSSIAN);
-    Animator::AnimateImageAlpha(this, 0, animationTime, GAUSSIAN);
+    Animator::animateRoundness(this, this->roundness * sizeScale, animationTime, GAUSSIAN);
+    Animator::animateImageAlpha(this, 0, animationTime, GAUSSIAN);
 
     for (auto button : _buttons) {
       button->isActive = true;
@@ -116,11 +116,11 @@ void ManagerButton::_AdjustSizeAndPosition() {
       }
     });
   }
-  else if (this->CursorAbove()) {
-    Animator::SizeUp(this);
+  else if (this->cursorAbove()) {
+    Animator::sizeUp(this);
   }
   else {
-    Animator::Reset(this);
+    Animator::reset(this);
     for (auto button : _buttons) { button->isActive = false; button->allowInteraction = false; }
   }
 
@@ -146,7 +146,7 @@ void ManagerButton::_AdjustSizeAndPosition() {
 
 }
 
-void ManagerButton::_LoadImageFromSystem() {
+void ManagerButton::_loadImageFromSystem() {
   char* outPath = nullptr;
 
   nfdu8filteritem_t filters[2] = {
@@ -163,7 +163,7 @@ void ManagerButton::_LoadImageFromSystem() {
 
   if (result == NFD_OKAY) {
     Image img = LoadImage(outPath);
-    App::Instance->canvas.AddImage(img);
+    App::instance->canvas.addImage(img);
     UnloadImage(img);
 
     NFD_FreePath(outPath); // pamiętaj o zwolnieniu
@@ -176,7 +176,7 @@ void ManagerButton::_LoadImageFromSystem() {
   }
 }
 
-void ManagerButton::_SaveImageToSystem() {
+void ManagerButton::_saveImageToSystem() {
   char* outPath = nullptr;
 
   nfdu8filteritem_t filters[2] = {
@@ -194,7 +194,7 @@ void ManagerButton::_SaveImageToSystem() {
 
   if (result == NFD_OKAY) {
 
-    Image img = App::Instance->canvas.ExportAsImage();
+    Image img = App::instance->canvas.exportAsImage();
 
     // raylib sam rozpoznaje format po rozszerzeniu
     ExportImage(img, outPath);

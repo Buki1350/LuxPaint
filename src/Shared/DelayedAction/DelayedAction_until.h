@@ -21,7 +21,7 @@ public:
     _actions.push_back(this);
   }
 
-  void Update() override {
+  void update() override {
     if (_condition()) {
       _callback();
       markedForDeletion = true;

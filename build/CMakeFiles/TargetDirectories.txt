@@ -1,0 +1,3 @@
+C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/CMakeFiles/LuxPaint.dir
+C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/CMakeFiles/ZERO_CHECK.dir

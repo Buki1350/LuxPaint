@@ -1,12 +1,12 @@
 #include "UIObjectsManager.h"
 
-void UIObjectsManager::_UpdateRenderOrderList() {
+void UIObjectsManager::_updateRenderOrderList() {
   if (_pendingUIObjects.empty()) return;
 
   for (UIObject* obj : _pendingUIObjects) {
     auto it = _objectsInRenderOrder.begin();
     for (; it != _objectsInRenderOrder.end(); ++it) {
-      if ((*it)->GetZLayer() > obj->GetZLayer()) break;
+      if ((*it)->getZLayer() > obj->getZLayer()) break;
     }
     _objectsInRenderOrder.insert(it, obj);
   }
@@ -15,7 +15,7 @@ void UIObjectsManager::_UpdateRenderOrderList() {
 }
 
 
-bool UIObjectsManager::IsInitialized() {
+bool UIObjectsManager::isInitialized() {
   return _initialized;
 }
 
@@ -31,12 +31,12 @@ void UIObjectsManager::AddUIObject(UIObject *object) {
 }
 
 void UIObjectsManager::DrawAll() {
-  _UpdateRenderOrderList();
+  _updateRenderOrderList();
 
   auto snapshot = _objectsInRenderOrder;
   for (UIObject* obj : _objectsInRenderOrder) {
     if (obj->isActive)
-      obj->Draw();
+      obj->draw();
   }
 }
 

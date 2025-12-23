@@ -15,7 +15,7 @@ class ToolBox final : public UIObject, public Updatable {
   float _marginScale = 0.01f;
   float _tilesSeparationScale = 0.01f;
 
-  void _ExpandTools(ToolSet* toolSet);
+  void _expandTools(ToolSet* toolSet);
 
   // ==== internal helper class
   friend class ToolsSetList;
@@ -25,11 +25,11 @@ class ToolBox final : public UIObject, public Updatable {
     ToolSet&  _toolSet;
     UIObject* _oToolSetListBackground = nullptr;
     std::vector<Button*> _toolsButtons;
-    std::pair<Vec2f, Vec2f> _CalculateTransforms();
+    std::pair<Vec2f, Vec2f> _calculateTransforms();
 
   public:
     ToolsSetList( ToolBox* toolBox, ToolSet& toolSet );
-    void Update() override;
+    void update() override;
   };
   // ====
 
@@ -38,8 +38,8 @@ class ToolBox final : public UIObject, public Updatable {
   ToolsSetList* _activeTools = nullptr;
 
 public:
-  void Init();
-  bool Initialized();
-  void SetBackgroundColor(Color color);
-  void Update() override;
+  void init();
+  bool initialized();
+  void setBackgroundColor(Color color);
+  void update() override;
 };

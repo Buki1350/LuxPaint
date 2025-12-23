@@ -1,6 +1,6 @@
 #include "Debug.h"
 
-#include "../Shared/KeyBindings/Keybindings.h"
+#include "../Shared/Keybindings/Keybindings.h"
 
 #include <iostream>
 
@@ -22,7 +22,7 @@ void Debug::DrawAll() {
 }
 
 void Debug::PrintPushedKeys() {
-  auto pushedKeys = Keybindings::GetAllPushedKeys();
+  auto pushedKeys = Keybindings::getAllPushedKeys();
 
   std::cout << "[ ";
   for (int i = 0; i < pushedKeys.size(); i++) {

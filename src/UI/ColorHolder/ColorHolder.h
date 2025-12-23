@@ -12,9 +12,9 @@ class ColorHolder final : public UIObject, public Updatable {
   int _numberOfSavedColors = 0;
 
 public:
-  void Init();
-  void Update() override;
-  void _CreateColorPicker();
+  void init();
+  void update() override;
+  void _createColorPicker();
 
-  void SetBackgroundColor(Color color);
+  void setBackgroundColor(Color color);
 };

@@ -20,10 +20,10 @@ class  Slider final : public UIObject, public Updatable {
 
 public:
   Slider(ORIENTATION orientation);
-  void Update() override;
-  void OnValueChanged(std::function<void()> lambdaFunction);
-  float GetValue();
-  void SetValue(float value);
-  void OnRelease(std::function<void()> lambdaFunction);
-  void Destroy() override;
+  void update() override;
+  void onValueChanged(std::function<void()> lambdaFunction);
+  float getValue();
+  void setValue(float value);
+  void onRelease(std::function<void()> lambdaFunction);
+  void destroy() override;
 };

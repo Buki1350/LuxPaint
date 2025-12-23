@@ -4,46 +4,47 @@
 
 #include "ColorHolder.h"
 
-#include "../../App.h"
-#include "../../Shared/Utils/Utils.h"
+#include "../../App/App.h"
 #include "../../Shared/UIObjects/UIObjectsManager.h"
 #include "../ColorPicker/ColorPicker.h"
+#include "Shared/Utils/Files/utiFiles.h"
+#include "Shared/Utils/View/utiView.h"
 
-void ColorHolder::Init() {
-  this->color = Utils::Files::LoadColor("colorHolder", "uiGlobal");
-  this->SetZLayer(LAYER_WIDGETS);
+void ColorHolder::init() {
+  this->color = uti::files::loadColor("colorHolder", "uiGlobal");
+  this->setZLayer(LAYER_WIDGETS);
 
   Button* colorPickButton = new Button();
   colorPickButton->color = WHITE;
-  colorPickButton->SetZLayer(this->GetZLayer() + 1);
+  colorPickButton->setZLayer(this->getZLayer() + 1);
   colorPickButton->roundness = this->roundness;
-  colorPickButton->SetImage(FilesManager::LoadImage("rgb.png"));
+  colorPickButton->setImage(Serializer::LoadImage("rgb.png"));
   colorPickButton->imageMarginScale = UIOBJECT_ICON_MARGIN;
-  colorPickButton->OnClick([this]() {
-    _CreateColorPicker();
+  colorPickButton->onClick([this]() {
+    _createColorPicker();
   });
   _buttons.push_back(colorPickButton);
 
   for (int i = 0; i < _numberOfSavedColors; i++) {
     Button* savedColor = new Button();
     savedColor->color = WHITE;
-    savedColor->SetZLayer(this->GetZLayer() + 1);
+    savedColor->setZLayer(this->getZLayer() + 1);
     savedColor->roundness = 1;
-    savedColor->OnClick([this, savedColor]() {
-      App::Instance->canvas.SetCurrentColor(savedColor->color);
+    savedColor->onClick([this, savedColor]() {
+      App::instance->canvas.setCurrentColor(savedColor->color);
     });
     _buttons.push_back(savedColor);
   }
 }
 
-void ColorHolder::Update() {
-  float screenScale = Utils::View::GetSmallerMonitorEdge();
-  float windowHeight = Utils::View::GetWindowSize().y;
+void ColorHolder::update() {
+  float screenScale = uti::view::getSmallerMonitorEdge();
+  float windowHeight = uti::view::getWindowSize().y;
   float separatorSize = _separatorScale * screenScale;
   float offset = _offsetScale * screenScale;
   Vec2f buttonSize = Vec2f(_buttonScale * screenScale);
 
-  this->roundness = UI_WIDGETS_ROUNDNESS * Utils::View::GetSmallerMonitorEdge();
+  this->roundness = UI_WIDGETS_ROUNDNESS * uti::view::getSmallerMonitorEdge();
 
   this->size = Vec2f(
     separatorSize + _buttons.size() * (buttonSize.x + separatorSize),
@@ -60,22 +61,22 @@ void ColorHolder::Update() {
   }
 }
 
-void ColorHolder::_CreateColorPicker() {
-  float screenScale = Utils::View::GetSmallerMonitorEdge();
+void ColorHolder::_createColorPicker() {
+  float screenScale = uti::view::getSmallerMonitorEdge();
   float separatorSize = _separatorScale * screenScale;
 
   ColorPicker *cp = new ColorPicker();
   cp->position = Vec2f(separatorSize,
                        this->position.y - separatorSize - cp->size.y);
 
-  cp->SetColor(App::Instance->canvas.GetCurrentColor());
+  cp->setColor(App::instance->canvas.getCurrentColor());
 
-  cp->OnColorChange([this](Color newColor) {
+  cp->onColorChange([this](Color newColor) {
     if (!_buttons.empty()) {
       _buttons[0]->color = newColor;
     }
-    App::Instance->canvas.SetCurrentColor(newColor);
+    App::instance->canvas.setCurrentColor(newColor);
   });
 }
 
-void ColorHolder::SetBackgroundColor(Color color) { this->color = color; }
+void ColorHolder::setBackgroundColor(Color color) { this->color = color; }

@@ -3,5 +3,5 @@
 class Initializable {
 public:
   Initializable();
-  virtual void Init() = 0;
+  virtual void init() = 0;
 };

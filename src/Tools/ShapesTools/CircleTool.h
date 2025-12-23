@@ -10,32 +10,32 @@ public:
   explicit CircleTool(const std::string& name) : Tool(name) {}
 
 protected:
-  bool CanSizeBeChanged() const override { return true; };
+  bool canSizeBeChanged() const override { return true; };
 
-  void HandleMousePressed(UIObject* img) override {
-    Vec2i p = img->GetOnImageCursorPosition();
+  void _handleMousePressedImpl(UIObject* img) override {
+    Vec2i p = img->getOnImageCursorPosition();
     if (p.x < 0) return;
 
     _start = p;
     _active = true;
   }
 
-  void HandleMouseDown(UIObject* imageToPaint) override {
+  void _handleMouseDownImpl(UIObject* imageToPaint) override {
     // celowo puste — okrąg rysujemy dopiero na release
   }
 
-  void HandleMouseRelease(UIObject *img) override {
+  void _handleMouseReleaseImpl(UIObject *img) override {
     if (!_active || !img)
       return;
 
-    Vec2i p = img->GetOnImageCursorPosition();
+    Vec2i p = img->getOnImageCursorPosition();
     if (p.x < 0) {
       _active = false;
       return;
     }
 
-    Image image = img->GetImage();
-    Color c = App::Instance->canvas.GetCurrentColor();
+    Image image = img->getImage();
+    Color c = App::instance->canvas.getCurrentColor();
 
     int dx = p.x - _start.x;
     int dy = p.y - _start.y;
@@ -48,8 +48,18 @@ protected:
 
     while (x >= y) {
       auto px = [&](int ox, int oy) {
-        ImageDrawPixel(&image, _start.x + ox, _start.y + oy, c);
+        int thickness = std::max(size, 1);
+        for (int t = 0; t < thickness; t++) {
+          ImageDrawCircle(
+            &image,
+            _start.x + ox,
+            _start.y + oy,
+            t,
+            c
+          );
+        }
       };
+
 
       px(x, y);
       px(y, x);
@@ -69,7 +79,7 @@ protected:
       }
     }
 
-    img->UpdateTexture();
+    img->updateTexture();
     _active = false;
   }
 };

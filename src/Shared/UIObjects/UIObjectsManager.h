@@ -11,10 +11,10 @@ class UIObjectsManager {
   inline static bool _initialized = false;
   inline static std::vector<UIObject*> _pendingUIObjects;
   inline static std::list<UIObject*> _objectsInRenderOrder;
-  static void _UpdateRenderOrderList();
+  static void _updateRenderOrderList();
 
 public:
-  static bool IsInitialized();
+  static bool isInitialized();
   static void Init();
   static void AddUIObject(UIObject *object);
   static void DrawAll();

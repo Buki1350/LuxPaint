@@ -1,7 +1,10 @@
 #pragma once
-#include "../../UI/MiniMenu/MiniMenu.h"
 #include "../../Shared/UIObjects/UIObjectsManager.h"
+#include "../../UI/MiniMenu/MiniMenu.h"
 #include "../MiniMenu/MiniMenuBuilder.h"
+#include "Math/Matrx.h"
+#include "Shared/SnapshotsManager/SnapshotsTypes/ImageSnapshot.h"
+#include "Shared/Utils/Convert/utiConvert.h"
 
 class BlankCanvasBuilder : public MiniMenuBuilderBase<BlankCanvasBuilder> {
 public:
@@ -33,33 +36,33 @@ public:
     okButton->color = GRAY;
     okButton->text = "Ok";
     okButton->text.center = true;
-    okButton->OnClick([field1Value1, field1Value2]() {
-      std::string sValue1 = field1Value1->GetValue();
-      std::string sValue2 = field1Value2->GetValue();
+    okButton->onClick([field1Value1, field1Value2]() {
+      std::string sValue1 = field1Value1->getValue();
+      std::string sValue2 = field1Value2->getValue();
       if (sValue1.empty() || sValue2.empty()) return;
 
       Vec2f size = Vec2f(stof(sValue1), stof(sValue2));
       Matrx<Color> blankImageMatrix(size.CastTo<int>());
       blankImageMatrix.fill(WHITE);
-      Texture2D blankImage = Utils::Convert::MatrixToTexture(blankImageMatrix);
-      App::Instance->canvas.AddTexture(blankImage);
+      Texture2D blankImage = uti::convert::matrixToTexture(blankImageMatrix);
+      App::instance->canvas.addTexture(blankImage);
 
-      menu->Destroy();
+      menu->destroy();
     });
 
     auto cancelButton = new Button();
     cancelButton->size = {75, 20};
     cancelButton->color = GRAY;
     cancelButton->text = "Cancel";
-    cancelButton->OnClick([]() {
-      menu->Destroy();
+    cancelButton->onClick([]() {
+      menu->destroy();
     });
 
-    menu->PackRow({actionName});
+    menu->packRow({actionName});
 
-    menu->PackRow({
+    menu->packRow({
       field1Info,
-      MiniMenu::FlexSeparator(),
+      MiniMenu::flexSeparator(),
       field1Value1,
       slash,
       field1Value2
@@ -67,11 +70,11 @@ public:
 
     auto separator = new UIObject();
     separator->size = {50, 40};
-    menu->PackRow({separator});
+    menu->packRow({separator});
 
-    menu->PackRow({
+    menu->packRow({
       cancelButton,
-      MiniMenu::FlexSeparator(),
+      MiniMenu::flexSeparator(),
       okButton,
     });
   }
@@ -79,7 +82,9 @@ public:
   static void CreateBlank(Vec2i size) {
     Matrx<Color> blankImageMatrix(size);
     blankImageMatrix.fill(WHITE);
-    Texture2D blankImage = Utils::Convert::MatrixToTexture(blankImageMatrix);
-    App::Instance->canvas.AddTexture(blankImage);
+    Texture2D blankImage = uti::convert::matrixToTexture(blankImageMatrix);
+    App::instance->canvas.addTexture(blankImage);
+    App::instance->snapshotManager.saveSnapshot(
+        std::make_unique<ImageSnapshot>(App::instance->canvas.getLayersInfo()));
   }
 };

@@ -1,23 +1,30 @@
 #include "Tool.h"
+#include "../../App/App.h"
+#include "Shared/SnapshotsManager/SnapshotManager.h"
+#include "Shared/SnapshotsManager/SnapshotsTypes/ImageSnapshot.h"
 
-#include "Tool.h"
 #include <iostream>
 
-void Tool::SetSize(int val) { size = val; }
+void Tool::handleMousePressed(UIObject *ui_object) {
+  _handleMousePressedImpl(ui_object);
+}
+void Tool::handleMouseDown(UIObject *ui_object) {
+  _handleMouseDownImpl(ui_object);
+}
+void Tool::handleMouseRelease(UIObject *ui_object) {
+  _handleMouseReleaseImpl(ui_object);
+  App::instance->snapshotManager.saveSnapshot(
+    std::make_unique<ImageSnapshot>(App::instance->canvas.getLayersInfo()));
+}
+
+void Tool::setSize(int val) { size = val; }
 
 Tool::Tool(const std::string &name) {
   this->_name = name;
   icon = {};
 
-  // Wczytanie obrazu
-  Image img = FilesManager::LoadImage(name + ".png");
-  if (!img.data) {
-    std::cerr << "Failed to load image: " << name << ".png\n";
-    // Tworzymy placeholder (1x1 białe)
-    img = GenImageColor(1, 1, WHITE);
-  }
+  Image img = Serializer::LoadImage(name + ".png");
 
-  // Upload do GPU
   icon = LoadTextureFromImage(img);
 
   // Zwolnienie pamięci CPU

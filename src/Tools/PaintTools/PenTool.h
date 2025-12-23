@@ -7,18 +7,18 @@ class PenTool final : public Tool {
 public:
   explicit PenTool(const std::string& name) : Tool(name) {}
 
-  void HandleMousePressed(UIObject* img) override {
+  void _handleMousePressedImpl(UIObject* img) override {
     _lastPixel = {-1, -1};
   }
 
-  void HandleMouseDown(UIObject* img) override {
+  void _handleMouseDownImpl(UIObject* img) override {
     if (!img) return;
 
-    Vec2i p = img->GetOnImageCursorPosition();
+    Vec2i p = img->getOnImageCursorPosition();
     if (p.x < 0) return;
 
-    Image im = img->GetImage();
-    Color col = App::Instance->canvas.GetCurrentColor();
+    Image im = img->getImage();
+    Color col = App::instance->canvas.getCurrentColor();
     int radius = std::max(size, 1);   // grubość linii
 
     if (_lastPixel.x >= 0) {
@@ -39,14 +39,14 @@ public:
       ImageDrawCircle(&im, p.x, p.y, radius, col);
     }
 
-    img->UpdateTexture();
+    img->updateTexture();
     _lastPixel = p;
   }
 
-  void HandleMouseRelease(UIObject *img) override {
+  void _handleMouseReleaseImpl(UIObject *img) override {
     _lastPixel = {-1, -1};
   }
 
 protected:
-  bool CanSizeBeChanged() const override { return true; };
+  bool canSizeBeChanged() const override { return true; };
 };

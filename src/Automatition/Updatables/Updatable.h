@@ -6,5 +6,5 @@ public:
   bool markedForDeletion = false;
   Updatable() { UpdatablesManager::updatables.push_back(this); }
   virtual ~Updatable() = default;
-  virtual void Update() = 0;
+  virtual void update() = 0;
 };

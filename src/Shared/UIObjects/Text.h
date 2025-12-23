@@ -4,6 +4,11 @@
 
 class UIObject;
 
+enum TextWrapType {
+  EXPAND,
+  CUT,
+};
+
 class Text {
 public:
   UIObject* uiObject_parent = nullptr;
@@ -13,9 +18,10 @@ public:
   Color textColor = BLACK;
   bool center = false;
 
-  float GetPixelWidth();
-  void SetParent(UIObject *parent);
-  void Draw();
+  float getPixelWidth();
+  void setParent(UIObject *parent);
+  void wrapToWidth(TextWrapType wrapType);
+  void draw();
 
   void operator=(const char *other) { value = other; }
   Text &operator=(const std::string & other) { value = other; return *this; }

@@ -1,23 +1,25 @@
 #include "ColorPicker.h"
 
-#include "../../Shared/FilesManager/FilesManager.h"
+#include "../../Shared/Serializer/Serializer.h"
+#include "Shared/Utils/Files/utiFiles.h"
+#include "Shared/Utils/View/utiView.h"
 
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
 
 ColorPicker::ColorPicker() {
-  _backgroundColor = Utils::Files::LoadColor("colorPicker");
+  _backgroundColor = uti::files::loadColor("colorPicker");
   this->color = _backgroundColor;
-  this->size = Vec2f(Utils::View::GetSmallerMonitorEdge() * _overallSizeScale);
-  this->SetZLayer(LAYER_COLORPICKER);
+  this->size = Vec2f(uti::view::getSmallerMonitorEdge() * _overallSizeScale);
+  this->setZLayer(LAYER_COLORPICKER);
 
   _oRainbow = new UIObject;
   _oRainbow->outlineScale = 0;
   _oRainbow->imageStretch = true;
   _oRainbow->imageMarginScale = 0.0f;
-  _oRainbow->SetZLayer(GetZLayer() + 1);
-  _GenerateRainbowTexture();
+  _oRainbow->setZLayer(getZLayer() + 1);
+  _generateRainbowTexture();
 
   _oDot = new UIObject;
   _oDot->roundness = 1;
@@ -25,27 +27,27 @@ ColorPicker::ColorPicker() {
   //_oDot->outlineScale = 0.5f;
 
   _hexInputField = new InputField;
-  _hexInputField->SetMode(InputMode::LETTERS_AND_NUMBERS);
+  _hexInputField->setMode(InputMode::LETTERS_AND_NUMBERS);
 
   // Slidery
   _sRSlider = new Slider(HORIZONTAL);
   _sGSlider = new Slider(HORIZONTAL);
   _sBSlider = new Slider(HORIZONTAL);
   _sASlider = new Slider(HORIZONTAL);
-  _sASlider->SetValue(1);
+  _sASlider->setValue(1);
   _sliders = {_sRSlider, _sGSlider, _sBSlider, _sASlider};
 
   for (auto slider : _sliders)
-    slider->SetZLayer(this->GetZLayer() + 1);
+    slider->setZLayer(this->getZLayer() + 1);
 
   // Etykiety R G B A
   for (int i = 0; i < 4; i++) {
     const char *labels = "RGBA";
     UIObject * label = new UIObject;
     label->text = std::string(1, labels[i]);
-    label->color = Utils::Files::LoadColor("colorPickerLabel", "uiGlobal");
+    label->color = uti::files::loadColor("colorPickerLabel", "uiGlobal");
     label->outlineScale = 0;
-    label->SetZLayer(this->GetZLayer() + 2);
+    label->setZLayer(this->getZLayer() + 2);
     _sliderLabels.push_back(label);
   }
 
@@ -53,22 +55,22 @@ ColorPicker::ColorPicker() {
   __previousColor = _currentColor;
 }
 
-void ColorPicker::Update() {
-  float scale = Utils::View::GetSmallerMonitorEdge();
+void ColorPicker::update() {
+  float scale = uti::view::getSmallerMonitorEdge();
   float margin = _marginScale * scale;
   //float spaceUnderRainbow = _spaceUnderRainbowScale * scale;
 
-  this->roundness = Utils::View::GetSmallerMonitorEdge() *  UI_WIDGETS_ROUNDNESS;
+  this->roundness = uti::view::getSmallerMonitorEdge() *  UI_WIDGETS_ROUNDNESS;
 
   float oRainbowWidth = this->size.x - 2 * margin;
   float oRainbowHeight = this->size.y * 0.5f; // panoramiczne
   _oRainbow->size = {oRainbowWidth, oRainbowHeight};
   _oRainbow->position = this->position + Vec2f(margin, margin);
-  _oRainbow->SetZLayer(this->GetZLayer() + 1);
+  _oRainbow->setZLayer(this->getZLayer() + 1);
 
   float dotSize = 0.01f * scale;
   _oDot->size = {dotSize, dotSize};
-  _oDot->SetZLayer(this->GetZLayer() + 3);
+  _oDot->setZLayer(this->getZLayer() + 3);
 
   float hexInputFieldWidth = this->size.x / 2;
   float hexInputFieldHeight = 0.03f * scale;
@@ -76,7 +78,7 @@ void ColorPicker::Update() {
   _hexInputField->position = {
       _oRainbow->position.x,
       _oRainbow->position.y + _oRainbow->size.y + margin};
-  _hexInputField->SetZLayer(this->GetZLayer() + 1);
+  _hexInputField->setZLayer(this->getZLayer() + 1);
 
   float availableHeight =
       this->size.y - _oRainbow->size.y - _hexInputField->size.y - 7 * margin;
@@ -102,13 +104,13 @@ void ColorPicker::Update() {
   }
 
   // Logika
-  _UpdateFromSliders();
-  _UpdateFromHex();
-  _UpdateFromRainbow();
-  _SyncUI();
+  _updateFromSliders();
+  _updateFromHex();
+  _updateFromRainbow();
+  _syncUI();
 
-  if (ClickedButNotThis())
-    Destroy();
+  if (clickedButNotThis())
+    destroy();
 
   if (
     _currentColor.r != __previousColor.r ||
@@ -120,7 +122,7 @@ void ColorPicker::Update() {
   __previousColor = _currentColor;
 }
 
-void ColorPicker::_GenerateRainbowTexture() {
+void ColorPicker::_generateRainbowTexture() {
   constexpr int size = 512;
   Image img = GenImageColor(size, size, BLANK);
   Color* pixels = (Color*)img.data;
@@ -156,27 +158,27 @@ void ColorPicker::_GenerateRainbowTexture() {
     }
   }
 
-  _oRainbow->SetImage(img);
+  _oRainbow->setImage(img);
   UnloadImage(img);
 }
 
 
 
-void ColorPicker::_UpdateFromSliders() {
+void ColorPicker::_updateFromSliders() {
   if (!_sRSlider || !_sGSlider || !_sBSlider || !_sASlider)
     return;
 
-  int r = (int)(_sRSlider->GetValue() * 255);
-  int g = (int)(_sGSlider->GetValue() * 255);
-  int b = (int)(_sBSlider->GetValue() * 255);
-  int a = (int)(_sASlider->GetValue() * 255);
+  int r = (int)(_sRSlider->getValue() * 255);
+  int g = (int)(_sGSlider->getValue() * 255);
+  int b = (int)(_sBSlider->getValue() * 255);
+  int a = (int)(_sASlider->getValue() * 255);
   _currentColor = {(unsigned char)r, (unsigned char)g, (unsigned char)b,
                    (unsigned char)a};
 }
 
-void ColorPicker::_UpdateFromHex() {
-  if (_hexInputField->IsFocused()) {
-    std::string hex = _hexInputField->GetValue();
+void ColorPicker::_updateFromHex() {
+  if (_hexInputField->isFocused()) {
+    std::string hex = _hexInputField->getValue();
     if (hex.size() > 0 && hex[0] == '#')
       hex = hex.substr(1);
 
@@ -199,10 +201,10 @@ void ColorPicker::_UpdateFromHex() {
   }
 }
 
-void ColorPicker::_UpdateFromRainbow() {
-  if (_oRainbow->CursorAbove() && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+void ColorPicker::_updateFromRainbow() {
+  if (_oRainbow->cursorAbove() && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 
-    Vector2 mp = GetMousePosition();
+    Vec2f mp = uti::input::getMousePosition();
     float relX = (mp.x - _oRainbow->position.x);
     float relY = (mp.y - _oRainbow->position.y);
 
@@ -233,47 +235,47 @@ void ColorPicker::_UpdateFromRainbow() {
 
 
 
-void ColorPicker::_SyncUI() {
+void ColorPicker::_syncUI() {
   std::stringstream ss;
   ss << "#" << std::uppercase << std::hex << std::setfill('0')
      << std::setw(2) << (int)_currentColor.r << std::setw(2)
      << (int)_currentColor.g << std::setw(2) << (int)_currentColor.b;
-  _hexInputField->SetValue(ss.str());
+  _hexInputField->setValue(ss.str());
 
-  _sRSlider->SetValue(_currentColor.r / 255.0f);
-  _sGSlider->SetValue(_currentColor.g / 255.0f);
-  _sBSlider->SetValue(_currentColor.b / 255.0f);
-  _sASlider->SetValue(_currentColor.a / 255.0f);
+  _sRSlider->setValue(_currentColor.r / 255.0f);
+  _sGSlider->setValue(_currentColor.g / 255.0f);
+  _sBSlider->setValue(_currentColor.b / 255.0f);
+  _sASlider->setValue(_currentColor.a / 255.0f);
 }
 
-void ColorPicker::Destroy() {
-  _oRainbow->Destroy();
-  _oDot->Destroy();
-  _hexInputField->Destroy();
+void ColorPicker::destroy() {
+  _oRainbow->destroy();
+  _oDot->destroy();
+  _hexInputField->destroy();
 
   for (auto &label : _sliderLabels)
-    if (label) label->Destroy();
+    if (label) label->destroy();
 
   for (auto &slider : _sliders)
-    if (slider) slider->Destroy();
+    if (slider) slider->destroy();
 
   if (_OnDestroy)   // <––––– tu!
     _OnDestroy();
 
-  UIObject::Destroy();
+  UIObject::destroy();
 }
 
 
-Color ColorPicker::GetColor() const { return _currentColor; }
+Color ColorPicker::getColor() const { return _currentColor; }
 
-void ColorPicker::SetColor(Color color) {
+void ColorPicker::setColor(Color color) {
   _currentColor = color;
   __previousColor = _currentColor;
-  _SyncUI();
+  _syncUI();
 }
 
-void ColorPicker::OnColorChange(std::function<void(Color)> callback) {
+void ColorPicker::onColorChange(std::function<void(Color)> callback) {
   _OnColorChange = callback;
 }
 
-void ColorPicker::OnDestroy(std::function<void()> labdaFunction) { _OnDestroy = labdaFunction; }
+void ColorPicker::onDestroy(std::function<void()> labdaFunction) { _OnDestroy = labdaFunction; }

@@ -13,10 +13,10 @@ class RectangleSelection final : public Tool {
   Rectangle GetSelectionRect() const;
 
 public:
-  bool CanSizeBeChanged() const override { return false; }
+  bool canSizeBeChanged() const override { return false; }
   explicit RectangleSelection(const std::string& name) : Tool(name) {}
 
-  void HandleMousePressed(UIObject* imageToPaint) override;
-  void HandleMouseDown(UIObject* imageToPaint) override;
-  void HandleMouseRelease(UIObject *imageToPaint) override;
+  void _handleMousePressedImpl(UIObject* imageToPaint) override;
+  void _handleMouseDownImpl(UIObject* imageToPaint) override;
+  void _handleMouseReleaseImpl(UIObject *imageToPaint) override;
 };

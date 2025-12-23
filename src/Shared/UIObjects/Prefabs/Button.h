@@ -2,8 +2,11 @@
 #include "../../../Automatition/Updatables/Updatable.h"
 #include "../../../Shared/Animator/Animator.h"
 #include "../UIObject.h"
+#include "Shared/Utils/Colors/Colors.h"
+#include "Shared/Utils/Input/Input.h"
 
 #include <functional>
+
 class Button final : public UIObject, public Updatable {
   std::function<void()> _onClickCallback;
   bool _focused = false;
@@ -13,16 +16,16 @@ class Button final : public UIObject, public Updatable {
 public:
   bool allowInteraction = true;
 
-  void SetFocused(bool value) {
+  void setFocused(bool value) {
     _focused = value;
     _lockFocus = value;
   }
 
-  void Update() override {
+  void update() override {
     if (!allowInteraction)
       return;
 
-    if (CursorAbove()) {
+    if (cursorAbove()) {
       _focused = true;
     }
     else if (!_lockFocus) {
@@ -30,37 +33,37 @@ public:
     }
     else {
       _focused = false;
-      Animator::Reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
+      Animator::reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
     }
 
-    if (!CursorAbove() || Utils::Input::MouseReleased()) {
-      Animator::Reset(this, ANIMATION_SIZEUP_DURATION);
+    if (!cursorAbove() || uti::input::mouseReleased()) {
+      Animator::reset(this, ANIMATION_SIZEUP_DURATION);
       _darken = false;
     }
 
     if (_focused) {
-      Animator::SizeUp(this);
+      Animator::sizeUp(this);
 
       if (IsMouseButtonPressed(0)) {
         if (!_darken) {
-          Animator::AnimateColor(this, Utils::Colors::DarkenColor(color, .3f), ANIMATION_SIZEUP_DURATION);
+          Animator::animateColor(this, uti::colors::darkenColor(color, .3f), ANIMATION_SIZEUP_DURATION);
           _darken = true;
         }
       }
     }
     else {
-      Animator::Reset(this);
+      Animator::reset(this);
       _darken = false;
     }
 
-    if (Clicked() && _onClickCallback != nullptr) {
+    if (clicked() && _onClickCallback != nullptr) {
       _onClickCallback();
     }
   };
 
-  void OnClick(std::function<void()> callback) { _onClickCallback = callback; }
+  void onClick(std::function<void()> callback) { _onClickCallback = callback; }
 
-  void Invoke() {
+  void invoke() {
     if (_onClickCallback != nullptr) _onClickCallback();
   }
 };

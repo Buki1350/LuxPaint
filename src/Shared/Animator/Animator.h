@@ -15,7 +15,7 @@ class Animator final : public Updatable, public Singleton<Animator> {
 public:
   std::vector<std::unique_ptr<IAnimationValue>> animatedObjectsValues;
 
-  static void Transform(
+  static void transform(
       UIObject* uiObject,
       Vec2f targetPosition,
       Vec2f targetSize,
@@ -25,30 +25,30 @@ public:
       float targetImageAlpha = 1
   );
 
-  void Update() override; // instance update
+  void update() override; // instance update
 
   //... basic - returns current animated value
-  static Vec2f AnimatePosition(UIObject* uiObject, Vec2f targetPosition, float duration, MovementType movementType = GAUSSIAN);
-  static Vec2f AnimateSize(UIObject* uiObject, Vec2f targetSize, float duration, MovementType movementType = GAUSSIAN);
-  static Color AnimateColor(UIObject* uiObject, Color targetColor, float duration, MovementType movementType = GAUSSIAN);
-  static float AnimateImageAlpha(UIObject* uiObject, float targetAlpha, float duration, MovementType movementType = GAUSSIAN);
-  static float AnimateRoundness(UIObject* uiObject, float targetRoundness, float duration, MovementType movementType = GAUSSIAN);
-  static float AnimateOutline(UIObject* uiObject, float targetOutline, float duration, MovementType movementType = GAUSSIAN);
-  static void Reset(UIObject* uiObject, UIObjectParameter parameter, float time = 0.0f);
-  static void Reset(UIObject *uiObject, float time = 0.0f);
-  static void Apply(UIObject* uiObject);
+  static Vec2f animatePosition(UIObject* uiObject, Vec2f targetPosition, float duration, MovementType movementType = GAUSSIAN);
+  static Vec2f animateSize(UIObject* uiObject, Vec2f targetSize, float duration, MovementType movementType = GAUSSIAN);
+  static Color animateColor(UIObject* uiObject, Color targetColor, float duration, MovementType movementType = GAUSSIAN);
+  static float animateImageAlpha(UIObject* uiObject, float targetAlpha, float duration, MovementType movementType = GAUSSIAN);
+  static float animateRoundness(UIObject* uiObject, float targetRoundness, float duration, MovementType movementType = GAUSSIAN);
+  static float animateOutline(UIObject* uiObject, float targetOutline, float duration, MovementType movementType = GAUSSIAN);
+  static void reset(UIObject* uiObject, UIObjectParameter parameter, float time = 0.0f);
+  static void reset(UIObject *uiObject, float time = 0.0f);
+  static void apply(UIObject* uiObject);
 
   //... templates
-  static void SizeUp(UIObject *uiObject,
+  static void sizeUp(UIObject *uiObject,
                      float scale = ANIMATION_ICON_SIZEUP_SCALE,
                      float time = ANIMATION_SIZEUP_DURATION);
-  static void FadeOut(UIObject *uiObject, float time);
-  static void FadeIn(UIObject *uiObject, float time);
+  static void fadeOut(UIObject *uiObject, float time);
+  static void fadeIn(UIObject *uiObject, float time);
 
   //...
-  static void Terminate(UIObject *uiObject);
-  static void Terminate(std::vector<UIObject*>& uiObjects);
-  static void Free(UIObject* uiObject);
-  static bool AnimatorContains(UIObject* uiObject, UIObjectParameter param);
+  static void terminate(UIObject *uiObject);
+  static void terminate(std::vector<UIObject*>& uiObjects);
+  static void free(UIObject* uiObject);
+  static bool animatorContains(UIObject* uiObject, UIObjectParameter param);
 
 };

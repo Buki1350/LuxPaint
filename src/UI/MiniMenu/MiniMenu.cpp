@@ -1,37 +1,41 @@
 #include "../../UI/MiniMenu/MiniMenu.h"
 
 #include "../../Shared/Animator/Animator.h"
-#include "../../Shared/FilesManager/FilesManager.h"
-#include "../../Shared/KeyBindings/Keybindings.h"
-#include "../../Shared/Utils/Utils.h"
+#include "../../Shared/Keybindings/Keybindings.h"
+#include "../../Shared/Serializer/Serializer.h"
 #include "../../Shared/UIObjects/Extensions/UIFocusOutliner.h"
 #include "../../Shared/UIObjects/UIObjectsManager.h"
+#include "Shared/Utils/Files/utiFiles.h"
+#include "Shared/Utils/View/utiView.h"
 
 std::vector<MiniMenu*> MiniMenu::instances = {};
 
-MiniMenu *MiniMenu::CreateInstance() {
-  float margin = MINIMENU_MARGIN_SCALE * Utils::View::GetSmallerMonitorEdge();
+MiniMenu *MiniMenu::createInstance() {
+  float margin = MINIMENU_MARGIN_SCALE * uti::view::getSmallerMonitorEdge();
   MiniMenu *newFrontPanel = new MiniMenu();
   instances.insert(instances.begin(), newFrontPanel);
   newFrontPanel->_oBackground = new UIObject();
   newFrontPanel->_targetSize = Vec2f::ones() * margin;
-  newFrontPanel->_oBackground->color = Utils::Files::LoadColor("miniMenu", "uiGlobal");
+  newFrontPanel->_oBackground->color = uti::files::loadColor("miniMenu", "uiGlobal");
   newFrontPanel->_oBackground->size = {0, 0};
+  if (instances.size() > 1)
+    newFrontPanel->_oBackground->setZLayer(instances[1]->_oBackground->getZLayer());
+
   return newFrontPanel;
 }
 
-void MiniMenu::DestroyInstance(MiniMenu *miniMenu) {
+void MiniMenu::destroyInstance(MiniMenu *miniMenu) {
   if (!miniMenu || !miniMenu->_oBackground)
     return;
   miniMenu->_markedForDeletion = true;
 }
 
-void MiniMenu::Destroy() { DestroyInstance(this); } 
+void MiniMenu::destroy() { destroyInstance(this); } 
 
-MiniMenu * MiniMenu::Pack(UIObject* object) { return PackRow({object}); }
+MiniMenu * MiniMenu::pack(UIObject* object) { return packRow({object}); }
 
-MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) {
-  float margin = MINIMENU_MARGIN_SCALE * Utils::View::GetSmallerMonitorEdge();
+MiniMenu* MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) {
+  float margin = MINIMENU_MARGIN_SCALE * uti::view::getSmallerMonitorEdge();
 
   Row row;
   float rowWidth = margin;
@@ -44,7 +48,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
     rowWidth += margin;
     rowHeight = std::max(rowHeight, e.initialSize.y);
 
-    e.object->SetZLayer(_oBackground->GetZLayer() + 1);
+    e.object->setZLayer(_oBackground->getZLayer() + 1);
     e.object->position = _oBackground->position + _oBackground->size / 2;
     e.object->size = Vec2f::zero();
 
@@ -54,7 +58,7 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
       _buttonsAndInputs.push_back(e.object);
     }
 
-    Color textCol = Utils::Colors::GetDynamicTextColorFor(_oBackground);
+    Color textCol = uti::colors::getDynamicBlackOrWhiteFor(_oBackground->color);
     for (auto &el : _oPackedObjects) {
       el.object->text.textColor = textCol;
     }
@@ -69,16 +73,16 @@ MiniMenu* MiniMenu::PackRow(std::initializer_list<ObjectWithSavedSize> objects) 
   return this;
 }
 
-MiniMenu::ObjectWithSavedSize MiniMenu::FlexSeparator() { return {new UIObject(), true}; }
+MiniMenu::ObjectWithSavedSize MiniMenu::flexSeparator() { return {new UIObject(), true}; }
 
-void MiniMenu::Update() {
-  _HandleClosing();
-  _CalculateTransforms();
-  _HandleDeleting();
-  _HandleKeybindings();
+void MiniMenu::update() {
+  _handleClosing();
+  _calculateTransforms();
+  _handleDeleting();
+  _handleKeybindings();
 }
 
-void MiniMenu::_HandleClosing() {
+void MiniMenu::_handleClosing() {
   if (
     instances.empty() ||
     this != MiniMenu::instances[0] ||
@@ -86,34 +90,34 @@ void MiniMenu::_HandleClosing() {
 
   for (auto instance : instances) {
     if (IsMouseButtonPressed(0)) {
-      bool cursorAboveAny = instance->_oBackground->CursorAbove();
+      bool cursorAboveAny = instance->_oBackground->cursorAbove();
 
       for (auto &e : instance->_oPackedObjects) {
-        if (e.object->CursorAbove()) {
+        if (e.object->cursorAbove()) {
           cursorAboveAny = true;
           break;
         }
       }
 
       if (!cursorAboveAny) {
-        DestroyInstance(instance);
+        destroyInstance(instance);
         break;
       }
     }
   }
 }
 
-void MiniMenu::_CalculateTransforms() {
+void MiniMenu::_calculateTransforms() {
     if (!_oBackground || _markedForDeletion)
         return;
 
-    float margin = MINIMENU_MARGIN_SCALE * Utils::View::GetSmallerMonitorEdge();
+    float margin = MINIMENU_MARGIN_SCALE * uti::view::getSmallerMonitorEdge();
 
-    Vec2f postAnimatedSize = Animator::AnimateSize(
+    Vec2f postAnimatedSize = Animator::animateSize(
         _oBackground, _targetSize, ANIMATION_POPUP_DURATION, GAUSSIAN
     );
 
-    Vec2f windowSize = Utils::View::GetWindowSize().CastTo<float>();
+    Vec2f windowSize = uti::view::getWindowSize().CastTo<float>();
     _oBackground->position = windowSize / 2 - postAnimatedSize / 2;
 
     float totalHeight = margin;
@@ -181,21 +185,21 @@ void MiniMenu::_CalculateTransforms() {
     }
 }
 
-void MiniMenu::_HandleDeleting() {
+void MiniMenu::_handleDeleting() {
   if (_markedForDeletion) {
     if (_deletingElapsed < _deletingDuration + ANIMATION_TOLERANCE) {
-      _deletingElapsed += Utils::Time::GetDeltaTime();
-      Animator::AnimateSize(_oBackground, {0, 0}, _deletingDuration);
-      Animator::AnimatePosition(_oBackground, Utils::View::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
+      _deletingElapsed += uti::time::getDeltaTime();
+      Animator::animateSize(_oBackground, {0, 0}, _deletingDuration);
+      Animator::animatePosition(_oBackground, uti::view::getWindowSize().CastTo<float>() / 2, _deletingDuration);
 
       for (auto &e : _oPackedObjects) {
-        Animator::AnimateSize(e.object, {0, 0}, _deletingDuration);
-        Animator::AnimatePosition(e.object, Utils::View::GetWindowSize().CastTo<float>() / 2, _deletingDuration);
+        Animator::animateSize(e.object, {0, 0}, _deletingDuration);
+        Animator::animatePosition(e.object, uti::view::getWindowSize().CastTo<float>() / 2, _deletingDuration);
       }
       return;
     }
 
-    if (!Animator::AnimatorContains(_oBackground, NONE)) {
+    if (!Animator::animatorContains(_oBackground, NONE)) {
       auto it = std::find(instances.begin(), instances.end(), this);
       if (it != instances.end()) instances.erase(it);
 
@@ -203,9 +207,9 @@ void MiniMenu::_HandleDeleting() {
       uiObjectsToDelete.push_back(_oBackground);
       for (auto o : _oPackedObjects) { uiObjectsToDelete.push_back(o.object); }
 
-      Animator::Terminate(uiObjectsToDelete);
+      Animator::terminate(uiObjectsToDelete);
 
-      for (auto o : uiObjectsToDelete) { o->Destroy(); }
+      for (auto o : uiObjectsToDelete) { o->destroy(); }
       _oPackedObjects.clear();
       _onDestructionFunc();
 
@@ -214,24 +218,24 @@ void MiniMenu::_HandleDeleting() {
   }
 }
 
-void MiniMenu::_HandleKeybindings() {
+void MiniMenu::_handleKeybindings() {
   if (instances.empty() || this != instances[0] || instances[0]->_buttonsAndInputs.empty()) return;
 
-  if (Keybindings::ActionDetected(MENU_NEXT)) { _FocusNext(); }
-  else if (Keybindings::ActionDetected(MENU_PREV)) { _FocusPrevious(); }
-  else if (Keybindings::ActionDetected(MENU_CONFIRM)) {
+  if (Keybindings::actionDetected(MENU_NEXT)) { _focusNext(); }
+  else if (Keybindings::actionDetected(MENU_PREV)) { _focusPrevious(); }
+  else if (Keybindings::actionDetected(MENU_CONFIRM)) {
     if (_currentSelected) {
       if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
-        btn->Invoke();
+        btn->invoke();
       }
       else if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
-        input->SetValue(input->GetValue() + " ");
+        input->setValue(input->getValue() + " ");
       }
     }
   }
 }
 
-void MiniMenu::_FocusNext() {
+void MiniMenu::_focusNext() {
   int currentIndex = -1;
   if (_currentSelected == nullptr) _currentSelected = _buttonsAndInputs[0];
   else {
@@ -247,16 +251,16 @@ void MiniMenu::_FocusNext() {
   _currentSelected = _buttonsAndInputs[nextIndex];
 
   if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
-    input->SetFocused(true);
+    input->setFocused(true);
   }
   else if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
-    btn->SetFocused(true);
+    btn->setFocused(true);
   }
 
-  UIFocusOutliner::Focus(_currentSelected);
+  UIFocusOutliner::focus(_currentSelected);
 }
 
-void MiniMenu::_FocusPrevious() {
+void MiniMenu::_focusPrevious() {
   if (_buttonsAndInputs.empty()) return;
 
   int currentIndex = -1;
@@ -277,32 +281,53 @@ void MiniMenu::_FocusPrevious() {
   }
 
   if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
-    input->SetFocused(true);
+    input->setFocused(true);
   }
   else if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
-    btn->SetFocused(true);
+    btn->setFocused(true);
   }
 
-  UIFocusOutliner::Focus(_currentSelected);
+  UIFocusOutliner::focus(_currentSelected);
 }
 
-void MiniMenu::OnDestroy(std::function<void()> labdaFunction) {
+void MiniMenu::onDestroy(std::function<void()> labdaFunction) {
   _onDestructionFunc = labdaFunction;
 }
 
-void MiniMenu::DisableClosing() {
+void MiniMenu::disableClosing() {
   _disableClosing = true;
 }
 
-void MiniMenu::EnableClosing() { _disableClosing = false; }
+void MiniMenu::enableClosing() { _disableClosing = false; }
 
-void MiniMenu::SetBackgroundColorForAll(Color color) {
+void MiniMenu::createSmallSeparator() {
+  auto sep = new UIObject();
+  sep->name = "separator";
+  sep->size = { 500, 2 };
+  sep->color = uti::colors::getDynamicBlackOrWhiteFor(this->_oBackground->color);
+  sep->roundness = 1;
+  sep->outlineScale = 0;
+  this->packRow({ sep });
+}
+
+void MiniMenu::setBackgroundColorForAll(Color color) {
   for (auto i : instances) {
     i->_oBackground->color = color;
     for (auto p : i->_oPackedObjects) {
-      p.object->text.textColor = Utils::Colors::GetDynamicTextColorFor(i->_oBackground);
+      p.object->text.textColor =
+          uti::colors::getDynamicBlackOrWhiteFor(i->_oBackground->color);
+
+      if (p.object->name == "separator" ) {
+        p.object->color = uti::colors::getDynamicBlackOrWhiteFor(i->getOBackground()->color);
+      }
+      else if (p.object->name == "colorButtonOutline" ) {
+        p.object->outlineColor = uti::colors::getDynamicBlackOrWhiteFor(i->getOBackground()->color);
+      }
     }
   }
+}
+const UIObject *MiniMenu::getOBackground() {
+  return _oBackground;
 }
 
 

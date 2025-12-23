@@ -30,12 +30,12 @@ class MiniMenu final : public Updatable {
     // ... helper for not closing when clicked not on this uiObject
     bool _disableClosing = false;
 
-    void _HandleClosing();
-    void _CalculateTransforms();
-    void _HandleDeleting();
-    void _HandleKeybindings();
-    void _FocusNext();
-    void _FocusPrevious();
+    void _handleClosing();
+    void _calculateTransforms();
+    void _handleDeleting();
+    void _handleKeybindings();
+    void _focusNext();
+    void _focusPrevious();
 
     struct ObjectWithSavedSize {
         UIObject* object;
@@ -52,17 +52,22 @@ class MiniMenu final : public Updatable {
 public:
     static std::vector<MiniMenu*> instances;
     bool centerElements = false;
-    static MiniMenu* CreateInstance();
-    static void DestroyInstance(MiniMenu* miniMenu);
-    void Destroy();
+    static MiniMenu* createInstance();
+    static void destroyInstance(MiniMenu* miniMenu);
+    void destroy();
 
-    MiniMenu* Pack(UIObject *object);
-    MiniMenu *PackRow(std::initializer_list<ObjectWithSavedSize> objects);
-    static ObjectWithSavedSize FlexSeparator();
-    void Update() override;
-    void OnDestroy(std::function<void()> labdaFunction);
-    void DisableClosing();
-    void EnableClosing();
+    const UIObject* getOBackground();
 
-    static void SetBackgroundColorForAll(Color color);
+    MiniMenu* pack(UIObject *object);
+    MiniMenu *packRow(std::initializer_list<ObjectWithSavedSize> objects);
+    void update() override;
+    void onDestroy(std::function<void()> labdaFunction);
+    void disableClosing();
+    void enableClosing();
+
+    void createSmallSeparator();
+
+    static ObjectWithSavedSize flexSeparator();
+
+    static void setBackgroundColorForAll(Color color);
 };

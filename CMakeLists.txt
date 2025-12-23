@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(LuxPaint VERSION 0.1.0 LANGUAGES C CXX)
 
-find_package(PkgConfig REQUIRED)
+if (UNIX)
+    find_package(PkgConfig REQUIRED)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Ścieżki do raylib (Windows - lokalne, Linux - systemowe)
 if (WIN32)
     set(RAYLIB_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/raylib/include")
     set(RAYLIB_LIB_DIR "${CMAKE_SOURCE_DIR}/raylib/lib")
 elseif(UNIX)
-    find_package(raylib 4.0 REQUIRED) # Wymaga: sudo apt install libraylib-dev
+    find_package(raylib 4.0 REQUIRED)
 endif()
 
 file( GLOB NFD_HEADER otherLibs/nfd/nfd.h )
@@ -19,17 +20,14 @@ if (WIN32)
     file( GLOB NFD_SOURCE otherLibs/nfd/nfd_win.cpp )
 else(UNIX)
     file( GLOB NFD_SOURCE otherLibs/nfd/nfd_gtk.cpp )
-#else()
-#    file( NFD_SOURCE ../otherLibs/nfd/nfd_cocoa.m )
 endif()
 
-# Tworzymy plik wykonywalny
 add_executable(LuxPaint
         ${NFD_HEADER}
         ${NFD_SOURCE}
         src/main.cpp
-        src/App.cpp
-        src/Shared/FilesManager/FilesManager.cpp
+        src/App/App.cpp
+        src/Shared/Serializer/Serializer.cpp
         src/Tools/Shared/Tool.cpp
         src/Tools/Shared/Tool.h
         src/Tools/ToolSet/ToolSet.cpp
@@ -40,8 +38,6 @@ add_executable(LuxPaint
         src/Tools/PaintTools/PenTool.h
         src/UI/ToolBox/ToolBox.h
         src/UI/ToolBox/ToolBox.cpp
-        src/Shared/Utils/Utils.cpp
-        src/Shared/Utils/Utils.h
         src/UI/ManagerButton/ManagerButton.cpp
         src/UI/ManagerButton/ManagerButton.h
         src/UI/ColorHolder/ColorHolder.cpp
@@ -85,15 +81,14 @@ add_executable(LuxPaint
         src/Shared/KeyBindings/Keybindings.cpp
         src/Shared/KeyBindings/Keybindings.h
         src/Shared/UIObjects/Extensions/UIFocusOutliner.h
-        src/UI/ManagerButton/SettingsBuilder.h
+        src/UI/ManagerButton/Settings/SettingsBuilder.h
         src/UI/MiniMenu/MiniMenuBuilder.h
         src/Shared/DelayedAction/DelayedActions.h
         src/Shared/DelayedAction/DelayedAction_until.h
         src/Canvas/Selectors/SelectionMask.cpp
         src/Canvas/Selectors/SelectionMask.h
-        src/Shared/InputManager/InputManager.cpp
-        src/Shared/InputManager/InputManager.h
-        src/Shared/KeyBindings/KeyNames.h
+        src/Shared/InputActionListener/InputActionListener.cpp
+        src/Shared/InputActionListener/InputActionListener.h
         src/Debug/Debug.cpp
         src/Debug/Debug.h
         src/Tools/PaintTools/BucketTool.h
@@ -103,12 +98,31 @@ add_executable(LuxPaint
         src/UI/ToolSizeSlider/ToolSizeSlider.h
         src/Shared/Calculations/Calc.h
         src/Shared/Calculations/CalcUIO.cpp
-        src/Shared/Utils/UtilsColors.cpp
-        src/Shared/Utils/UtilsFiles.cpp
-        src/Shared/Utils/UtilsView.cpp
-        src/Shared/Utils/UtilsInput.cpp
-        src/Shared/Utils/UtilsAppData.cpp
-        src/Shared/Utils/UtilsConvert.cpp
+        src/Shared/SnapshotsManager/SnapshotManager.cpp
+        src/Shared/SnapshotsManager/SnapshotManager.h
+        src/Shared/SnapshotsManager/SnapshotsTypes/Snapshot.h
+        src/Shared/SnapshotsManager/SnapshotsTypes/ImageSnapshot.h
+        src/Shared/Timer/Timer.cpp
+        src/Shared/Timer/Timer.h
+        src/Tools/ShapesTools/LineTool.h
+        src/Tools/PaintTools/EraserTool.h
+        src/Shared/Utils/Colors/Colors.cpp
+        src/Shared/Utils/Colors/Colors.h
+        src/Shared/Utils/AppData/utiAppData.cpp
+        src/Shared/Utils/AppData/utiAppData.h
+        src/Shared/Utils/Convert/utiConvert.cpp
+        src/Shared/Utils/Convert/utiConvert.h
+        src/Shared/Utils/Files/utiFiles.cpp
+        src/Shared/Utils/Files/utiFiles.h
+        src/Shared/Utils/Input/Input.cpp
+        src/Shared/Utils/Input/Input.h
+        src/App/AppData.h
+        src/Shared/Utils/View/utiView.cpp
+        src/Shared/Utils/View/utiView.h
+        src/Shared/Utils/Time/utiTime.cpp
+        src/Shared/Utils/Time/utiTime.h
+        src/UI/ManagerButton/Settings/ColorsSettingsBuilder.h
+        src/UI/ManagerButton/Settings/KeybindingsSettingsBuilder.h
 )
 
 target_include_directories(LuxPaint PRIVATE
@@ -118,18 +132,20 @@ target_include_directories(LuxPaint PRIVATE
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
 
-# Linkowanie i include w zależności od systemu
+# ... resources copy
+add_custom_command(
+        TARGET LuxPaint
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resources
+        $<TARGET_FILE_DIR:LuxPaint>/resources
+)
+
 if (WIN32)
     target_include_directories(LuxPaint PRIVATE ${RAYLIB_INCLUDE_DIR})
     target_link_directories(LuxPaint PRIVATE ${RAYLIB_LIB_DIR})
     target_link_libraries(LuxPaint PRIVATE raylib opengl32 gdi32 winmm)
 
-    # Ukrycie konsoli, ale zachowanie main()
-#    set_target_properties(LuxPaint PROPERTIES
-#        LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
-#    )  
-
-    # Kopiowanie DLL po buildzie
     add_custom_command(
         TARGET LuxPaint
         POST_BUILD

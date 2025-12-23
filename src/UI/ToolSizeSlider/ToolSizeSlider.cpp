@@ -1,25 +1,26 @@
 #include "ToolSizeSlider.h"
-#include "../../App.h"
-#include "../../Shared/Utils/Utils.h"
+#include "../../App/App.h"
 #include "../../Shared/DelayedAction/DelayedAction_until.h"
+#include "Shared/Utils/Files/utiFiles.h"
+#include "Shared/Utils/View/utiView.h"
 
 #include <iostream>
 
-void ToolSizeSlider::Init() {
+void ToolSizeSlider::init() {
     _inputField = new InputField();
     _inputField->text.center = true;
-    _inputField->SetMode(InputMode::NUMBERS_ONLY);
-    _inputField->OnValueChanged(
+    _inputField->setMode(InputMode::NUMBERS_ONLY);
+    _inputField->onValueChanged(
         [this] {
-        _UpdateSliderFromInput();
+        _updateSliderFromInput();
     });
 
     _slider = new Slider(ORIENTATION::VERTICAL);
-    _slider->OnValueChanged([this] {
-        _UpdateInputFromSlider(_slider->GetValue());
+    _slider->onValueChanged([this] {
+        _updateInputFromSlider(_slider->getValue());
     });
-    _slider->OnRelease([this] {
-        std::string valueS = _inputField->GetValue();
+    _slider->onRelease([this] {
+        std::string valueS = _inputField->getValue();
         int value = std::stoi(valueS.empty()? "1" : valueS);
         minVal = value / 5;
         maxVal = value * 5;
@@ -28,78 +29,78 @@ void ToolSizeSlider::Init() {
     new DelayedAction_until(
         [this] { return _currentTool != nullptr; },
         [this] {
-            std::string valueS = _inputField->GetValue();
+            std::string valueS = _inputField->getValue();
             int value = std::stoi(valueS.empty()? "1" : valueS);
             minVal = value / 5;
             maxVal = value * 5;
         });
 
     this->position = Vec2f(0, 25);
-    this->color = Utils::Files::LoadColor("ToolSizeSlider", "uiGlobal");
-    this->SetZLayer(LAYER_WIDGETS);
+    this->color = uti::files::loadColor("ToolSizeSlider", "uiGlobal");
+    this->setZLayer(LAYER_WIDGETS);
     this->name = "ToolSizeSlider";
 }
 
-Vec2f ToolSizeSlider::_CalculateShownPosition() {
+Vec2f ToolSizeSlider::_calculateShownPosition() {
   Vec2f separator = Vec2f(0, 30);
-  return Calc::UIO::LeftCorner(&App::Instance->toolBox) + separator;
+  return Calc::UIO::LeftCorner(&App::instance->toolBox) + separator;
 }
 
-void ToolSizeSlider::_UpdateSliderFromInput() {
+void ToolSizeSlider::_updateSliderFromInput() {
     if (!_currentTool) return;
 
-    std::string valStr = _inputField->GetValue();
+    std::string valStr = _inputField->getValue();
     if (valStr.empty()) return;
 
     int inputVal = std::stoi(valStr);
     int newVal = inputVal;
 
     float sliderValue = (float)(newVal - minVal) / (maxVal - minVal);
-    _slider->SetValue(sliderValue);
+    _slider->setValue(sliderValue);
 
-    _currentTool->SetSize((float)newVal);
+    _currentTool->setSize((float)newVal);
 }
 
 
-void ToolSizeSlider::_UpdateInputFromSlider(float sliderValue) {
+void ToolSizeSlider::_updateInputFromSlider(float sliderValue) {
     if (!_currentTool) return;
 
     int newVal = (int)(std::round(sliderValue * 100) / 100 * maxVal / 2);
     newVal = std::max(newVal, 1);
-    _inputField->SetValue(std::to_string(newVal));
-    _currentTool->SetSize((float)newVal);
-    _slider->SetValue(.5f);
+    _inputField->setValue(std::to_string(newVal));
+    _currentTool->setSize((float)newVal);
+    _slider->setValue(.5f);
     //std::cout << sliderValue << std::endl;
 }
 
 
-Vec2f ToolSizeSlider::_CalculateHiddenPosition() {
+Vec2f ToolSizeSlider::_calculateHiddenPosition() {
     Vec2f separator = Vec2f(0, 30);
-    Vec2f newPosition = Calc::UIO::LeftCorner(&App::Instance->toolBox) + separator;
-    newPosition.x = -size.x - Utils::View::GetSmallerMonitorEdge() * UIOBJECT_OUTLINE_SCALE;
+    Vec2f newPosition = Calc::UIO::LeftCorner(&App::instance->toolBox) + separator;
+    newPosition.x = -size.x - uti::view::getSmallerMonitorEdge() * UIOBJECT_OUTLINE_SCALE;
     return newPosition;
 }
 
-void ToolSizeSlider::_Show() {
+void ToolSizeSlider::_show() {
     float showTime = ANIMATION_SIZEUP_DURATION;
-    Animator::AnimatePosition(this, _CalculateShownPosition(), showTime, GAUSSIAN);
+    Animator::animatePosition(this, _calculateShownPosition(), showTime, GAUSSIAN);
 }
 
-void ToolSizeSlider::_Hide() {
+void ToolSizeSlider::_hide() {
     float hideTime = ANIMATION_SIZEUP_DURATION;
-    Animator::AnimatePosition(this, _CalculateHiddenPosition(), hideTime, GAUSSIAN);
+    Animator::animatePosition(this, _calculateHiddenPosition(), hideTime, GAUSSIAN);
 }
 
-float ToolSizeSlider::_GetCurrentValue() {
+float ToolSizeSlider::_getCurrentValue() {
     return _maxSliderValue / 2;
 }
 
-void ToolSizeSlider::Update() {
-    float smallerMonitorEdge = Utils::View::GetSmallerMonitorEdge();
-    _currentTool = App::Instance->canvas.GetCurrentTool();
+void ToolSizeSlider::update() {
+    float smallerMonitorEdge = uti::view::getSmallerMonitorEdge();
+    _currentTool = App::instance->canvas.getCurrentTool();
 
     // --- panel size ---
-    this->size = Vec2f(App::Instance->toolBox.size.x, _heightScale * smallerMonitorEdge);
+    this->size = Vec2f(App::instance->toolBox.size.x, _heightScale * smallerMonitorEdge);
     this->roundness = UI_WIDGETS_ROUNDNESS * smallerMonitorEdge;
 
     float margin = smallerMonitorEdge * 0.01f;
@@ -107,34 +108,34 @@ void ToolSizeSlider::Update() {
     // --- input field ---
     _inputField->position = this->position + Vec2f(margin, margin);
     _inputField->size = Vec2f(size.x - 2 * margin, 25);
-    _inputField->SetZLayer(GetZLayer() + 1);
+    _inputField->setZLayer(getZLayer() + 1);
 
     // --- slider and values ---
     if ((minVal == -1 || maxVal == -1) && _currentTool != nullptr) {
-        float sliderVal = _slider->GetValue();
+        float sliderVal = _slider->getValue();
         if ((minVal == -1 || maxVal == -1) && sliderVal != 0) {
             maxVal = (int)sliderVal * 5;
             minVal = (int)sliderVal / 5;
         }
 
-        _inputField->SetValue("1");
-        _UpdateSliderFromInput();
+        _inputField->setValue("1");
+        _updateSliderFromInput();
     }
 
     _slider->position = position + Vec2f(0, _inputField->size.y + margin * 2);
     _slider->size = size - Vec2f(0, _inputField->size.y + margin * 3);
-    _slider->SetZLayer(GetZLayer() + 1);
+    _slider->setZLayer(getZLayer() + 1);
 
 
     // --- show/hide logic ---
     static bool hovered = false;
-    if (_currentTool != nullptr && _currentTool->CanSizeBeChanged()) {
+    if (_currentTool != nullptr && _currentTool->canSizeBeChanged()) {
         if (!hovered) {
-            _Show();
+            _show();
             hovered = true;
         }
     } else {
-        _Hide();
+        _hide();
         hovered = false;
     }
 }

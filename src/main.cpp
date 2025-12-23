@@ -1,8 +1,8 @@
-#include "App.h"
+#include "App/App.h"
 
 int main() {
-    App::Instance->Init();
-    App::Instance->Run();
+    App::instance->Init();
+    App::instance->Run();
     
     return 0;
 }

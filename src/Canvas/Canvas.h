@@ -28,27 +28,27 @@ class Canvas final : public UIObject, public Updatable {
 
   const float MIN_CANVAS_SIZE = 8.0f;
 
-  void _UpdateBackground();
-    void _HandleOutline();
-    void _HandlePainting();
-    void _HandleCropping();
-  UIObjEdge _GetHoveredEdge(UIObject *layer, Vec2f mp);
+  void _updateBackground();
+    void _handleOutline();
+    void _handlePainting();
+    void _handleCropping();
+  UIObjEdge _getHoveredEdge(UIObject *layer, Vec2f mp);
 
-  bool _CanDrag();
-  void _HandleZoomAndDrag();
-  void _CreateBackground();
+  bool _canDrag();
+  void _handleZoomAndDrag();
+  void _createBackground();
 
 public:
-  void Init();
-  void AddImage(Image image);
-  void AddTexture(Texture2D texture);
-  void Update() override;
+  void init();
+  void addImage(Image image);
+  void addTexture(Texture2D texture);
+  void update() override;
 
-  std::vector<UIObject*>& GetImages();
-  void SetCurrentColor(Color color);
-  Color GetCurrentColor();
-  void SetCurrentTool(Tool *tool);
-  const Tool *GetCurrentToolRO();
-  Tool *GetCurrentTool();
-  Image ExportAsImage();
+  const std::vector<UIObject*>& getLayersInfo();
+  void setCurrentColor(Color color);
+  Color getCurrentColor();
+  void setCurrentTool(Tool *tool);
+  const Tool *getCurrentToolRO();
+  Tool *getCurrentTool();
+  Image exportAsImage();
 };

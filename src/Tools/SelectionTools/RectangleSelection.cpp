@@ -1,17 +1,16 @@
 #include "RectangleSelection.h"
-#include "../../App.h"
+#include "../../App/App.h"
 #include "../../Canvas/Selectors/MarchingAntsSelector.h"
 #include "../../Canvas/Selectors/SelectionMask.h"
-#include "../../Shared/Utils/Utils.h"
 #include "raylib.h"
 
-void RectangleSelection::HandleMousePressed(UIObject*) {
+void RectangleSelection::_handleMousePressedImpl(UIObject*) {
 
-    if (Utils::Input::MousePressed()) {
+    if (uti::input::mousePressed()) {
 
         _selecting = true;
 
-        _startPos = Utils::Input::GetMousePosition();
+        _startPos = uti::input::getMousePosition();
         _endPos = _startPos;
 
         // Tworzymy nową ramkę selekcji
@@ -20,21 +19,21 @@ void RectangleSelection::HandleMousePressed(UIObject*) {
 
         // 1×1 obraz BLANK – nie trzeba aktualizować co frame
         Image tmp = GenImageColor(1, 1, BLANK);
-        _currentSelection->SetImage(tmp);
+        _currentSelection->setImage(tmp);
         UnloadImage(tmp);
 
-        _currentSelection->SetZLayer(1000);
+        _currentSelection->setZLayer(1000);
 
         // Efekt "marching ants"
-        MarchingAntsSelector::StartOn(_currentSelection);
+        MarchingAntsSelector::startOn(_currentSelection);
     }
 }
 
-void RectangleSelection::HandleMouseDown(UIObject*) {
+void RectangleSelection::_handleMouseDownImpl(UIObject*) {
 
-    if (_selecting && Utils::Input::MouseDown()) {
+    if (_selecting && uti::input::mouseDown()) {
 
-        _endPos = Utils::Input::GetMousePosition();
+        _endPos = uti::input::getMousePosition();
         Rectangle rect = GetSelectionRect();
 
         if (_currentSelection) {
@@ -44,9 +43,9 @@ void RectangleSelection::HandleMouseDown(UIObject*) {
     }
 }
 
-void RectangleSelection::HandleMouseRelease(UIObject*) {
+void RectangleSelection::_handleMouseReleaseImpl(UIObject*) {
 
-    if (_selecting && Utils::Input::MouseReleased()) {
+    if (_selecting && uti::input::mouseReleased()) {
 
         _selecting = false;
 
@@ -56,8 +55,8 @@ void RectangleSelection::HandleMouseRelease(UIObject*) {
         mask.CreateFromRect(
             rect,
             {
-                (float)App::Instance->canvas.GetImages()[0]->size.x,
-                (float)App::Instance->canvas.GetImages()[0]->size.y
+                (float)App::instance->canvas.getLayersInfo()[0]->size.x,
+                (float)App::instance->canvas.getLayersInfo()[0]->size.y
             }
         );
 
@@ -66,8 +65,8 @@ void RectangleSelection::HandleMouseRelease(UIObject*) {
 
             for (auto* sel : _selections) {
                 if (sel != _currentSelection) {
-                    MarchingAntsSelector::StopOn(sel);
-                    sel->Destroy();
+                    MarchingAntsSelector::stopOn(sel);
+                    sel->destroy();
                 }
             }
 

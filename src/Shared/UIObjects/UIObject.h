@@ -6,24 +6,29 @@
 #include <string>
 
 class UIObject {
-  Texture2D   _texture = {};
-  bool        _hasTexture = false;
-  Image       _image;
-  bool        _hasImage = false;
-  bool        textFittingEnabled = false;
-  float       textFittingSeparatorScale = 0.005f;
   int         _zLayer = 0;
 
+  bool        textFittingEnabled = false;
+  float       textFittingSeparatorScale = 0.005f;
+
+  bool        _hasTexture = false;
+  Image       _image;
+  Texture2D   _texture = {};
+  bool        _hasImage = false;
+
 public:
+  // ... core
   bool          isActive = true;
+  Text          text;
   std::string   name = "";
+  // .. transform
   Vec2f         position {0,0};
   Vec2f         size {0,0};
-  Color         color {};
+  // ... visual
+  Color         color {0, 0, 0, 0};
   float         roundness = 0;
-  Text          text;
-  // ... style
   float         outlineScale = UIOBJECT_OUTLINE_SCALE;
+  Color         outlineColor = {0, 0, 0, 0};
   bool          keepRoundness = true;
   // ... images
   bool          imageStretch = false;
@@ -31,21 +36,21 @@ public:
   float         imageMarginScale = 0;
 
   UIObject();
-  virtual void Draw();
-  void SetZLayer(int newZLayer);
-  int GetZLayer();
-  bool CursorAbove() const;
-  bool Clicked() const;
-  bool ClickedButNotThis();
-  bool Pressed() const;
-  void SetImage(const Texture &texture);
-  void SetImage(const Image &image);
-  void UpdateTexture();
-  Image GetImage();
-  Vec2i GetImageSize();
-  Vec2i GetOnImageCursorPosition();
-  Texture &GetTexture();
-  virtual void Destroy();
+  virtual void draw();
+  void setZLayer(int newZLayer);
+  int getZLayer();
+  bool cursorAbove() const;
+  bool clicked() const;
+  bool clickedButNotThis();
+  bool pressed() const;
+  void setImage(const Texture &texture);
+  void setImage(const Image &image);
+  void updateTexture();
+  Image getImage();
+  Vec2i getImageSize();
+  Vec2i getOnImageCursorPosition();
+  Texture &getTexture();
+  virtual void destroy();
 };
 
 // ... animator utility

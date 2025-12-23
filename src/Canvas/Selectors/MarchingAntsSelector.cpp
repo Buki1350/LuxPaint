@@ -1,40 +1,41 @@
 #include "MarchingAntsSelector.h"
-#include "../../Shared/FilesManager/FilesManager.h"
-#include "../../Shared/Utils/Utils.h"
+#include "../../Shared/Serializer/Serializer.h"
 #include "../../Shared/UIObjects/UIObjectsManager.h"
+#include "Math/Matrx.h"
+#include "Shared/Utils/Convert/utiConvert.h"
 
 [[maybe_unused]]
 static MarchingAntsSelector instance;
 
-void MarchingAntsSelector::Init() {
-  gridImage = FilesManager::LoadImage("Grids/checker.png");
+void MarchingAntsSelector::init() {
+  gridImage = Serializer::LoadImage("Grids/checker.png");
 }
 
-void MarchingAntsSelector::StartOn(UIObject* obj) {
-  for (auto &sel : Instance->selections)
+void MarchingAntsSelector::startOn(UIObject* obj) {
+  for (auto &sel : instance->selections)
     if (sel.target == obj) return;
 
   MarchingSelection newSel;
   newSel.target = obj;
 
   for (int i = 0; i < 8; i++) {
-    newSel.MAImages[i] = Instance->_GetAntTextureTextureStep(obj->GetTexture(), i);
+    newSel.MAImages[i] = instance->_getAntTextureTextureStep(obj->getTexture(), i);
   }
 
   newSel.overlay = new UIObject();
-  newSel.overlay->SetImage(newSel.MAImages[0]);
+  newSel.overlay->setImage(newSel.MAImages[0]);
   newSel.overlay->size = obj->size;
   newSel.overlay->position = obj->position;
-  newSel.overlay->SetZLayer(obj->GetZLayer() + 1);
+  newSel.overlay->setZLayer(obj->getZLayer() + 1);
   newSel.overlay->imageAlpha = 1.0f;
   newSel.overlay->outlineScale = 0.0f;
 
-  Instance->selections.push_back(newSel);
+  instance->selections.push_back(newSel);
 }
 
 
 
-void MarchingAntsSelector::Update() {
+void MarchingAntsSelector::update() {
   _timeAccumulator += GetFrameTime();
   if (_timeAccumulator >= 0.1f) { // co 100 ms
     _frameStep = (_frameStep + 1) % 8;
@@ -46,16 +47,16 @@ void MarchingAntsSelector::Update() {
     sel.overlay->size = sel.target->size;
 
     // ustawiamy aktualną klatkę
-    sel.overlay->SetImage(sel.MAImages[_frameStep]);
+    sel.overlay->setImage(sel.MAImages[_frameStep]);
   }
 }
 
 
 
-void MarchingAntsSelector::StopOn(UIObject* obj) {
-  if (Instance == nullptr) return;
+void MarchingAntsSelector::stopOn(UIObject* obj) {
+  if (instance == nullptr) return;
 
-  for (auto it = Instance->selections.begin(); it != Instance->selections.end(); ++it) {
+  for (auto it = instance->selections.begin(); it != instance->selections.end(); ++it) {
     if (it->target == obj) {
       it->overlay->isActive = false;
 
@@ -63,14 +64,14 @@ void MarchingAntsSelector::StopOn(UIObject* obj) {
         UnloadTexture(it->MAImages[i]);
       }
 
-      Instance->selections.erase(it);
+      instance->selections.erase(it);
       break;
     }
   }
 }
 
-Texture MarchingAntsSelector::_GetAntTextureTextureStep(Texture& texture, int step) {
-  Matrx<Color> textureMatrix = Utils::Convert::TextureToMatrix(texture);
+Texture MarchingAntsSelector::_getAntTextureTextureStep(Texture& texture, int step) {
+  Matrx<Color> textureMatrix = uti::convert::textureToMatrix(texture);
   Vec2i size = textureMatrix.size();
 
   int borderThickness = 2;
@@ -98,7 +99,7 @@ Texture MarchingAntsSelector::_GetAntTextureTextureStep(Texture& texture, int st
     }
   }
 
-  Texture2D newTexture = Utils::Convert::MatrixToTexture(textureMatrix);
+  Texture2D newTexture = uti::convert::matrixToTexture(textureMatrix);
   return newTexture;
 }
 

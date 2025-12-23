@@ -26,14 +26,14 @@ public:
   InputField();
   ~InputField() override;
 
-  void SetMode(InputMode mode);
-  std::string GetValue() const;
-  void SetValue(const std::string &v);
-  void SetFocused(bool value);
+  void setMode(InputMode mode);
+  std::string getValue() const;
+  void setValue(const std::string &v);
+  void setFocused(bool value);
 
-  void Update() override;
-  void Draw() override;
+  void update() override;
+  void draw() override;
 
-  bool IsFocused() const { return this == _instance; }
-  void OnValueChanged(std::function<void()> lambdaFunc);
+  bool isFocused() const { return this == _instance; }
+  void onValueChanged(std::function<void()> lambdaFunc);
 };

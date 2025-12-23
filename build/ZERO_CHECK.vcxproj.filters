@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\build\CMakeFiles\43ea657b19ce4f8ce0f4332807bb1e29\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A3DAAB20-4AC3-38ED-9506-AB3752FDC247}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

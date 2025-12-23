@@ -6,14 +6,14 @@
 template <typename T>
 class Singleton {
 public:
-  inline static T* Instance = nullptr;
+  inline static T* instance = nullptr;
 
 protected:
     Singleton() {
-        if (Instance == nullptr) Instance = static_cast<T*>(this);
+        if (instance == nullptr) instance = static_cast<T*>(this);
     }
 
     ~Singleton() {
-        Instance = nullptr;
+        instance = nullptr;
     }
 };

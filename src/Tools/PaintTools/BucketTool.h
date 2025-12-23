@@ -7,28 +7,28 @@ public:
     explicit BucketTool(const std::string& name) : Tool(name) {}
 
 protected:
-  bool CanSizeBeChanged() const override { return false; };
+  bool canSizeBeChanged() const override { return false; };
 
-    void HandleMousePressed(UIObject* img) override {
+    void _handleMousePressedImpl(UIObject* img) override {
 
-        Vec2i p = img->GetOnImageCursorPosition();
+        Vec2i p = img->getOnImageCursorPosition();
         if (p.x < 0)
           return;
 
-        Image image = img->GetImage();
+        Image image = img->getImage();
 
         Color target = GetPixelUnsafe(image, p.x, p.y);
-        Color replacement = App::Instance->canvas.GetCurrentColor();
+        Color replacement = App::instance->canvas.getCurrentColor();
 
         if (ColorsEqual(target, replacement)) return;
 
         FloodFill(image, p.x, p.y, target, replacement);
-        img->UpdateTexture();
+        img->updateTexture();
     }
 
 
-    void HandleMouseDown(UIObject* imageToPaint) override {}
-    void HandleMouseRelease(UIObject* imageToPaint) override {}
+    void _handleMouseDownImpl(UIObject* imageToPaint) override {}
+    void _handleMouseReleaseImpl(UIObject* imageToPaint) override {}
 
 private:
 

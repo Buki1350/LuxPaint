@@ -12,7 +12,7 @@ public:
 
   static void InitAll() {
     for (auto i : initializables) {
-      i->Init();
+      i->init();
     }
   }
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include "../Calculations/Calc.h"
-#include "../Utils/Utils.h"
+#include "Shared/Utils/Time/utiTime.h"
 
 enum MovementType {
   GAUSSIAN,
@@ -110,7 +110,7 @@ class AnimationValue final : public IAnimationValue {
   void LocalUpdate() override {
     if (!currentValue) return;
 
-    currentTime += Utils::Time::GetDeltaTime();
+    currentTime += uti::time::getDeltaTime();
     float t = duration > 0.0f ? currentTime / duration : 1.0f;
     if (t > 1.0f) t = 1.0f;
 

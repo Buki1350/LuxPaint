@@ -1,9 +1,11 @@
 #include "../Prefabs/InputField.h"
-#include "../../../Shared/Utils/Utils.h"
+#include "Shared/Utils/AppData/utiAppData.h"
+#include "Shared/Utils/Convert/utiConvert.h"
+#include "Shared/Utils/Time/utiTime.h"
 #include "raylib.h"
 
 InputField::InputField() {
-  text.SetParent(this);
+  text.setParent(this);
   text.center = false;
   text.margin = 5;
   color = WHITE;
@@ -12,19 +14,19 @@ InputField::~InputField() {
     if (this == _instance) { _instance = nullptr; }
 }
 
-void InputField::SetMode(InputMode mode) {
+void InputField::setMode(InputMode mode) {
     _mode = mode;
 }
 
-std::string InputField::GetValue() const {
+std::string InputField::getValue() const {
     return _value;
 }
 
-void InputField::SetValue(const std::string &v) {
+void InputField::setValue(const std::string &v) {
   _value = v;
   _cursorPos = (int)_value.size();
 }
-void InputField::SetFocused(bool value) {
+void InputField::setFocused(bool value) {
     if (value == true) {
         _queued = this;
     }
@@ -33,10 +35,10 @@ void InputField::SetFocused(bool value) {
     }
 }
 
-void InputField::Update() {
-    if (Clicked()) {
+void InputField::update() {
+    if (clicked()) {
         _queued = this;
-    } else if (IsMouseButtonPressed(0) && !CursorAbove()) {
+    } else if (IsMouseButtonPressed(0) && !cursorAbove()) {
         _instance = nullptr;
     }
     if (_queued != nullptr) {
@@ -73,7 +75,7 @@ void InputField::Update() {
         }
     }
 
-    _cursorTimer += Utils::Time::GetDeltaTime();
+    _cursorTimer += uti::time::getDeltaTime();
     if (_cursorTimer > 0.5f) {
         _cursorVisible = !_cursorVisible;
         _cursorTimer = 0.0f;
@@ -100,8 +102,8 @@ void InputField::Update() {
     }
 }
 
-void InputField::Draw() {
-  UIObject::Draw();
+void InputField::draw() {
+  UIObject::draw();
 
   Vec2f finalPos = position;
   Vec2f finalSize = size;
@@ -109,7 +111,7 @@ void InputField::Draw() {
   BeginScissorMode((int)finalPos.x, (int)finalPos.y, (int)finalSize.x,
                    (int)finalSize.y);
 
-  DrawTextEx(Utils::AppData::GetDefaultFont(), _value.c_str(),
+  DrawTextEx(uti::appdata::getDefaultFont(), _value.c_str(),
              {finalPos.x + text.margin - _scrollOffset,
               finalPos.y + (finalSize.y - text.fontSize) / 2.0f},
              (float)text.fontSize, 1.0f, text.textColor);
@@ -124,6 +126,6 @@ void InputField::Draw() {
 
   EndScissorMode();
 }
-void InputField::OnValueChanged(std::function<void()> lambdaFunc) {
+void InputField::onValueChanged(std::function<void()> lambdaFunc) {
     _onValueChangedCallback = lambdaFunc;
 }

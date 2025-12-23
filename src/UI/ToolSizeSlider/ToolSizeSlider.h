@@ -14,15 +14,15 @@ class ToolSizeSlider final : public UIObject, public Updatable {
   int minVal = -1, maxVal = -1;
   Tool* _currentTool = nullptr;
 
-  Vec2f _CalculateHiddenPosition();
-  Vec2f _CalculateShownPosition();
-  void _UpdateSliderFromInput();
-  void _UpdateInputFromSlider(float sliderValue);
-  void _Show();
-  void _Hide();
-  float _GetCurrentValue();
+  Vec2f _calculateHiddenPosition();
+  Vec2f _calculateShownPosition();
+  void _updateSliderFromInput();
+  void _updateInputFromSlider(float sliderValue);
+  void _show();
+  void _hide();
+  float _getCurrentValue();
 
 public:
-  void Init();
-  void Update() override;
+  void init();
+  void update() override;
 };
