@@ -1,27 +1,24 @@
 #pragma once
 
-#include "../Canvas/Canvas.h"
 #include "../Shared/Singleton/Singleton.h"
 #include "../Shared/SnapshotsManager/SnapshotManager.h"
 #include "../Shared/UIObjects/UIObjectsManager.h"
+#include "../UI/Canvas/Canvas.h"
 #include "../UI/ColorHolder/ColorHolder.h"
 #include "../UI/ManagerButton/ManagerButton.h"
 #include "../UI/ToolBox/ToolBox.h"
 #include "../UI/ToolSizeSlider/ToolSizeSlider.h"
-#include "AppData.h"
-#include "Shared/Utils/Files/utiFiles.h"
+#include "AppData/AppData.h"
 
 class App : public Singleton<App> {
-    void Close();
-    void _Update();
-    void _Draw();
-    void _HandleDebugDrawing();
+    AppData _appData;
 
-    AppData _appData = {};
-    friend void uti::files::updateAppData();
+    void _close();
+    void _update();
+    void _draw();
+    void _handleDebugDrawing();
 
 public:
-    // TODO: backgroundColor;
 
     UIObjectsManager UIObjectManager;
     SnapshotManager snapshotManager;
@@ -34,4 +31,5 @@ public:
     void Init();
     void Run();
     const AppData& getAppData();
+    AppData& getMutableAppData();
 };

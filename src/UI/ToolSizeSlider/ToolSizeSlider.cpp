@@ -15,15 +15,15 @@ void ToolSizeSlider::init() {
         _updateSliderFromInput();
     });
 
-    _slider = new Slider(ORIENTATION::VERTICAL);
+    _slider = std::make_unique<Slider>(ORIENTATION::VERTICAL);
     _slider->onValueChanged([this] {
         _updateInputFromSlider(_slider->getValue());
     });
     _slider->onRelease([this] {
         std::string valueS = _inputField->getValue();
         int value = std::stoi(valueS.empty()? "1" : valueS);
-        minVal = value / 5;
-        maxVal = value * 5;
+        _minVal = value / 5;
+        _maxVal = value * 5;
     });
 
     new DelayedAction_until(
@@ -31,8 +31,8 @@ void ToolSizeSlider::init() {
         [this] {
             std::string valueS = _inputField->getValue();
             int value = std::stoi(valueS.empty()? "1" : valueS);
-            minVal = value / 5;
-            maxVal = value * 5;
+            _minVal = value / 5;
+            _maxVal = value * 5;
         });
 
     this->position = Vec2f(0, 25);
@@ -55,7 +55,7 @@ void ToolSizeSlider::_updateSliderFromInput() {
     int inputVal = std::stoi(valStr);
     int newVal = inputVal;
 
-    float sliderValue = (float)(newVal - minVal) / (maxVal - minVal);
+    float sliderValue = (float)(newVal - _minVal) / (_maxVal - _minVal);
     _slider->setValue(sliderValue);
 
     _currentTool->setSize((float)newVal);
@@ -65,7 +65,7 @@ void ToolSizeSlider::_updateSliderFromInput() {
 void ToolSizeSlider::_updateInputFromSlider(float sliderValue) {
     if (!_currentTool) return;
 
-    int newVal = (int)(std::round(sliderValue * 100) / 100 * maxVal / 2);
+    int newVal = (int)(std::round(sliderValue * 100) / 100 * _maxVal / 2);
     newVal = std::max(newVal, 1);
     _inputField->setValue(std::to_string(newVal));
     _currentTool->setSize((float)newVal);
@@ -98,11 +98,11 @@ float ToolSizeSlider::_getCurrentValue() {
 void ToolSizeSlider::update() {
     float smallerMonitorEdge = uti::view::getSmallerMonitorEdge();
     _currentTool = App::instance->canvas.getCurrentTool();
+    _floatValue = _slider->getValue() * _maxVal;
 
     // --- panel size ---
     this->size = Vec2f(App::instance->toolBox.size.x, _heightScale * smallerMonitorEdge);
     this->roundness = UI_WIDGETS_ROUNDNESS * smallerMonitorEdge;
-
     float margin = smallerMonitorEdge * 0.01f;
 
     // --- input field ---
@@ -111,21 +111,21 @@ void ToolSizeSlider::update() {
     _inputField->setZLayer(getZLayer() + 1);
 
     // --- slider and values ---
-    if ((minVal == -1 || maxVal == -1) && _currentTool != nullptr) {
+    if ((_minVal == -1 || _maxVal == -1) && _currentTool != nullptr) {
         float sliderVal = _slider->getValue();
-        if ((minVal == -1 || maxVal == -1) && sliderVal != 0) {
-            maxVal = (int)sliderVal * 5;
-            minVal = (int)sliderVal / 5;
+        if ((_minVal == -1 || _maxVal == -1) && sliderVal != 0) {
+            _maxVal = (int)sliderVal * 5;
+            _minVal = (int)sliderVal / 5;
         }
 
-        _inputField->setValue("1");
+        if (_inputField->text.value.empty())
+            _inputField->setValue("1");
         _updateSliderFromInput();
     }
 
     _slider->position = position + Vec2f(0, _inputField->size.y + margin * 2);
     _slider->size = size - Vec2f(0, _inputField->size.y + margin * 3);
     _slider->setZLayer(getZLayer() + 1);
-
 
     // --- show/hide logic ---
     static bool hovered = false;

@@ -12,7 +12,7 @@ public:
 protected:
   bool canSizeBeChanged() const override { return true; };
 
-  void _handleMousePressedImpl(UIObject* img) override {
+  void handleMousePressedImpl(UIObject* img) override {
     Vec2i p = img->getOnImageCursorPosition();
     if (p.x < 0) return;
 
@@ -20,11 +20,11 @@ protected:
     _active = true;
   }
 
-  void _handleMouseDownImpl(UIObject* imageToPaint) override {
+  void handleMouseDownImpl(UIObject* imageToPaint) override {
     // celowo puste — okrąg rysujemy dopiero na release
   }
 
-  void _handleMouseReleaseImpl(UIObject *img) override {
+  void handleMouseReleaseImpl(UIObject *img) override {
     if (!_active || !img)
       return;
 

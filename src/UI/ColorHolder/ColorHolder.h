@@ -8,7 +8,7 @@ class ColorHolder final : public UIObject, public Updatable {
   float _buttonScale = 0.05f;
   float _separatorScale = 0.01f;
 
-  std::vector<Button*> _buttons;
+  std::vector<Button*> _colorButtons;
   int _numberOfSavedColors = 0;
 
 public:
@@ -17,4 +17,5 @@ public:
   void _createColorPicker();
 
   void setBackgroundColor(Color color);
+  Color getCurrentColor() const;
 };

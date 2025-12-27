@@ -16,7 +16,7 @@ public:
   bool canSizeBeChanged() const override { return false; }
   explicit RectangleSelection(const std::string& name) : Tool(name) {}
 
-  void _handleMousePressedImpl(UIObject* imageToPaint) override;
-  void _handleMouseDownImpl(UIObject* imageToPaint) override;
-  void _handleMouseReleaseImpl(UIObject *imageToPaint) override;
+  void handleMousePressedImpl(UIObject* imageToPaint) override;
+  void handleMouseDownImpl(UIObject* imageToPaint) override;
+  void handleMouseReleaseImpl(UIObject *imageToPaint) override;
 };

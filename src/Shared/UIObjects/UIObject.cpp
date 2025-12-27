@@ -188,7 +188,7 @@ void UIObject::setZLayer(int newZLayer) {
   UIObjectsManager::_updateRenderOrderList();
 }
 
-int UIObject::getZLayer() { return this->_zLayer; }
+int UIObject::getZLayer() const { return this->_zLayer; }
 
 bool UIObject::cursorAbove() const {
   return

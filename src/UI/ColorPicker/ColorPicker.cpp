@@ -1,11 +1,13 @@
 #include "ColorPicker.h"
 
 #include "../../Shared/Serializer/Serializer.h"
+#include "App/App.h"
 #include "Shared/Utils/Files/utiFiles.h"
 #include "Shared/Utils/View/utiView.h"
 
 #include <algorithm>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 
 ColorPicker::ColorPicker() {
@@ -29,7 +31,6 @@ ColorPicker::ColorPicker() {
   _hexInputField = new InputField;
   _hexInputField->setMode(InputMode::LETTERS_AND_NUMBERS);
 
-  // Slidery
   _sRSlider = new Slider(HORIZONTAL);
   _sGSlider = new Slider(HORIZONTAL);
   _sBSlider = new Slider(HORIZONTAL);
@@ -51,19 +52,18 @@ ColorPicker::ColorPicker() {
     _sliderLabels.push_back(label);
   }
 
-  _currentColor = WHITE;
+  _currentColor = App::instance->colorHolder.getCurrentColor();
   __previousColor = _currentColor;
 }
 
 void ColorPicker::update() {
   float scale = uti::view::getSmallerMonitorEdge();
   float margin = _marginScale * scale;
-  //float spaceUnderRainbow = _spaceUnderRainbowScale * scale;
 
-  this->roundness = uti::view::getSmallerMonitorEdge() *  UI_WIDGETS_ROUNDNESS;
+  this->roundness = uti::view::getSmallerMonitorEdge() *  0.00005;
 
   float oRainbowWidth = this->size.x - 2 * margin;
-  float oRainbowHeight = this->size.y * 0.5f; // panoramiczne
+  float oRainbowHeight = this->size.y * 0.5f;
   _oRainbow->size = {oRainbowWidth, oRainbowHeight};
   _oRainbow->position = this->position + Vec2f(margin, margin);
   _oRainbow->setZLayer(this->getZLayer() + 1);
@@ -89,21 +89,17 @@ void ColorPicker::update() {
     float yPos = _hexInputField->position.y + _hexInputField->size.y + margin +
                  i * (sliderHeight + margin);
 
-    // Etykieta
     UIObject* label = _sliderLabels[i];
     label->size = {sliderHeight, sliderHeight};
     label->position = {_oRainbow->position.x, yPos};
-    //label->textSize = 0.4f * sliderHeight;
 
-    // Suwak obok etykiety
     float sliderX = label->position.x + label->size.x + margin;
     float sliderWidth =
-        this->size.x - sliderX - margin; // mieści się w tle
+        this->size.x - sliderX - margin;
     slider->position = {sliderX, yPos};
     slider->size = {sliderWidth, sliderHeight};
   }
 
-  // Logika
   _updateFromSliders();
   _updateFromHex();
   _updateFromRainbow();
@@ -112,12 +108,16 @@ void ColorPicker::update() {
   if (clickedButNotThis())
     destroy();
 
-  if (
+  // ... when colorpicker popped up, _OnColorChange was being invoked with default BLACK color
+  if (_justStarted) _justStarted = false;
+  else if (
     _currentColor.r != __previousColor.r ||
     _currentColor.g != __previousColor.g ||
     _currentColor.b != __previousColor.b ||
     _currentColor.a != __previousColor.a
-    ) { _OnColorChange(_currentColor); }
+    ) {
+    _OnColorChange(_currentColor);
+  }
 
   __previousColor = _currentColor;
 }

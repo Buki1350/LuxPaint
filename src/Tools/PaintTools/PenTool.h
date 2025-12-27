@@ -7,11 +7,11 @@ class PenTool final : public Tool {
 public:
   explicit PenTool(const std::string& name) : Tool(name) {}
 
-  void _handleMousePressedImpl(UIObject* img) override {
+  void handleMousePressedImpl(UIObject* img) override {
     _lastPixel = {-1, -1};
   }
 
-  void _handleMouseDownImpl(UIObject* img) override {
+  void handleMouseDownImpl(UIObject* img) override {
     if (!img) return;
 
     Vec2i p = img->getOnImageCursorPosition();
@@ -43,7 +43,7 @@ public:
     _lastPixel = p;
   }
 
-  void _handleMouseReleaseImpl(UIObject *img) override {
+  void handleMouseReleaseImpl(UIObject *img) override {
     _lastPixel = {-1, -1};
   }
 

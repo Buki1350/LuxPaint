@@ -7,17 +7,17 @@ protected:
 public:
   explicit BrushTool(const std::string& name) : Tool(name) {}
 
-  void _handleMousePressedImpl(UIObject* img) override {
+  void handleMousePressedImpl(UIObject* img) override {
     _holdFrames = 0;
     Draw(img);
   }
 
-  void _handleMouseDownImpl(UIObject* img) override {
+  void handleMouseDownImpl(UIObject* img) override {
     _holdFrames++;
     Draw(img);
   }
 
-  void _handleMouseReleaseImpl(UIObject *img) override {
+  void handleMouseReleaseImpl(UIObject *img) override {
     _holdFrames = 0;
   }
 

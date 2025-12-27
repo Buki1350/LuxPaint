@@ -9,8 +9,8 @@
 #include "../../Shared/Animator/Animator.h"
 #include "../../Shared/DelayedAction/DelayedAction_inSeconds.h"
 #include "../../Shared/Serializer/Serializer.h"
-#include "BlankCanvasBuilder.h"
-#include "Settings/SettingsBuilder.h"
+#include "../MiniMenus/BlankCanvas/BlankCanvasBuilder.h"
+#include "../MiniMenus/Settings/SettingsBuilder.h"
 #include "Shared/Utils/Files/utiFiles.h"
 
 void ManagerButton::init() {

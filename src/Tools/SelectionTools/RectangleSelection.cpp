@@ -1,10 +1,10 @@
 #include "RectangleSelection.h"
 #include "../../App/App.h"
-#include "../../Canvas/Selectors/MarchingAntsSelector.h"
-#include "../../Canvas/Selectors/SelectionMask.h"
+#include "../../UI/Canvas/Selectors/MarchingAntsSelector.h"
+#include "../../UI/Canvas/Selectors/SelectionMask.h"
 #include "raylib.h"
 
-void RectangleSelection::_handleMousePressedImpl(UIObject*) {
+void RectangleSelection::handleMousePressedImpl(UIObject*) {
 
     if (uti::input::mousePressed()) {
 
@@ -29,7 +29,7 @@ void RectangleSelection::_handleMousePressedImpl(UIObject*) {
     }
 }
 
-void RectangleSelection::_handleMouseDownImpl(UIObject*) {
+void RectangleSelection::handleMouseDownImpl(UIObject*) {
 
     if (_selecting && uti::input::mouseDown()) {
 
@@ -43,7 +43,7 @@ void RectangleSelection::_handleMouseDownImpl(UIObject*) {
     }
 }
 
-void RectangleSelection::_handleMouseReleaseImpl(UIObject*) {
+void RectangleSelection::handleMouseReleaseImpl(UIObject*) {
 
     if (_selecting && uti::input::mouseReleased()) {
 

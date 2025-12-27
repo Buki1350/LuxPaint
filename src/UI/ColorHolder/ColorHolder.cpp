@@ -10,6 +10,8 @@
 #include "Shared/Utils/Files/utiFiles.h"
 #include "Shared/Utils/View/utiView.h"
 
+#include <iostream>
+
 void ColorHolder::init() {
   this->color = uti::files::loadColor("colorHolder", "uiGlobal");
   this->setZLayer(LAYER_WIDGETS);
@@ -23,7 +25,7 @@ void ColorHolder::init() {
   colorPickButton->onClick([this]() {
     _createColorPicker();
   });
-  _buttons.push_back(colorPickButton);
+  _colorButtons.push_back(colorPickButton);
 
   for (int i = 0; i < _numberOfSavedColors; i++) {
     Button* savedColor = new Button();
@@ -33,7 +35,7 @@ void ColorHolder::init() {
     savedColor->onClick([this, savedColor]() {
       App::instance->canvas.setCurrentColor(savedColor->color);
     });
-    _buttons.push_back(savedColor);
+    _colorButtons.push_back(savedColor);
   }
 }
 
@@ -47,14 +49,14 @@ void ColorHolder::update() {
   this->roundness = UI_WIDGETS_ROUNDNESS * uti::view::getSmallerMonitorEdge();
 
   this->size = Vec2f(
-    separatorSize + _buttons.size() * (buttonSize.x + separatorSize),
+    separatorSize + _colorButtons.size() * (buttonSize.x + separatorSize),
     buttonSize.y + separatorSize * 2
     );
   this->position = Vec2f(offset, windowHeight - separatorSize - this->size.y);
 
-  for (int i = 0; i < _buttons.size(); i++) {
-    _buttons[i]->size = buttonSize;
-    _buttons[i]->position = Vec2f(
+  for (int i = 0; i < _colorButtons.size(); i++) {
+    _colorButtons[i]->size = buttonSize;
+    _colorButtons[i]->position = Vec2f(
       this->position.x + separatorSize + (buttonSize.x + separatorSize) * i,
       this->position.y + separatorSize
       );
@@ -72,11 +74,18 @@ void ColorHolder::_createColorPicker() {
   cp->setColor(App::instance->canvas.getCurrentColor());
 
   cp->onColorChange([this](Color newColor) {
-    if (!_buttons.empty()) {
-      _buttons[0]->color = newColor;
+    if (!_colorButtons.empty()) {
+      _colorButtons[0]->color = newColor;
     }
     App::instance->canvas.setCurrentColor(newColor);
   });
 }
 
-void ColorHolder::setBackgroundColor(Color color) { this->color = color; }
+void ColorHolder::setBackgroundColor(Color color) {
+  this->color = color;
+}
+
+Color ColorHolder::getCurrentColor() const {
+  if (_colorButtons.size() == 0) { std::cerr << "[ColorHolder::setBackgroundColor] No buttons in panel." << std::endl; }
+  return _colorButtons[0]->color;
+}

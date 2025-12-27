@@ -1,12 +1,11 @@
 #pragma once
-#include "../Automatition/Updatables/Updatable.h"
-#include "../Shared/UIObjects/UIObject.h"
+#include "../../Automatition/Updatables/Updatable.h"
+#include "../../Shared/UIObjects/UIObject.h"
 #include "raylib.h"
 
 #include <vector>
 
-#include "../Tools/Shared/Tool.h"
-#include "Selectors/SelectionMask.h"
+#include "../../Tools/Shared/Tool.h"
 
 class Canvas final : public UIObject, public Updatable {
   // ... first layer works as base for other layers

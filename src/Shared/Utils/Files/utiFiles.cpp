@@ -4,32 +4,15 @@
 
 namespace uti::files {
 
-void updateAppData() {
-
-  static bool defaultFontLoaded = false;
-  if (!defaultFontLoaded) {
-    App::instance->_appData.defaultFont =
-       LoadFont((std::string(PATH_FONTS) + "Comfortaa-Bold.ttf").c_str());
-    defaultFontLoaded = true;
-  }
-
-  Vec2i currentMonitorSize = Vec2i( GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-  Vec2i windowSize = Vec2i(GetScreenWidth(), GetScreenHeight());
-
-  App::instance->_appData.monitorSize = currentMonitorSize;
-  App::instance->_appData.smallerMonitorEdge = std::min(currentMonitorSize.x, currentMonitorSize.y);
-  App::instance->_appData.windowSize = windowSize;
-}
-
 Color loadColor(std::string token, std::string defaultToken) {
   if (!defaultToken.empty()) {
-    std::string foundDefaultColorString = Serializer::LoadFromResources<std::string>(FILE_COLOR_PALETTE, defaultToken);
+    std::string foundDefaultColorString = Serializer::LoadFromData<std::string>(FILE_COLOR_PALETTE, defaultToken);
     if (!foundDefaultColorString.empty()) {
       return colors::hexToColor(foundDefaultColorString);
     }
   }
 
-  Color color = colors::hexToColor(Serializer::LoadFromResources<std::string>(FILE_COLOR_PALETTE, token));
+  Color color = colors::hexToColor(Serializer::LoadFromData<std::string>(FILE_COLOR_PALETTE, token));
   if (color.r == 0 && color.g == 0 && color.b == 0 && color.a == 255) {
     Serializer::SaveToResources<std::string>(FILE_COLOR_PALETTE, token, "#7d7d7d");
     color = colors::hexToColor("#7d7d7d");

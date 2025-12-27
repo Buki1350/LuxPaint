@@ -22,6 +22,8 @@ else(UNIX)
     file( GLOB NFD_SOURCE otherLibs/nfd/nfd_gtk.cpp )
 endif()
 
+
+
 add_executable(LuxPaint
         ${NFD_HEADER}
         ${NFD_SOURCE}
@@ -50,20 +52,20 @@ add_executable(LuxPaint
         src/Defines.h
         src/Shared/UIObjects/Text.cpp
         src/Shared/UIObjects/Text.h
-        src/Canvas/Canvas.cpp
-        src/Canvas/Canvas.h
+        src/UI/Canvas/Canvas.cpp
+        src/UI/Canvas/Canvas.h
         src/Math/Vec2.h
         src/Automatition/Initializables/Initializable.h
         src/Automatition/Initializables/Initializables.h
         src/Automatition/Initializables/Initializable.cpp
         src/Automatition/Initializables/Initializables.cpp
-        src/Canvas/Selectors/MarchingAntsSelector.cpp
-        src/Canvas/Selectors/MarchingAntsSelector.h
+        src/UI/Canvas/Selectors/MarchingAntsSelector.cpp
+        src/UI/Canvas/Selectors/MarchingAntsSelector.h
         src/Shared/Singleton/Singleton.h
         src/Math/Matrx.h
-        src/UI/MiniMenu/MiniMenu.cpp
-        src/UI/MiniMenu/MiniMenu.h
-        src/UI/ManagerButton/BlankCanvasBuilder.h
+        src/UI/MiniMenus/MiniMenu/MiniMenu.cpp
+        src/UI/MiniMenus/MiniMenu/MiniMenu.h
+        src/UI/MiniMenus/BlankCanvas/BlankCanvasBuilder.h
         src/Shared/Animator/AnimationValue.h
         src/Shared/Animator/AnimationValue.tpp
         src/Macros.h
@@ -81,12 +83,12 @@ add_executable(LuxPaint
         src/Shared/KeyBindings/Keybindings.cpp
         src/Shared/KeyBindings/Keybindings.h
         src/Shared/UIObjects/Extensions/UIFocusOutliner.h
-        src/UI/ManagerButton/Settings/SettingsBuilder.h
-        src/UI/MiniMenu/MiniMenuBuilder.h
+        src/UI/MiniMenus/Settings/SettingsBuilder.h
+        src/UI/MiniMenus/MiniMenu/MiniMenuBuilder.h
         src/Shared/DelayedAction/DelayedActions.h
         src/Shared/DelayedAction/DelayedAction_until.h
-        src/Canvas/Selectors/SelectionMask.cpp
-        src/Canvas/Selectors/SelectionMask.h
+        src/UI/Canvas/Selectors/SelectionMask.cpp
+        src/UI/Canvas/Selectors/SelectionMask.h
         src/Shared/InputActionListener/InputActionListener.cpp
         src/Shared/InputActionListener/InputActionListener.h
         src/Debug/Debug.cpp
@@ -108,21 +110,22 @@ add_executable(LuxPaint
         src/Tools/PaintTools/EraserTool.h
         src/Shared/Utils/Colors/Colors.cpp
         src/Shared/Utils/Colors/Colors.h
-        src/Shared/Utils/AppData/utiAppData.cpp
-        src/Shared/Utils/AppData/utiAppData.h
         src/Shared/Utils/Convert/utiConvert.cpp
         src/Shared/Utils/Convert/utiConvert.h
         src/Shared/Utils/Files/utiFiles.cpp
         src/Shared/Utils/Files/utiFiles.h
         src/Shared/Utils/Input/Input.cpp
         src/Shared/Utils/Input/Input.h
-        src/App/AppData.h
+        src/App/AppData/AppData.h
         src/Shared/Utils/View/utiView.cpp
         src/Shared/Utils/View/utiView.h
         src/Shared/Utils/Time/utiTime.cpp
         src/Shared/Utils/Time/utiTime.h
-        src/UI/ManagerButton/Settings/ColorsSettingsBuilder.h
-        src/UI/ManagerButton/Settings/KeybindingsSettingsBuilder.h
+        src/UI/MiniMenus/Settings/ColorsSettingsBuilder.h
+        src/UI/MiniMenus/Settings/KeybindingsSettingsBuilder.h
+        src/Shared/Utils/Text/utiText.cpp
+        src/Shared/Utils/Text/utiText.h
+        src/App/AppData/AppData.cpp
 )
 
 target_include_directories(LuxPaint PRIVATE
@@ -131,6 +134,16 @@ target_include_directories(LuxPaint PRIVATE
 
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
+
+if (MSVC)
+    target_compile_options(LuxPaint PRIVATE
+            $<$<CONFIG:Debug>:/Od /Zi /Ob0 /Oy->
+    )
+else()
+    target_compile_options(LuxPaint PRIVATE
+            $<$<CONFIG:Debug>:-O0 -g>
+    )
+endif()
 
 # ... resources copy
 add_custom_command(

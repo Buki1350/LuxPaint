@@ -6,13 +6,15 @@
 #include <iostream>
 
 void Tool::handleMousePressed(UIObject *ui_object) {
-  _handleMousePressedImpl(ui_object);
+  handleMousePressedImpl(ui_object);
 }
+
 void Tool::handleMouseDown(UIObject *ui_object) {
-  _handleMouseDownImpl(ui_object);
+  handleMouseDownImpl(ui_object);
 }
+
 void Tool::handleMouseRelease(UIObject *ui_object) {
-  _handleMouseReleaseImpl(ui_object);
+  handleMouseReleaseImpl(ui_object);
   App::instance->snapshotManager.saveSnapshot(
     std::make_unique<ImageSnapshot>(App::instance->canvas.getLayersInfo()));
 }

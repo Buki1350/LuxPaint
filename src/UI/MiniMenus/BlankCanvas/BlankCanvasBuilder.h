@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Shared/UIObjects/UIObjectsManager.h"
-#include "../../UI/MiniMenu/MiniMenu.h"
+#include "../../../Shared/UIObjects/UIObjectsManager.h"
+#include "../MiniMenu/MiniMenu.h"
 #include "../MiniMenu/MiniMenuBuilder.h"
 #include "Math/Matrx.h"
 #include "Shared/SnapshotsManager/SnapshotsTypes/ImageSnapshot.h"
@@ -11,13 +11,13 @@ public:
   void BuildContext() {
     auto actionName = new UIObject();
     actionName->size = {500, 20};
-    actionName->color = RED;
+    actionName->color = uti::colors::darkenColor(menu->getOBackground()->color, 0.25f);
     actionName->text = "New blank image";
     actionName->text.center = true;
 
     auto field1Info = new UIObject();
-    field1Info->text = "Size: ";
-    field1Info->size = {50, 20};
+    field1Info->text = "Size in pixels: ";
+    field1Info->size = {150, 20};
 
     auto field1Value1 = new InputField();
     field1Value1->color = WHITE;

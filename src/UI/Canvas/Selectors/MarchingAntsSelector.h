@@ -1,8 +1,8 @@
 #pragma once
-#include "../../Automatition/Initializables/Initializable.h"
-#include "../../Automatition/Updatables/Updatable.h"
-#include "../../Shared/Singleton/Singleton.h"
-#include "../../Shared/UIObjects/UIObject.h"
+#include "../../../Automatition/Initializables/Initializable.h"
+#include "../../../Automatition/Updatables/Updatable.h"
+#include "../../../Shared/Singleton/Singleton.h"
+#include "../../../Shared/UIObjects/UIObject.h"
 
 #include <vector>
 

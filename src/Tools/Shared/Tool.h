@@ -6,12 +6,11 @@
 #include <string>
 
 class Tool {
-
-  protected:
-  virtual void _handleMousePressedImpl(UIObject* imageToPaint) = 0;
-  virtual void _handleMouseDownImpl(UIObject* imageToPaint) = 0;
-  virtual void _handleMouseReleaseImpl(UIObject* imageToPaint) = 0;
   std::string _name;
+  protected:
+  virtual void handleMousePressedImpl(UIObject* imageToPaint) = 0;
+  virtual void handleMouseDownImpl(UIObject* imageToPaint) = 0;
+  virtual void handleMouseReleaseImpl(UIObject* imageToPaint) = 0;
   int size = 0;
 
   public:

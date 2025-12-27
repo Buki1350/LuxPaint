@@ -1,6 +1,6 @@
 #include "InputActionListener.h"
 #include "../../App/App.h"
-#include "../../UI/ManagerButton/BlankCanvasBuilder.h"
+#include "../../UI/MiniMenus/BlankCanvas/BlankCanvasBuilder.h"
 #include "../Keybindings/Keybindings.h"
 
 static InputActionListener singleton;

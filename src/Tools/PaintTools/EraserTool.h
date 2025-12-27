@@ -8,9 +8,9 @@ public:
 protected:
   bool canSizeBeChanged() const override { return true; };
 
-  void _handleMousePressedImpl(UIObject* img) override { Erase(img); }
-  void _handleMouseDownImpl(UIObject* img) override { Erase(img); }
-  void _handleMouseReleaseImpl(UIObject*) override {}
+  void handleMousePressedImpl(UIObject* img) override { Erase(img); }
+  void handleMouseDownImpl(UIObject* img) override { Erase(img); }
+  void handleMouseReleaseImpl(UIObject*) override {}
 
 private:
   void Erase(UIObject* img) {

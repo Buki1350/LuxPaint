@@ -38,7 +38,7 @@ public:
   UIObject();
   virtual void draw();
   void setZLayer(int newZLayer);
-  int getZLayer();
+  int getZLayer() const;
   bool cursorAbove() const;
   bool clicked() const;
   bool clickedButNotThis();

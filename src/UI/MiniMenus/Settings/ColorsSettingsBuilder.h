@@ -1,8 +1,7 @@
 #pragma once
-#include "App/App.h"
 #include "SettingsBuilder.h"
 #include "Shared/Utils/Files/utiFiles.h"
-#include "UI/MiniMenu/MiniMenuBuilder.h"
+#include "UI/MiniMenus/MiniMenu/MiniMenuBuilder.h"
 
 class ColorsSettingsBuilder : public MiniMenuBuilderBase<ColorsSettingsBuilder> {
   inline static std::map<std::string, Color> colorDict;
@@ -96,7 +95,7 @@ class ColorsSettingsBuilder : public MiniMenuBuilderBase<ColorsSettingsBuilder> 
         menu->packRow({ label, MiniMenu::flexSeparator(), button });
     }
 
-    void ApplyGlobalUIColor(Color c) {
+    void applyGlobalUIColor(Color c) {
         App::instance->toolBox.setBackgroundColor(c);
         App::instance->colorHolder.setBackgroundColor(c);
         App::instance->managerButton.color = c;
@@ -105,6 +104,7 @@ class ColorsSettingsBuilder : public MiniMenuBuilderBase<ColorsSettingsBuilder> 
     }
 
 public:
+
     void BuildContext() {
         colorDict = uti::files::loadAllColors();
 
@@ -115,15 +115,26 @@ public:
         menu->packRow({ MiniMenu::flexSeparator(), uiColorsHeader, MiniMenu::flexSeparator() });
         menu->createSmallSeparator();
 
+
+        CreateColorPickRow(
+            "App background color",
+            "appBackground",
+            [this](Color c) {
+                App::instance->getMutableAppData().appBackgroundColor = c;
+                App::instance->getMutableAppData().appBackgroundColor.a = 255;
+                uti::files::saveColor("appBackground", App::instance->getMutableAppData().appBackgroundColor);
+            }
+        );
+        menu->createSmallSeparator();
+
         // === GLOBAL UI COLOR PICKER ===
         CreateColorPickRow(
             "Global UI color",
             "uiGlobal",
             [this](Color c) {
-                ApplyGlobalUIColor(c);
+                applyGlobalUIColor(c);
             }
         );
-
         menu->createSmallSeparator();
 
         // === INDIVIDUAL COLORS (INDENTED) ===

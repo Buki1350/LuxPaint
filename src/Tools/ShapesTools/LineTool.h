@@ -12,13 +12,13 @@ public:
 protected:
   bool canSizeBeChanged() const override { return true; };
 
-  void _handleMousePressedImpl(UIObject* img) override {
+  void handleMousePressedImpl(UIObject* img) override {
     _start = img->getOnImageCursorPosition();
   }
 
-  void _handleMouseDownImpl(UIObject*) override {}
+  void handleMouseDownImpl(UIObject*) override {}
 
-  void _handleMouseReleaseImpl(UIObject* img) override {
+  void handleMouseReleaseImpl(UIObject* img) override {
     if (!img || _start.x < 0) return;
 
     Vec2i end = img->getOnImageCursorPosition();

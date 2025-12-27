@@ -1,10 +1,10 @@
-#include "../../UI/MiniMenu/MiniMenu.h"
+#include "../../MiniMenus/MiniMenu/MiniMenu.h"
 
-#include "../../Shared/Animator/Animator.h"
-#include "../../Shared/Keybindings/Keybindings.h"
-#include "../../Shared/Serializer/Serializer.h"
-#include "../../Shared/UIObjects/Extensions/UIFocusOutliner.h"
-#include "../../Shared/UIObjects/UIObjectsManager.h"
+#include "../../../Shared/Animator/Animator.h"
+#include "../../../Shared/Keybindings/Keybindings.h"
+#include "../../../Shared/Serializer/Serializer.h"
+#include "../../../Shared/UIObjects/Extensions/UIFocusOutliner.h"
+#include "../../../Shared/UIObjects/UIObjectsManager.h"
 #include "Shared/Utils/Files/utiFiles.h"
 #include "Shared/Utils/View/utiView.h"
 

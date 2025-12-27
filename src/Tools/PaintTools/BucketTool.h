@@ -9,7 +9,7 @@ public:
 protected:
   bool canSizeBeChanged() const override { return false; };
 
-    void _handleMousePressedImpl(UIObject* img) override {
+    void handleMousePressedImpl(UIObject* img) override {
 
         Vec2i p = img->getOnImageCursorPosition();
         if (p.x < 0)
@@ -27,8 +27,8 @@ protected:
     }
 
 
-    void _handleMouseDownImpl(UIObject* imageToPaint) override {}
-    void _handleMouseReleaseImpl(UIObject* imageToPaint) override {}
+    void handleMouseDownImpl(UIObject* imageToPaint) override {}
+    void handleMouseReleaseImpl(UIObject* imageToPaint) override {}
 
 private:
 
