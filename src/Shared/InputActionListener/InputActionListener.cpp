@@ -10,8 +10,8 @@ void InputActionListener::update() {
   updateDebug();
 #endif
 
-  if (Keybindings::actionDetected(UNDO)) { App::instance->snapshotManager.undo(); }
-  if (Keybindings::actionDetected(REDO)) { App::instance->snapshotManager.redo(); }
+  if (Keybindings::actionDetected(UNDO)) { App::instance().snapshotManager.undo(); }
+  if (Keybindings::actionDetected(REDO)) { App::instance().snapshotManager.redo(); }
 }
 
 #ifdef DEBUG

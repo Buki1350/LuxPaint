@@ -96,11 +96,11 @@ class ColorsSettingsBuilder : public MiniMenuBuilderBase<ColorsSettingsBuilder> 
     }
 
     void applyGlobalUIColor(Color c) {
-        App::instance->toolBox.setBackgroundColor(c);
-        App::instance->colorHolder.setBackgroundColor(c);
-        App::instance->managerButton.color = c;
+        App::instance().toolBox.setBackgroundColor(c);
+        App::instance().colorHolder.setBackgroundColor(c);
+        App::instance().managerButton.color = c;
         MiniMenu::setBackgroundColorForAll(c);
-        App::instance->toolSizeSlider.color = c;
+        App::instance().toolSizeSlider.color = c;
     }
 
 public:
@@ -120,9 +120,9 @@ public:
             "App background color",
             "appBackground",
             [this](Color c) {
-                App::instance->getMutableAppData().appBackgroundColor = c;
-                App::instance->getMutableAppData().appBackgroundColor.a = 255;
-                uti::files::saveColor("appBackground", App::instance->getMutableAppData().appBackgroundColor);
+                App::instance().getMutableAppData().appBackgroundColor = c;
+                App::instance().getMutableAppData().appBackgroundColor.a = 255;
+                uti::files::saveColor("appBackground", App::instance().getMutableAppData().appBackgroundColor);
             }
         );
         menu->createSmallSeparator();
@@ -141,19 +141,19 @@ public:
         CreateIndentedColorPickRow(
             "Toolbox color",
             "toolbox",
-            [this](Color c) { App::instance->toolBox.setBackgroundColor(c); }
+            [this](Color c) { App::instance().toolBox.setBackgroundColor(c); }
         );
 
         CreateIndentedColorPickRow(
             "Color holder color",
             "colorHolder",
-            [this](Color c) { App::instance->colorHolder.setBackgroundColor(c); }
+            [this](Color c) { App::instance().colorHolder.setBackgroundColor(c); }
         );
 
         CreateIndentedColorPickRow(
             "Manager button color",
             "managerButton",
-            [this](Color c) { App::instance->managerButton.color = c; }
+            [this](Color c) { App::instance().managerButton.color = c; }
         );
 
         CreateIndentedColorPickRow(
@@ -165,7 +165,7 @@ public:
         CreateIndentedColorPickRow(
             "Tool size slider color",
             "toolSizeSlider",
-            [this](Color c) { App::instance->toolSizeSlider.color = c; }
+            [this](Color c) { App::instance().toolSizeSlider.color = c; }
         );
     }
 };

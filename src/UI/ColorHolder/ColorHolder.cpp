@@ -33,7 +33,7 @@ void ColorHolder::init() {
     savedColor->setZLayer(this->getZLayer() + 1);
     savedColor->roundness = 1;
     savedColor->onClick([this, savedColor]() {
-      App::instance->canvas.setCurrentColor(savedColor->color);
+      App::instance().canvas.setCurrentColor(savedColor->color);
     });
     _colorButtons.push_back(savedColor);
   }
@@ -71,13 +71,13 @@ void ColorHolder::_createColorPicker() {
   cp->position = Vec2f(separatorSize,
                        this->position.y - separatorSize - cp->size.y);
 
-  cp->setColor(App::instance->canvas.getCurrentColor());
+  cp->setColor(App::instance().canvas.getCurrentColor());
 
   cp->onColorChange([this](Color newColor) {
     if (!_colorButtons.empty()) {
       _colorButtons[0]->color = newColor;
     }
-    App::instance->canvas.setCurrentColor(newColor);
+    App::instance().canvas.setCurrentColor(newColor);
   });
 }
 

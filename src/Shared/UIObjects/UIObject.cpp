@@ -91,10 +91,10 @@ void UIObject::destroy() {
   UIObjectsManager::_objectsInRenderOrder.remove(this);
 
   // ... remove from updatables
-  if (auto up = dynamic_cast<Updatable*>(this)) {
-    auto& upvec = UpdatablesManager::updatables;
-    upvec.erase(std::remove(upvec.begin(), upvec.end(), up), upvec.end());
-  }
+  // if (auto up = dynamic_cast<Updatable*>(this)) {
+  //   auto& upvec = UpdatablesManager::_updatables;
+  //   upvec.erase(std::remove(upvec.begin(), upvec.end(), up), upvec.end());
+  // }
 
   delete this;
 }

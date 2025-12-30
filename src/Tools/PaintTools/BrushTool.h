@@ -33,7 +33,7 @@ private:
     if (p.x < 0) return;
 
     Image im = img->getImage();
-    Color c = App::instance->canvas.getCurrentColor();
+    Color c = App::instance().canvas.getCurrentColor();
 
     int base = std::max(size, 1);
     int extra = std::min(

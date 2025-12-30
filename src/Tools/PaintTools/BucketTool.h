@@ -18,7 +18,7 @@ protected:
         Image image = img->getImage();
 
         Color target = GetPixelUnsafe(image, p.x, p.y);
-        Color replacement = App::instance->canvas.getCurrentColor();
+        Color replacement = App::instance().canvas.getCurrentColor();
 
         if (ColorsEqual(target, replacement)) return;
 

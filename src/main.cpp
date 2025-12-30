@@ -1,8 +1,8 @@
 #include "App/App.h"
 
 int main() {
-    App::instance->Init();
-    App::instance->Run();
+    App::instance().init();
+    App::instance().run();
     
     return 0;
 }

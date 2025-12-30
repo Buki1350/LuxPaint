@@ -52,7 +52,7 @@ ColorPicker::ColorPicker() {
     _sliderLabels.push_back(label);
   }
 
-  _currentColor = App::instance->colorHolder.getCurrentColor();
+  _currentColor = App::instance().colorHolder.getCurrentColor();
   __previousColor = _currentColor;
 }
 

@@ -28,8 +28,8 @@ public:
     ToolBox toolBox;
     Canvas canvas;
 
-    void Init();
-    void Run();
+    void init();
+    void run();
     const AppData& getAppData();
     AppData& getMutableAppData();
 };

@@ -45,7 +45,7 @@ public:
       Matrx<Color> blankImageMatrix(size.CastTo<int>());
       blankImageMatrix.fill(WHITE);
       Texture2D blankImage = uti::convert::matrixToTexture(blankImageMatrix);
-      App::instance->canvas.addTexture(blankImage);
+      App::instance().canvas.addTexture(blankImage);
 
       menu->destroy();
     });
@@ -83,8 +83,8 @@ public:
     Matrx<Color> blankImageMatrix(size);
     blankImageMatrix.fill(WHITE);
     Texture2D blankImage = uti::convert::matrixToTexture(blankImageMatrix);
-    App::instance->canvas.addTexture(blankImage);
-    App::instance->snapshotManager.saveSnapshot(
-        std::make_unique<ImageSnapshot>(App::instance->canvas.getLayersInfo()));
+    App::instance().canvas.addTexture(blankImage);
+    App::instance().snapshotManager.saveSnapshot(
+        std::make_unique<ImageSnapshot>(App::instance().canvas.getLayersInfo()));
   }
 };

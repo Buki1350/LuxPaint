@@ -2,20 +2,18 @@
 #include "Updatable.h"
 #include <algorithm>
 
-void UpdatablesManager::UpdateAll() {
-  updatables.erase(
+void UpdatablesManager::updateAll() {
+  _updatables.erase(
       std::remove_if(
-          updatables.begin(),
-          updatables.end(),
+          _updatables.begin(),
+          _updatables.end(),
           [](Updatable* u) { return u == nullptr || u->markedForDeletion; }
       ),
-      updatables.end()
+      _updatables.end()
   );
 
-  auto snapshot = updatables;
-
+  auto snapshot = _updatables;
   for (Updatable* updatable : snapshot) {
-    auto s = updatable;
     if (updatable != nullptr && !updatable->markedForDeletion) {
       updatable->update();
     }

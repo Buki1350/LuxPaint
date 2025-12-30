@@ -111,7 +111,7 @@ void InputField::draw() {
   BeginScissorMode((int)finalPos.x, (int)finalPos.y, (int)finalSize.x,
                    (int)finalSize.y);
 
-  DrawTextEx(App::instance->getAppData().defaultFont, _value.c_str(),
+  DrawTextEx(App::instance().getAppData().defaultFont, _value.c_str(),
              {finalPos.x + text.margin - _scrollOffset,
               finalPos.y + (finalSize.y - text.fontSize) / 2.0f},
              (float)text.fontSize, 1.0f, text.textColor);

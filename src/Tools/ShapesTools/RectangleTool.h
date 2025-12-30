@@ -35,7 +35,7 @@ protected:
     }
 
     Image image = img->getImage();
-    Color c = App::instance->canvas.getCurrentColor();
+    Color c = App::instance().canvas.getCurrentColor();
 
     int x1 = std::min(_start.x, end.x);
     int y1 = std::min(_start.y, end.y);

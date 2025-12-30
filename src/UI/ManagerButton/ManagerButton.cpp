@@ -163,7 +163,7 @@ void ManagerButton::_loadImageFromSystem() {
 
   if (result == NFD_OKAY) {
     Image img = LoadImage(outPath);
-    App::instance->canvas.addImage(img);
+    App::instance().canvas.addImage(img);
     UnloadImage(img);
 
     NFD_FreePath(outPath); // pamiętaj o zwolnieniu
@@ -194,7 +194,7 @@ void ManagerButton::_saveImageToSystem() {
 
   if (result == NFD_OKAY) {
 
-    Image img = App::instance->canvas.exportAsImage();
+    Image img = App::instance().canvas.exportAsImage();
 
     // raylib sam rozpoznaje format po rozszerzeniu
     ExportImage(img, outPath);

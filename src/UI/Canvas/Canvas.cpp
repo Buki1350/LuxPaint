@@ -89,7 +89,7 @@ void Canvas::_updateBackground() {
 
 void Canvas::_handleOutline() {
   if (_oActiveImage) {
-    MarchingAntsSelector::instance->startOn(_oActiveImage);
+    MarchingAntsSelector::instance().startOn(_oActiveImage);
   }
   else {
     // Możesz tu ewentualnie usuwać wszystkie, jak chcesz

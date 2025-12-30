@@ -5,15 +5,15 @@
 namespace uti::view {
 
 Vec2i getCurrentMonitorSize() {
-  return App::instance->getAppData().monitorSize;
+  return App::instance().getAppData().monitorSize;
 }
 
 Vec2i getWindowSize() {
-  return App::instance->getAppData().windowSize;
+  return App::instance().getAppData().windowSize;
 }
 
 float getSmallerMonitorEdge() {
-  return App::instance->getAppData().smallerMonitorEdge;
+  return App::instance().getAppData().smallerMonitorEdge;
 }
 
 }

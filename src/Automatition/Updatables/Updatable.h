@@ -4,7 +4,7 @@
 class Updatable {
 public:
   bool markedForDeletion = false;
-  Updatable() { UpdatablesManager::updatables.push_back(this); }
+  Updatable() { UpdatablesManager::_updatables.push_back(this); }
   virtual ~Updatable() = default;
   virtual void update() = 0;
 };

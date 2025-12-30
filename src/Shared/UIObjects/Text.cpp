@@ -13,7 +13,7 @@ void Text::setParent(UIObject *parent) {
 void Text::wrapToWidth(TextWrapType wrapType) {
   if (!uiObject_parent) return;
 
-  Font font = App::instance->getAppData().defaultFont;
+  Font font = App::instance().getAppData().defaultFont;
   float maxWidth = uiObject_parent->size.x - 2 * margin;
   float maxHeight = uiObject_parent->size.y - 2 * margin;
   float lineHeight = (float)fontSize;
@@ -98,7 +98,7 @@ void Text::draw() {
       (int)finalSize.y
   );
 
-  DrawTextEx(App::instance->getAppData().defaultFont, value.c_str(), { x, y }, (float)fontSize, 1.0f, textColor);
+  DrawTextEx(App::instance().getAppData().defaultFont, value.c_str(), { x, y }, (float)fontSize, 1.0f, textColor);
 
   EndScissorMode();
 }

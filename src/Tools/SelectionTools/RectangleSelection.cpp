@@ -55,8 +55,8 @@ void RectangleSelection::handleMouseReleaseImpl(UIObject*) {
         mask.CreateFromRect(
             rect,
             {
-                (float)App::instance->canvas.getLayersInfo()[0]->size.x,
-                (float)App::instance->canvas.getLayersInfo()[0]->size.y
+                (float)App::instance().canvas.getLayersInfo()[0]->size.x,
+                (float)App::instance().canvas.getLayersInfo()[0]->size.y
             }
         );
 

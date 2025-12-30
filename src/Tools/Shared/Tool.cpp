@@ -15,8 +15,8 @@ void Tool::handleMouseDown(UIObject *ui_object) {
 
 void Tool::handleMouseRelease(UIObject *ui_object) {
   handleMouseReleaseImpl(ui_object);
-  App::instance->snapshotManager.saveSnapshot(
-    std::make_unique<ImageSnapshot>(App::instance->canvas.getLayersInfo()));
+  App::instance().snapshotManager.saveSnapshot(
+    std::make_unique<ImageSnapshot>(App::instance().canvas.getLayersInfo()));
 }
 
 void Tool::setSize(int val) { size = val; }

@@ -95,6 +95,7 @@
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
@@ -121,8 +122,17 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	</Message>
       <Command>setlocal
+C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_directory C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/resources C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/Debug/resources
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_if_different C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/raylib/lib/raylib.dll C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -188,8 +198,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	</Message>
       <Command>setlocal
+C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_directory C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/resources C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/Release/resources
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_if_different C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/raylib/lib/raylib.dll C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/Release
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -255,8 +274,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	</Message>
       <Command>setlocal
+C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_directory C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/resources C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/MinSizeRel/resources
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_if_different C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/raylib/lib/raylib.dll C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -321,8 +349,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>	</Message>
       <Command>setlocal
+C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_directory C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/resources C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/RelWithDebInfo/resources
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 C:\Users\lukas\AreaZero\Aplikacje\Cmake\bin\cmake.exe -E copy_if_different C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/raylib/lib/raylib.dll C:/Users/lukas/AreaZero/Repozytoria/LuxPaint/build/RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -411,8 +448,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\otherLibs\nfd\nfd.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\otherLibs\nfd\nfd_win.cpp" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\main.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\FilesManager\FilesManager.cpp" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App\App.cpp" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Serializer\Serializer.cpp" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\Shared\Tool.cpp" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\Shared\Tool.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\ToolSet\ToolSet.cpp" />
@@ -423,8 +460,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\PaintTools\PenTool.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ToolBox\ToolBox.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ToolBox\ToolBox.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Utils.cpp" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Utils.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\ManagerButton.cpp" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\ManagerButton.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ColorHolder\ColorHolder.cpp" />
@@ -437,20 +472,20 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Defines.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Text.cpp" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Text.h" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Canvas.cpp" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Canvas.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Canvas.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Canvas.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Math\Vec2.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializable.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializables.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializable.cpp" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializables.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\MarchingAntsSelector.cpp" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\MarchingAntsSelector.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\MarchingAntsSelector.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\MarchingAntsSelector.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Singleton\Singleton.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Math\Matrx.h" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenu\MiniMenu.cpp" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenu\MiniMenu.h" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\BlankCanvasBuilder.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\MiniMenu\MiniMenu.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\MiniMenu\MiniMenu.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\BlankCanvas\BlankCanvasBuilder.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Animator\AnimationValue.h" />
     <None Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Animator\AnimationValue.tpp">
     </None>
@@ -469,15 +504,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\KeyBindings\Keybindings.cpp" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\KeyBindings\Keybindings.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Extensions\UIFocusOutliner.h" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\SettingsBuilder.h" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenu\MiniMenuBuilder.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\Settings\SettingsBuilder.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\MiniMenu\MiniMenuBuilder.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\DelayedAction\DelayedActions.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\DelayedAction\DelayedAction_until.h" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\SelectionMask.cpp" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\SelectionMask.h" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputManager\InputManager.cpp" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputManager\InputManager.h" />
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\KeyBindings\KeyNames.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\SelectionMask.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\SelectionMask.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputActionListener\InputActionListener.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputActionListener\InputActionListener.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Debug\Debug.cpp" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Debug\Debug.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\PaintTools\BucketTool.h" />
@@ -487,12 +521,32 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ToolSizeSlider\ToolSizeSlider.h" />
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Calculations\Calc.h" />
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Calculations\CalcUIO.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsColors.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsFiles.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsView.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsInput.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsAppData.cpp" />
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsConvert.cpp" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotManager.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotManager.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotsTypes\Snapshot.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotsTypes\ImageSnapshot.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Timer\Timer.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Timer\Timer.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\ShapesTools\LineTool.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\PaintTools\EraserTool.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Colors\Colors.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Colors\Colors.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Convert\utiConvert.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Convert\utiConvert.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Files\utiFiles.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Files\utiFiles.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Input\Input.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Input\Input.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App\AppData\AppData.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\View\utiView.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\View\utiView.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Time\utiTime.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Time\utiTime.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\Settings\ColorsSettingsBuilder.h" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\Settings\KeybindingsSettingsBuilder.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Text\utiText.cpp" />
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Text\utiText.h" />
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App\AppData\AppData.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

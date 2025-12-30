@@ -18,7 +18,7 @@ public:
     if (p.x < 0) return;
 
     Image im = img->getImage();
-    Color col = App::instance->canvas.getCurrentColor();
+    Color col = App::instance().canvas.getCurrentColor();
     int radius = std::max(size, 1);   // grubość linii
 
     if (_lastPixel.x >= 0) {

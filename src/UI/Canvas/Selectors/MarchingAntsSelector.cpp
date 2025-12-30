@@ -12,14 +12,14 @@ void MarchingAntsSelector::init() {
 }
 
 void MarchingAntsSelector::startOn(UIObject* obj) {
-  for (auto &sel : instance->selections)
+  for (auto &sel : instance().selections)
     if (sel.target == obj) return;
 
   MarchingSelection newSel;
   newSel.target = obj;
 
   for (int i = 0; i < 8; i++) {
-    newSel.MAImages[i] = instance->_getAntTextureTextureStep(obj->getTexture(), i);
+    newSel.MAImages[i] = instance()._getAntTextureTextureStep(obj->getTexture(), i);
   }
 
   newSel.overlay = new UIObject();
@@ -30,7 +30,7 @@ void MarchingAntsSelector::startOn(UIObject* obj) {
   newSel.overlay->imageAlpha = 1.0f;
   newSel.overlay->outlineScale = 0.0f;
 
-  instance->selections.push_back(newSel);
+  instance().selections.push_back(newSel);
 }
 
 
@@ -54,9 +54,9 @@ void MarchingAntsSelector::update() {
 
 
 void MarchingAntsSelector::stopOn(UIObject* obj) {
-  if (instance == nullptr) return;
+  //if (instance == nullptr) return;
 
-  for (auto it = instance->selections.begin(); it != instance->selections.end(); ++it) {
+  for (auto it = instance().selections.begin(); it != instance().selections.end(); ++it) {
     if (it->target == obj) {
       it->overlay->isActive = false;
 
@@ -64,7 +64,7 @@ void MarchingAntsSelector::stopOn(UIObject* obj) {
         UnloadTexture(it->MAImages[i]);
       }
 
-      instance->selections.erase(it);
+      instance().selections.erase(it);
       break;
     }
   }

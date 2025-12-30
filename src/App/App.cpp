@@ -4,9 +4,7 @@
 #include "../Shared/Serializer/Serializer.h"
 #include "../Shared/UIObjects/UIObjectsManager.h"
 
-static App _;
-
-void App::Init()
+void App::init()
 {
   SetConfigFlags(FLAG_WINDOW_TRANSPARENT | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
   SetTargetFPS(60);
@@ -32,7 +30,7 @@ void App::Init()
 void App::_update()
 {
   _appData._updateValues();
-  UpdatablesManager::UpdateAll();
+  UpdatablesManager::updateAll();
 }
 
 void App::_draw() {
@@ -60,7 +58,7 @@ void App::_close() {
   CloseWindow();
 }
 
-void App::Run() {
+void App::run() {
   while (!WindowShouldClose()) {
     _update();
     _draw();

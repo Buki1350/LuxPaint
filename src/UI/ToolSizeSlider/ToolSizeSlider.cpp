@@ -43,7 +43,7 @@ void ToolSizeSlider::init() {
 
 Vec2f ToolSizeSlider::_calculateShownPosition() {
   Vec2f separator = Vec2f(0, 30);
-  return Calc::UIO::LeftCorner(&App::instance->toolBox) + separator;
+  return Calc::UIO::LeftCorner(&App::instance().toolBox) + separator;
 }
 
 void ToolSizeSlider::_updateSliderFromInput() {
@@ -76,7 +76,7 @@ void ToolSizeSlider::_updateInputFromSlider(float sliderValue) {
 
 Vec2f ToolSizeSlider::_calculateHiddenPosition() {
     Vec2f separator = Vec2f(0, 30);
-    Vec2f newPosition = Calc::UIO::LeftCorner(&App::instance->toolBox) + separator;
+    Vec2f newPosition = Calc::UIO::LeftCorner(&App::instance().toolBox) + separator;
     newPosition.x = -size.x - uti::view::getSmallerMonitorEdge() * UIOBJECT_OUTLINE_SCALE;
     return newPosition;
 }
@@ -97,11 +97,11 @@ float ToolSizeSlider::_getCurrentValue() {
 
 void ToolSizeSlider::update() {
     float smallerMonitorEdge = uti::view::getSmallerMonitorEdge();
-    _currentTool = App::instance->canvas.getCurrentTool();
+    _currentTool = App::instance().canvas.getCurrentTool();
     _floatValue = _slider->getValue() * _maxVal;
 
     // --- panel size ---
-    this->size = Vec2f(App::instance->toolBox.size.x, _heightScale * smallerMonitorEdge);
+    this->size = Vec2f(App::instance().toolBox.size.x, _heightScale * smallerMonitorEdge);
     this->roundness = UI_WIDGETS_ROUNDNESS * smallerMonitorEdge;
     float margin = smallerMonitorEdge * 0.01f;
 

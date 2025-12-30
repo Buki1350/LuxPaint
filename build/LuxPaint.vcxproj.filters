@@ -7,10 +7,10 @@
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\FilesManager\FilesManager.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Serializer\Serializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\Shared\Tool.cpp">
@@ -28,9 +28,6 @@
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ToolBox\ToolBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\ManagerButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,7 +43,7 @@
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Canvas.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Canvas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializable.cpp">
@@ -55,10 +52,10 @@
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\MarchingAntsSelector.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\MarchingAntsSelector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenu\MiniMenu.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\MiniMenu\MiniMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Prefabs\InputField.cpp">
@@ -76,10 +73,10 @@
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\KeyBindings\Keybindings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\SelectionMask.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\SelectionMask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputManager\InputManager.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputActionListener\InputActionListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Debug\Debug.cpp">
@@ -91,22 +88,34 @@
     <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Calculations\CalcUIO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsColors.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsFiles.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Timer\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsView.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Colors\Colors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsInput.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Convert\utiConvert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsAppData.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Files\utiFiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\UtilsConvert.cpp">
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Input\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\View\utiView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Time\utiTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Text\utiText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App\AppData\AppData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -127,9 +136,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ToolBox\ToolBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\ManagerButton.h">
@@ -153,7 +159,7 @@
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Canvas.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Canvas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Math\Vec2.h">
@@ -165,7 +171,7 @@
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Automatition\Initializables\Initializables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\MarchingAntsSelector.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\MarchingAntsSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Singleton\Singleton.h">
@@ -174,10 +180,10 @@
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Math\Matrx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenu\MiniMenu.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\MiniMenu\MiniMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\BlankCanvasBuilder.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\BlankCanvas\BlankCanvasBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Animator\AnimationValue.h">
@@ -213,10 +219,10 @@
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\UIObjects\Extensions\UIFocusOutliner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\ManagerButton\SettingsBuilder.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\Settings\SettingsBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenu\MiniMenuBuilder.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\MiniMenu\MiniMenuBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\DelayedAction\DelayedActions.h">
@@ -225,13 +231,10 @@
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\DelayedAction\DelayedAction_until.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Canvas\Selectors\SelectionMask.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\Canvas\Selectors\SelectionMask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputManager\InputManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\KeyBindings\KeyNames.h">
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\InputActionListener\InputActionListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Debug\Debug.h">
@@ -250,6 +253,54 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Calculations\Calc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotsTypes\Snapshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\SnapshotsManager\SnapshotsTypes\ImageSnapshot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Timer\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\ShapesTools\LineTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Tools\PaintTools\EraserTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Colors\Colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Convert\utiConvert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Files\utiFiles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Input\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\App\AppData\AppData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\View\utiView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Time\utiTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\Settings\ColorsSettingsBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\UI\MiniMenus\Settings\KeybindingsSettingsBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\lukas\AreaZero\Repozytoria\LuxPaint\src\Shared\Utils\Text\utiText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

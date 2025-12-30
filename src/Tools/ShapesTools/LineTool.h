@@ -23,7 +23,7 @@ protected:
 
     Vec2i end = img->getOnImageCursorPosition();
     Image im = img->getImage();
-    Color c = App::instance->canvas.getCurrentColor();
+    Color c = App::instance().canvas.getCurrentColor();
 
     int dx = end.x - _start.x;
     int dy = end.y - _start.y;

@@ -1,19 +1,17 @@
 #pragma once
 
-///
-/// [IMPORTANT] Requires declaration of static type in .cpp file.
-///
 template <typename T>
 class Singleton {
 public:
-  inline static T* instance = nullptr;
+    static T& instance() {
+        static T instance;
+        return instance;
+    }
 
 protected:
-    Singleton() {
-        if (instance == nullptr) instance = static_cast<T*>(this);
-    }
+    Singleton() = default;
+    ~Singleton() = default;
 
-    ~Singleton() {
-        instance = nullptr;
-    }
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
 };

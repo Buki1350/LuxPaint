@@ -29,7 +29,7 @@ void Animator::update() {
 }
 
 Vec2f Animator::animatePosition(UIObject *uiObject, Vec2f targetPosition, float duration, MovementType movementType) {
-    for (auto& anim : instance->animatedObjectsValues) {
+    for (auto& anim : instance().animatedObjectsValues) {
         if (anim->uiObject == uiObject && anim->objectParameter == POSITION) {
             auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
 
@@ -52,12 +52,12 @@ Vec2f Animator::animatePosition(UIObject *uiObject, Vec2f targetPosition, float 
         uiObject, uiObject->position, targetPosition, duration, POSITION, movementType
     );
     Vec2f start = newAV->startValue;
-    instance->animatedObjectsValues.push_back(std::move(newAV));
+    instance().animatedObjectsValues.push_back(std::move(newAV));
     return start;
 }
 
 Vec2f Animator::animateSize(UIObject *uiObject, Vec2f targetSize, float duration, MovementType movementType) {
-    for (auto& anim : instance->animatedObjectsValues) {
+    for (auto& anim : instance().animatedObjectsValues) {
         if (anim->uiObject == uiObject && anim->objectParameter == SIZE) {
             auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
 
@@ -78,12 +78,12 @@ Vec2f Animator::animateSize(UIObject *uiObject, Vec2f targetSize, float duration
         uiObject, uiObject->size, targetSize, duration, SIZE, movementType
     );
     Vec2f start = newAV->startValue;
-    instance->animatedObjectsValues.push_back(std::move(newAV));
+    instance().animatedObjectsValues.push_back(std::move(newAV));
     return start;
 }
 
 Color Animator::animateColor(UIObject *uiObject, Color targetColor, float duration, MovementType movementType) {
-    for (auto& anim : instance->animatedObjectsValues) {
+    for (auto& anim : instance().animatedObjectsValues) {
         if (anim->uiObject == uiObject && anim->objectParameter == COLOR) {
             auto av = static_cast<AnimationValue<Color>*>(anim.get());
             if (av->isResetting) return av->savedValue;
@@ -108,13 +108,13 @@ Color Animator::animateColor(UIObject *uiObject, Color targetColor, float durati
         uiObject, uiObject->color, targetColor, duration, COLOR, movementType
     );
     Color start = newAV->startValue;
-    instance->animatedObjectsValues.push_back(std::move(newAV));
+    instance().animatedObjectsValues.push_back(std::move(newAV));
     return start;
 }
 
 float Animator::animateImageAlpha(UIObject *uiObject, float targetAlpha,
                                   float duration, MovementType movementType) {
-  for (auto &anim : instance->animatedObjectsValues) {
+  for (auto &anim : instance().animatedObjectsValues) {
     if (anim->uiObject == uiObject && anim->objectParameter == IMAGE_ALPHA) {
       auto av = static_cast<AnimationValue<float> *>(anim.get());
 
@@ -135,13 +135,13 @@ float Animator::animateImageAlpha(UIObject *uiObject, float targetAlpha,
       uiObject, uiObject->imageAlpha, targetAlpha, duration, IMAGE_ALPHA,
       movementType);
   float start = newAV->startValue;
-  instance->animatedObjectsValues.push_back(std::move(newAV));
+  instance().animatedObjectsValues.push_back(std::move(newAV));
   return start;
 }
 
 float Animator::animateRoundness(UIObject *uiObject, float targetRoundness,
                                  float duration, MovementType movementType) {
-  for (auto& anim : instance->animatedObjectsValues) {
+  for (auto& anim : instance().animatedObjectsValues) {
     if (anim->uiObject == uiObject && anim->objectParameter == ROUNDNESS) {
       auto av = static_cast<AnimationValue<float>*>(anim.get());
 
@@ -162,13 +162,13 @@ float Animator::animateRoundness(UIObject *uiObject, float targetRoundness,
       uiObject, uiObject->roundness, targetRoundness, duration, ROUNDNESS, movementType
   );
   float start = newAV->startValue;
-  instance->animatedObjectsValues.push_back(std::move(newAV));
+  instance().animatedObjectsValues.push_back(std::move(newAV));
   return start;
 }
 
 float Animator::animateOutline(UIObject *uiObject, float targetOutline,
                                float duration, MovementType movementType) {
-  for (auto &anim : instance->animatedObjectsValues) {
+  for (auto &anim : instance().animatedObjectsValues) {
     if (anim->uiObject == uiObject && anim->objectParameter == OUTLINE) {
       auto av = static_cast<AnimationValue<float> *>(anim.get());
 
@@ -189,14 +189,12 @@ float Animator::animateOutline(UIObject *uiObject, float targetOutline,
       uiObject, uiObject->outlineScale, targetOutline, duration, OUTLINE,
       movementType);
   float start = newAV->startValue;
-  instance->animatedObjectsValues.push_back(std::move(newAV));
+  instance().animatedObjectsValues.push_back(std::move(newAV));
   return start;
 }
 
 void Animator::reset(UIObject* uiObject, UIObjectParameter parameter, float time) {
-  if (instance == nullptr) return;
-
-  for (auto& aov : instance->animatedObjectsValues) {
+  for (auto& aov : instance().animatedObjectsValues) {
     if (aov->uiObject == uiObject && aov->objectParameter == parameter) {
       aov->Reset(time);
     }
@@ -207,7 +205,7 @@ void Animator::reset(UIObject* uiObject, UIObjectParameter parameter, float time
 void Animator::reset(UIObject *uiObject, float time) {
   if (animatorContains(uiObject, NONE))
     return;
-  for (auto &aov : instance->animatedObjectsValues) {
+  for (auto &aov : instance().animatedObjectsValues) {
     if (aov->uiObject == uiObject) {
       aov->Reset(time);
     }
@@ -216,9 +214,9 @@ void Animator::reset(UIObject *uiObject, float time) {
 
 void Animator::apply(UIObject* uiObject) {
     // jeśli animator nie istnieje lub brak obiektów — nic nie robimy
-    if (instance == nullptr) return;
+    //if (instance == nullptr) return;
 
-    for (auto &anim : instance->animatedObjectsValues) {
+    for (auto &anim : instance().animatedObjectsValues) {
         if (anim->uiObject == uiObject) {
             // typ animacji zależy od parametru — ale zawsze możemy użyć targetValue
             if (anim->objectParameter == POSITION) {
@@ -248,15 +246,15 @@ void Animator::apply(UIObject* uiObject) {
     }
 
     // usuń animacje, które już zostały „zastosowane”
-    instance->animatedObjectsValues.erase(
+    instance().animatedObjectsValues.erase(
         std::remove_if(
-            instance->animatedObjectsValues.begin(),
-            instance->animatedObjectsValues.end(),
+            instance().animatedObjectsValues.begin(),
+            instance().animatedObjectsValues.end(),
             [&](const std::unique_ptr<IAnimationValue>& anim) {
                 return anim->uiObject == uiObject && anim->readyToDelete;
             }
         ),
-        instance->animatedObjectsValues.end()
+        instance().animatedObjectsValues.end()
     );
 }
 
@@ -294,33 +292,33 @@ void Animator::terminate(UIObject *uiObject) {
 }
 
 void Animator::terminate(std::vector<UIObject*>& uiObjects) {
-  if (instance == nullptr) return;
+  //if (instance == nullptr) return;
 
-  instance->animatedObjectsValues.erase(
+  instance().animatedObjectsValues.erase(
       std::remove_if(
-          instance->animatedObjectsValues.begin(),
-          instance->animatedObjectsValues.end(),
+          instance().animatedObjectsValues.begin(),
+          instance().animatedObjectsValues.end(),
           [&](const std::unique_ptr<IAnimationValue>& anim) {
               return std::find(uiObjects.begin(), uiObjects.end(), anim->uiObject) != uiObjects.end();
           }
       ),
-      instance->animatedObjectsValues.end()
+      instance().animatedObjectsValues.end()
   );
 }
 
 
 void Animator::free(UIObject *uiObject) {
-  instance->animatedObjectsValues.erase(
-      std::remove_if(instance->animatedObjectsValues.begin(),
-                     instance->animatedObjectsValues.end(),
+  instance().animatedObjectsValues.erase(
+      std::remove_if(instance().animatedObjectsValues.begin(),
+                     instance().animatedObjectsValues.end(),
                      [&](const std::unique_ptr<IAnimationValue> &anim) {
                        return anim->uiObject == uiObject;
                      }),
-      instance->animatedObjectsValues.end());
+      instance().animatedObjectsValues.end());
 }
 
 bool Animator::animatorContains(UIObject* uiObject, UIObjectParameter param) {
-  for (auto& anim : instance->animatedObjectsValues) {
+  for (auto& anim : instance().animatedObjectsValues) {
     if (anim->uiObject == uiObject && anim->objectParameter == param) {
       return true;
     }

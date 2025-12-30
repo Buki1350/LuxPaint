@@ -35,7 +35,7 @@ protected:
     }
 
     Image image = img->getImage();
-    Color c = App::instance->canvas.getCurrentColor();
+    Color c = App::instance().canvas.getCurrentColor();
 
     int dx = p.x - _start.x;
     int dy = p.y - _start.y;

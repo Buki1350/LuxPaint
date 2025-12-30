@@ -95,7 +95,7 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
   for (auto tool : toolSet.tools) {
     Button* newButton = new Button();
     newButton->setImage(tool->icon);
-    newButton->onClick([tool] {App::instance->canvas.setCurrentTool(tool); });
+    newButton->onClick([tool] {App::instance().canvas.setCurrentTool(tool); });
     newButton->setZLayer(_oToolSetListBackground->getZLayer() + 1);
     newButton->roundness = 1;
     newButton->color = WHITE;

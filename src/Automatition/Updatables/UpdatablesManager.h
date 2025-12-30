@@ -4,7 +4,8 @@
 class Updatable;
 
 class UpdatablesManager final {
+  friend class Updatable;
+  inline static std::vector<Updatable*> _updatables;
 public:
-  inline static std::vector<Updatable*> updatables;
-  static void UpdateAll();
+  static void updateAll();
 };
