@@ -16,61 +16,63 @@
 #define FILE_USER_PREFERENCES "UserPreference.dat"
 
 class Serializer {
-  static std::string CreateOrGetDirectory(std::string path);
+  static std::string createOrGetDirectory(std::string path);
 public:
+  // ... load
+  template <typename T>
+  static T load(std::string path, std::string filename, const std::string &token);
 
   template <typename T>
-  static T Load(std::string path, std::string filename, const std::string &token);
+  static std::vector<T> loadArray(std::string path, const std::string &token);
 
   template <typename T>
-  static std::vector<T> LoadArray(std::string path, const std::string &token);
+  static T loadFromData(std::string filename, const std::string &token);
 
   template <typename T>
-  static void Save(std::string path, std::string filename, const std::string &token, const T &value);
+  static T loadFromResources(std::string filename, const std::string &token);
+
+  static Image loadImage(const std::string &fileName);
+
+  // ... save
+  template <typename T>
+  static void save(std::string path, std::string filename, const std::string &token, const T &value);
 
   template <typename T>
-  static void SaveArray(std::string path, const std::string &token,
-                      const std::vector<T> &data);
-
+  static void saveArray(std::string path, const std::string &token, const std::vector<T> &data);
 
   template <typename T>
-  static T LoadFromData(std::string filename, const std::string &token);
+  static void saveToData(std::string filename, const std::string &token, T value);
 
   template <typename T>
-  static T LoadFromResources(std::string filename, const std::string &token);
-
-  template <typename T>
-  static void SaveToData(std::string filename, const std::string &token, T value);
-
-  template <typename T>
-  static void SaveToResources(std::string filename, const std::string &token, T value);
+  static void saveToResources(std::string filename, const std::string &token, T value);
 
   static std::vector<std::string> loadFileLines(const char *path);
   static void saveFileLines(const std::string& path, const std::vector<std::string> & lines);
-  static Image LoadImage(const std::string &fileName);
-  static bool Exists(const char *str);
+
+  // ... other
+  static bool exists(const char *str);
 };
 
 
 // ================= Helpers =================
 template<typename T>
-T Convert(const std::string &s) {
+T convert(const std::string &s) {
   std::stringstream ss(s);
   T value;
   ss >> value;
   return value;
 }
 
-template<> inline std::string Convert<std::string>(const std::string &s) {
+template<> inline std::string convert<std::string>(const std::string &s) {
   return s;
 }
 
 
 // ================= Load (single) =================
 template<typename T>
-T Serializer::Load(std::string path, std::string filename, const std::string &token) {
+T Serializer::load(std::string path, std::string filename, const std::string &token) {
 
-  filename = CreateOrGetDirectory(path) + filename;
+  filename = createOrGetDirectory(path) + filename;
 
   if (!std::filesystem::exists(filename)) {
     return T{};
@@ -85,7 +87,7 @@ T Serializer::Load(std::string path, std::string filename, const std::string &to
       // trim
       valuePart.erase(0, valuePart.find_first_not_of(' '));
       valuePart.erase(valuePart.find_last_not_of(' ') + 1);
-      return Convert<T>(valuePart);
+      return convert<T>(valuePart);
     }
   }
   return T{};
@@ -93,8 +95,8 @@ T Serializer::Load(std::string path, std::string filename, const std::string &to
 
 // ================= LoadArray =================
 template<typename T>
-std::vector<T> Serializer::LoadArray(std::string path, const std::string &token) {
-  path = CreateOrGetDirectory(PATH_DATA) + path;
+std::vector<T> Serializer::loadArray(std::string path, const std::string &token) {
+  path = createOrGetDirectory(PATH_DATA) + path;
   std::vector<T> result;
 
   if (!std::filesystem::exists(path)) {
@@ -115,7 +117,7 @@ std::vector<T> Serializer::LoadArray(std::string path, const std::string &token)
         tokenStr.erase(0, tokenStr.find_first_not_of(' '));
         tokenStr.erase(tokenStr.find_last_not_of(' ') + 1);
         if (!tokenStr.empty()) {
-          result.push_back(Convert<T>(tokenStr));
+          result.push_back(convert<T>(tokenStr));
         }
       }
       break;
@@ -126,8 +128,8 @@ std::vector<T> Serializer::LoadArray(std::string path, const std::string &token)
 
 // ================= Save (single) =================
 template<typename T>
-void Serializer::Save(std::string path, std::string filename, const std::string &token, const T &value) {
-  path = CreateOrGetDirectory(path) + filename;
+void Serializer::save(std::string path, std::string filename, const std::string &token, const T &value) {
+  path = createOrGetDirectory(path) + filename;
 
   std::ostringstream oss;
   oss << token << ": " << value;
@@ -166,9 +168,9 @@ void Serializer::Save(std::string path, std::string filename, const std::string 
 
 // ================= SaveArray =================
 template <typename T>
-void Serializer::SaveArray(std::string path, const std::string &token,
+void Serializer::saveArray(std::string path, const std::string &token,
                            const std::vector<T> &data) {
-  path = CreateOrGetDirectory(PATH_DATA) + path;
+  path = createOrGetDirectory(PATH_DATA) + path;
 
   std::ostringstream oss;
   oss << token << ": ";
@@ -211,24 +213,24 @@ void Serializer::SaveArray(std::string path, const std::string &token,
 }
 
 template <typename T>
-T Serializer::LoadFromData(std::string filename, const std::string &token) {
-  return Load<T>(PATH_DATA, filename, token);
+T Serializer::loadFromData(std::string filename, const std::string &token) {
+  return load<T>(PATH_DATA, filename, token);
 }
 
 template <typename T>
-T Serializer::LoadFromResources(std::string filename,
+T Serializer::loadFromResources(std::string filename,
                                 const std::string &token) {
-  return Load<T>(PATH_RESOURCES, filename, token);
+  return load<T>(PATH_RESOURCES, filename, token);
 }
 
 template <typename T>
-void Serializer::SaveToData(std::string filename, const std::string &token, T value) {
-  Save<T>(PATH_DATA, filename, token, value);
+void Serializer::saveToData(std::string filename, const std::string &token, T value) {
+  save<T>(PATH_DATA, filename, token, value);
 }
 
 template <typename T>
-void Serializer::SaveToResources(std::string filename, const std::string &token, T value) {
-  Save<T>(PATH_RESOURCES, filename, token, value);
+void Serializer::saveToResources(std::string filename, const std::string &token, T value) {
+  save<T>(PATH_RESOURCES, filename, token, value);
 }
 
 

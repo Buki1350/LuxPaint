@@ -17,8 +17,8 @@ public:
     menu->packRow({ MiniMenu::flexSeparator(), uiColorsHeader, MiniMenu::flexSeparator() });
     menu->createSmallSeparator();
 
-    std::string text = Serializer::LoadFromResources<std::string>("Hints/info.dat", "keybindings_info");
-    if (text == "") { Serializer::SaveToResources<std::string>("Hints/info.dat", "keybindings_info", "INFO.DAT INCOMPLETE"); }
+    std::string text = Serializer::loadFromResources<std::string>("Hints/info.dat", "keybindings_info");
+    if (text == "") { Serializer::saveToResources<std::string>("Hints/info.dat", "keybindings_info", "INFO.DAT INCOMPLETE"); }
     auto textField = new UIObject();
     textField->text = text;
     textField->size = { uti::view::getWindowSize().CastTo<float>().x / 2, 200 };

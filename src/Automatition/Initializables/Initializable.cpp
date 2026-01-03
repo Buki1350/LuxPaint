@@ -2,4 +2,4 @@
 
 #include "Initializables.h"
 
-Initializable::Initializable() { Initializables::AddInitializable(this); }
+Initializable::Initializable() { Initializables::addInitializable(this); }

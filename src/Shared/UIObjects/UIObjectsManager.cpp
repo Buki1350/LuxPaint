@@ -19,7 +19,7 @@ bool UIObjectsManager::isInitialized() {
   return _initialized;
 }
 
-void UIObjectsManager::Init() {
+void UIObjectsManager::init() {
   _pendingUIObjects = std::vector<UIObject*>();
   _objectsInRenderOrder = std::list<UIObject*>();
 

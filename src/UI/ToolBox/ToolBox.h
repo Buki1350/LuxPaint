@@ -1,8 +1,9 @@
 #pragma once
-#include "../../Tools/ToolSet/ToolSet.h"
 #include "../../Automatition/Updatables/Updatable.h"
+#include "../../Tools/ToolSet/ToolSet.h"
+#include "Automatition/Initializables/Initializable.h"
 
-class ToolBox final : public UIObject, public Updatable {
+class ToolBox final : public UIObject, public Updatable, public Initializable {
   bool _initialized = false;
 
   Color _toolSetListColor {};
@@ -38,7 +39,7 @@ class ToolBox final : public UIObject, public Updatable {
   ToolsSetList* _activeTools = nullptr;
 
 public:
-  void init();
+  void init() override;
   bool initialized();
   void setBackgroundColor(Color color);
   void update() override;

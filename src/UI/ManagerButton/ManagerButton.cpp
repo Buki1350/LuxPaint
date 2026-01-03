@@ -15,7 +15,7 @@
 
 void ManagerButton::init() {
   this->color = uti::files::loadColor("managerButton", "uiGlobal");
-  this->setImage(Serializer::LoadImage("manager_button.png"));
+  this->setImage(Serializer::loadImage("manager_button.png"));
   this->setZLayer(LAYER_WIDGETS);
   this->imageMarginScale = UIOBJECT_ICON_MARGIN;
 
@@ -36,7 +36,7 @@ void ManagerButton::init() {
   _oLoadButton->color = buttonsColor;
   _oLoadButton->text = "Load image";
   _oLoadButton->text.center = true;
-  _oLoadButton->onClick([this](){_loadImageFromSystem();});
+  _oLoadButton->onClick([this](){loadImageFromSystem();});
   _oLoadButton->allowInteraction = false;
 
   _oSaveButton->isActive = false;
@@ -44,7 +44,7 @@ void ManagerButton::init() {
   _oSaveButton->text = "Save image";
   _oSaveButton->text.center = true;
   _oSaveButton->allowInteraction = false;
-  _oSaveButton->onClick([this](){ _saveImageToSystem(); });
+  _oSaveButton->onClick([this](){ saveImageToSystem(); });
 
   _oSettingsButton->isActive = false;
   _oSettingsButton->color = buttonsColor;
@@ -70,10 +70,10 @@ void ManagerButton::update() {
   if (!this->cursorAbove()) {
     _listExpanded = false;
   }
-  _adjustSizeAndPosition();
+  adjustSizeAndPosition();
 }
 
-void ManagerButton::_adjustSizeAndPosition() {
+void ManagerButton::adjustSizeAndPosition() {
   //... data
   Vec2f monitorSize     = uti::view::getCurrentMonitorSize().CastTo<float>();
   Vec2f windowSize      = uti::view::getWindowSize().CastTo<float>();
@@ -146,7 +146,7 @@ void ManagerButton::_adjustSizeAndPosition() {
 
 }
 
-void ManagerButton::_loadImageFromSystem() {
+void ManagerButton::loadImageFromSystem() {
   char* outPath = nullptr;
 
   nfdu8filteritem_t filters[2] = {
@@ -176,7 +176,7 @@ void ManagerButton::_loadImageFromSystem() {
   }
 }
 
-void ManagerButton::_saveImageToSystem() {
+void ManagerButton::saveImageToSystem() {
   char* outPath = nullptr;
 
   nfdu8filteritem_t filters[2] = {

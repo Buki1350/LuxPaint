@@ -3,8 +3,9 @@
 
 class AppData final {
   friend class App;
-  void _init();
-  void _updateValues();
+  void init();
+  void updateValues();
+  void saveValues();
 public:
   Font defaultFont = {};
   Vec2i monitorSize = Vec2i::zero();

@@ -1,20 +1,17 @@
 #include "Keybindings.h"
-
 #include "Shared/Utils/Files/utiFiles.h"
-
 #include <iostream>
 
-void Keybindings::_load() {
+void Keybindings::load() {
+  assignKeyNames();
+  assignActionsNames();
   actionsDictionary = uti::files::loadActions();
-  _createKeyNames();
-  _createActionNames();
 }
 
 std::map<InputAction, std::vector<KeyboardKey>>Keybindings::getDefaultBindings() {
   return {
       {MENU_NEXT,                 {KEY_TAB}},
       {MENU_PREV,                 {KEY_LEFT_SHIFT, KEY_TAB}},
-      {MENU_PREV,                 {KEY_ENTER}},
       {MODE_ADD,                  {KEY_LEFT_SHIFT}},
       {UNDO,                      {KEY_LEFT_CONTROL, KEY_Z}},
       {REDO,                      {KEY_LEFT_CONTROL, KEY_LEFT_SHIFT, KEY_Z}},
@@ -22,36 +19,43 @@ std::map<InputAction, std::vector<KeyboardKey>>Keybindings::getDefaultBindings()
   };
 }
 
-void Keybindings::_createActionNames() {
-  _inputActionsWithNames = std::vector<InputActionWithName> {
-        {MENU_NEXT,   "MENU_NEXT"},
-        {MENU_PREV,   "MENU_PREV"},
-        {MENU_PREV,   "MENU_PREV"},
-        {MODE_ADD,    "MENU_PREV"},
-        {UNDO,        "UNDO"},
-        {REDO,        "REDO"},
-        {DEBUG_CREATEIMAGE_250x250, "DEBUG_CREATEIMAGE_250x250"}
+std::vector<Keybindings::InputActionWithString> Keybindings::getActionsNames() {
+  return {
+      {MENU_NEXT,   "MENU_NEXT"},
+      {MENU_PREV,   "MENU_PREV"},
+      {MODE_ADD,    "MENU_ADD"},
+      {UNDO,        "UNDO"},
+      {REDO,        "REDO"},
+      {DEBUG_CREATEIMAGE_250x250, "DEBUG_CREATEIMAGE_250x250"}
   };
 }
 
-void Keybindings::_createKeyNames() {
-  _keysWithNames = std::vector<KeyWithName> {
-    {KEY_TAB,           "TAB"},
-    {KEY_LEFT_SHIFT,    "LEFT_SHIFT"},
-    {KEY_ENTER,         "ENTER"},
-    {KEY_F5,            "F5"},
-    {KEY_F6,            "F6"},
-    {KEY_F7,            "F7"},
-    {KEY_F8,            " F8"},
-    {KEY_F9,            "F9"},
-    {KEY_Z,             "Z"},
-    {KEY_X,             "X"},
-    {KEY_LEFT_CONTROL,  "LEFT_CONTROL"},
-  };
+void Keybindings::assignActionsNames() {
+  _inputActionsWithStrings = getActionsNames();
+}
+
+std::vector<Keybindings::KeyWithName> Keybindings::getKeyNames() {
+  return {
+      {KEY_TAB,           "TAB"},
+      {KEY_LEFT_SHIFT,    "LEFT_SHIFT"},
+      {KEY_ENTER,         "ENTER"},
+      {KEY_F5,            "F5"},
+      {KEY_F6,            "F6"},
+      {KEY_F7,            "F7"},
+      {KEY_F8,            "F8"},
+      {KEY_F9,            "F9"},
+      {KEY_Z,             "Z"},
+      {KEY_X,             "X"},
+      {KEY_LEFT_CONTROL,  "LEFT_CONTROL"},
+    };
+}
+
+void Keybindings::assignKeyNames() {
+  _keysWithNames = getKeyNames();
 }
 
 std::string Keybindings::actionToString(InputAction action) {
-  for (auto iaWithName : _inputActionsWithNames) {
+  for (auto iaWithName : _inputActionsWithStrings) {
     if (iaWithName.action == action)
       return iaWithName.name;
   }
@@ -59,7 +63,7 @@ std::string Keybindings::actionToString(InputAction action) {
 }
 
 InputAction Keybindings::actionFromString(std::string actionName) {
-  for (auto iaWithName : _inputActionsWithNames) {
+  for (auto iaWithName : _inputActionsWithStrings) {
     if (iaWithName.name == actionName)
       return iaWithName.action;
   }
@@ -74,8 +78,7 @@ std::string Keybindings::keyboardKeyToString(KeyboardKey key) {
   return "UNKNOWN";
 }
 
-KeyboardKey Keybindings::stringToKeyboardKey(const std::string& name)
-{
+KeyboardKey Keybindings::stringToKeyboardKey(const std::string &name) {
   for (auto keyWithName : _keysWithNames) {
     if (keyWithName.name == name)
       return keyWithName.key;
@@ -83,10 +86,8 @@ KeyboardKey Keybindings::stringToKeyboardKey(const std::string& name)
   return KEY_NULL;
 }
 
-bool Keybindings::actionDetected(InputAction action) {
-  if (actionsDictionary.empty()) {
-    _load();
-  }
+InputAction Keybindings::getDetectedAction() {
+  if (actionsDictionary.empty()) { load(); }
 
   _pushedKeys.clear();
 
@@ -96,27 +97,23 @@ bool Keybindings::actionDetected(InputAction action) {
     }
   }
 
-  if (_pushedKeys.empty())
-    return false;
+  if (_pushedKeys.empty()) return InputAction::IA_NONE;
 
-  bool match = true;
   InputAction foundAction = IA_NONE;
-  auto actDictCopy = actionsDictionary; // ## REMOVE ###################################################################################
+  //auto debugActDictCopy = actionsDictionary;
   for (auto e : actionsDictionary) {
-
     if (e.second.size() != _pushedKeys.size()) continue;
-    match = true;
 
+    bool same = true;
     for (int i = 0; i < e.second.size(); i++) {
       if (e.second[i] != _pushedKeys[i]) {
-        match = false;
+        same = false;
         break;
       }
     }
 
-    //if (match && e.first == action) {
-    if (match && e.first == action) {
-      foundAction = action;
+    if (same) {
+      foundAction =  e.first;
       break;
     }
   }
@@ -129,12 +126,11 @@ bool Keybindings::actionDetected(InputAction action) {
   }
   previouslyPushedKeys = _pushedKeys;
 
-  if ( match && foundAction != IA_NONE && foundAction != previouslyInvokedAction) {
+  if ( foundAction != IA_NONE && foundAction != previouslyInvokedAction) {
       previouslyInvokedAction = foundAction;
-      return true;
+      return foundAction;
   }
-
-  return false;
+  return IA_NONE;
 }
 
 std::vector<KeyboardKey> Keybindings::getAllPushedKeys() { return _pushedKeys; }

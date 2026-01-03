@@ -9,61 +9,50 @@ void App::init()
   SetConfigFlags(FLAG_WINDOW_TRANSPARENT | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
   SetTargetFPS(60);
 
-  std::vector<int> windowSize = Serializer::LoadArray<int>("UserPreferences.dat", "windowSize");
+  std::vector<int> windowSize = Serializer::loadArray<int>("UserPreferences.dat", "windowSize");
   if (windowSize.empty()) windowSize = {800, 600};
   InitWindow(windowSize[0], windowSize[1], "Lux Paint");
 
-  std::vector<int> windowPosition = Serializer::LoadArray<int>("UserPreferences.dat", "windowPosition");
+  std::vector<int> windowPosition = Serializer::loadArray<int>("UserPreferences.dat", "windowPosition");
   if (!windowPosition.empty()) SetWindowPosition(windowPosition[0], windowPosition[1]);
 
-  _appData._init();
+  _appData.init();
 
-  UIObjectsManager::Init();
-  Initializables::InitAll();
-  toolSizeSlider.init();
-  managerButton.init();
-  colorHolder.init();
-  toolBox.init();
-  canvas.init();
+  UIObjectsManager::init();
+  Initializables::initAll();
 }
 
-void App::_update()
+void App::update()
 {
-  _appData._updateValues();
+  _appData.updateValues();
   UpdatablesManager::updateAll();
 }
 
-void App::_draw() {
+void App::draw() {
     BeginDrawing();
     ClearBackground(_appData.appBackgroundColor);//127});
     UIObjectsManager::DrawAll();
 #ifdef DEBUG
-    _handleDebugDrawing();
+    handleDebugDrawing();
 #endif
   EndDrawing();
 }
 
-void App::_handleDebugDrawing() {
+void App::handleDebugDrawing() {
     Debug::DrawAll();
 }
 
-void App::_close() {
-  int screenWidth = GetScreenWidth();
-  int screenHeight = GetScreenHeight();
-  int windowX = (int)GetWindowPosition().x;
-  int windowY = (int)GetWindowPosition().y;
-
-  Serializer::SaveArray<int>("UserPreferences.dat", "windowSize", {screenWidth, screenHeight});
-  Serializer::SaveArray<int>("UserPreferences.dat", "windowPosition", {windowX, windowY});
+void App::close() {
+  _appData.saveValues();
   CloseWindow();
 }
 
 void App::run() {
   while (!WindowShouldClose()) {
-    _update();
-    _draw();
+    update();
+    draw();
   }
-  _close();
+  close();
 }
 
 const AppData &App::getAppData() { return _appData; }

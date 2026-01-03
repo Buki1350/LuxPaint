@@ -25,7 +25,7 @@ Tool::Tool(const std::string &name) {
   this->_name = name;
   icon = {};
 
-  Image img = Serializer::LoadImage(name + ".png");
+  Image img = Serializer::loadImage(name + ".png");
 
   icon = LoadTextureFromImage(img);
 

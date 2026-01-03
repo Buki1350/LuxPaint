@@ -15,7 +15,7 @@ class UIObjectsManager {
 
 public:
   static bool isInitialized();
-  static void Init();
+  static void init();
   static void AddUIObject(UIObject *object);
   static void DrawAll();
   static UIObject* GetObjectByName(std::string name);

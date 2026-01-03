@@ -3,11 +3,13 @@
 #include "../../Shared/UIObjects/Prefabs/InputField.h"
 #include "../../Shared/UIObjects/Prefabs/Slider.h"
 #include "../../Shared/UIObjects/UIObject.h"
+#include "Automatition/Initializables/Initializables.h"
 
 #include <memory>
 
 class Tool;
-class ToolSizeSlider final : public UIObject, public Updatable {
+class ToolSizeSlider final : public UIObject, public Updatable, public Initializable
+{
   float _widthScale = 0.1f;
   float _heightScale = 0.25f;
   std::unique_ptr<Slider> _slider = nullptr;
@@ -25,6 +27,6 @@ class ToolSizeSlider final : public UIObject, public Updatable {
   float _getCurrentValue();
 
 public:
-  void init();
+  void init() override;
   void update() override;
 };

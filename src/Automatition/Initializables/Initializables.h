@@ -6,11 +6,11 @@ class Initializables {
 public:
   static std::vector<Initializable*> initializables;
 
-  static void AddInitializable(Initializable* initializable) {
+  static void addInitializable(Initializable* initializable) {
     initializables.push_back(initializable);
   }
 
-  static void InitAll() {
+  static void initAll() {
     for (auto i : initializables) {
       i->init();
     }

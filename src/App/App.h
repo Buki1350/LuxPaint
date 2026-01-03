@@ -9,17 +9,17 @@
 #include "../UI/ToolBox/ToolBox.h"
 #include "../UI/ToolSizeSlider/ToolSizeSlider.h"
 #include "AppData/AppData.h"
+#include "Shared/InputActionListener/InputActionListener.h"
 
 class App : public Singleton<App> {
     AppData _appData;
 
-    void _close();
-    void _update();
-    void _draw();
-    void _handleDebugDrawing();
-
+    void close();
+    void update();
+    void draw();
+    void handleDebugDrawing();
 public:
-
+    InputActionListener inputActionListener;
     UIObjectsManager UIObjectManager;
     SnapshotManager snapshotManager;
     ToolSizeSlider toolSizeSlider;

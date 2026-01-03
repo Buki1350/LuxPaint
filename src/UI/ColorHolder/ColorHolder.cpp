@@ -20,7 +20,7 @@ void ColorHolder::init() {
   colorPickButton->color = WHITE;
   colorPickButton->setZLayer(this->getZLayer() + 1);
   colorPickButton->roundness = this->roundness;
-  colorPickButton->setImage(Serializer::LoadImage("rgb.png"));
+  colorPickButton->setImage(Serializer::loadImage("rgb.png"));
   colorPickButton->imageMarginScale = UIOBJECT_ICON_MARGIN;
   colorPickButton->onClick([this]() {
     _createColorPicker();

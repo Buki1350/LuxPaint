@@ -86,16 +86,7 @@ Texture &UIObject::getTexture() { return _texture; }
 
 void UIObject::destroy() {
   Animator::terminate(this);
-
-  // ... remove from ordered list
   UIObjectsManager::_objectsInRenderOrder.remove(this);
-
-  // ... remove from updatables
-  // if (auto up = dynamic_cast<Updatable*>(this)) {
-  //   auto& upvec = UpdatablesManager::_updatables;
-  //   upvec.erase(std::remove(upvec.begin(), upvec.end(), up), upvec.end());
-  // }
-
   delete this;
 }
 

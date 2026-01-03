@@ -126,6 +126,13 @@ add_executable(LuxPaint
         src/Shared/Utils/Text/utiText.cpp
         src/Shared/Utils/Text/utiText.h
         src/App/AppData/AppData.cpp
+        src/Debug/Tests/Tests.h
+        src/Debug/Tests/SerializationTests/SerializationTest.h
+        src/Debug/Tests/TestTypes.h
+        src/Debug/Tests/TestResult.h
+        src/Debug/Tests/Test.h
+        src/Shared/Utils/System/utiSystem.h
+        src/Shared/Utils/System/utiSystem.cpp
 )
 
 target_include_directories(LuxPaint PRIVATE
@@ -133,7 +140,9 @@ target_include_directories(LuxPaint PRIVATE
 )
 
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:DEBUG>
+)
 
 if (MSVC)
     target_compile_options(LuxPaint PRIVATE

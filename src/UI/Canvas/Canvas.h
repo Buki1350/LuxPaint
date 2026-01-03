@@ -6,8 +6,9 @@
 #include <vector>
 
 #include "../../Tools/Shared/Tool.h"
+#include "Automatition/Initializables/Initializable.h"
 
-class Canvas final : public UIObject, public Updatable {
+class Canvas final : public UIObject, public Updatable, public Initializable {
   // ... first layer works as base for other layers
   std::vector<UIObject*> _oLayers;
   // ... active layer

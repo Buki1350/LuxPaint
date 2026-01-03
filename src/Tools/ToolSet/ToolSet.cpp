@@ -4,7 +4,7 @@
 #include "../../Shared/UIObjects/UIObjectsManager.h"
 
 ToolSet::ToolSet(const std::string &name, const std::vector<Tool *> &tools) {
-  Texture2D icon = LoadTextureFromImage(Serializer::LoadImage(name + ".png"));
+  Texture2D icon = LoadTextureFromImage(Serializer::loadImage(name + ".png"));
   this->name = name;
   this->tools = tools;
 

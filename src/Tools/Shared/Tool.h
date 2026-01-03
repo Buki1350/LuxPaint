@@ -25,4 +25,5 @@ class Tool {
   int getSize() { return size; }
 
   Tool(const std::string &name);
+  virtual ~Tool() = default;
 };

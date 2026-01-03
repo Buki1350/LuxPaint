@@ -5,7 +5,6 @@
 #include "Shared/Utils/View/utiView.h"
 
 #include <iostream>
-
 void ToolSizeSlider::init() {
     _inputField = new InputField();
     _inputField->text.center = true;

@@ -1,11 +1,12 @@
 #pragma once
 #include "../../Automatition/Updatables/Updatable.h"
 #include "../../Shared/UIObjects/UIObject.h"
+#include "Automatition/Initializables/Initializable.h"
 
 class Button;
 class App;
 
-class ManagerButton final : public UIObject, public Updatable {
+class ManagerButton final : public UIObject, public Updatable, public Initializable {
   Button* _oNewButton = nullptr;
   Button* _oSaveButton = nullptr;
   Button* _oLoadButton = nullptr;
@@ -19,11 +20,11 @@ class ManagerButton final : public UIObject, public Updatable {
   float _listElementSeparationScale = 0.005f;
   bool _listExpanded = false;
 
-  void _loadImageFromSystem();
-  void _adjustSizeAndPosition();
+  void loadImageFromSystem();
+  void adjustSizeAndPosition();
 
 public:
-  void init();
+  void init() override;
   void update() override;
-  void _saveImageToSystem();
+  void saveImageToSystem();
 };

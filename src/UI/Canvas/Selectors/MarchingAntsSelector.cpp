@@ -8,7 +8,7 @@
 static MarchingAntsSelector instance;
 
 void MarchingAntsSelector::init() {
-  gridImage = Serializer::LoadImage("Grids/checker.png");
+  gridImage = Serializer::loadImage("Grids/checker.png");
 }
 
 void MarchingAntsSelector::startOn(UIObject* obj) {

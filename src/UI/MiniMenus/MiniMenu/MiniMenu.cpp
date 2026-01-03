@@ -221,9 +221,9 @@ void MiniMenu::_handleDeleting() {
 void MiniMenu::_handleKeybindings() {
   if (instances.empty() || this != instances[0] || instances[0]->_buttonsAndInputs.empty()) return;
 
-  if (Keybindings::actionDetected(MENU_NEXT)) { _focusNext(); }
-  else if (Keybindings::actionDetected(MENU_PREV)) { _focusPrevious(); }
-  else if (Keybindings::actionDetected(MENU_CONFIRM)) {
+  if (Keybindings::getDetectedAction()) { _focusNext(); }
+  else if (Keybindings::getDetectedAction()) { _focusPrevious(); }
+  else if (Keybindings::getDetectedAction()) {
     if (_currentSelected) {
       if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
         btn->invoke();
