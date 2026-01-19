@@ -17,7 +17,7 @@ void Canvas::update() {
   _handleZoomAndDrag();
   _updateBackground();
   _handlePainting();
-  _handleCropping();
+  //_handleCropping(); // ... TODO: bugged
 }
 
 bool Canvas::_canDrag() {

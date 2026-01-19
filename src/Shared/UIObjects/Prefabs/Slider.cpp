@@ -110,6 +110,7 @@ void Slider::onRelease(std::function<void()> lambdaFunction) {
 }
 
 void Slider::destroy() {
+    Updatable::markedForDeletion = true;
   _oLine->destroy();
   _oGrab->destroy();
   UIObject::destroy();

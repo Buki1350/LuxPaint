@@ -22,9 +22,13 @@ else(UNIX)
     file( GLOB NFD_SOURCE otherLibs/nfd/nfd_gtk.cpp )
 endif()
 
+#if (WIN32)
+#    set(LUXPAINT_EXECUTABLE_TYPE WIN32)
+#else()
+#    set(LUXPAINT_EXECUTABLE_TYPE "")
+#endif()
 
-
-add_executable(LuxPaint
+add_executable(LuxPaint ${LUXPAINT_EXECUTABLE_TYPE}
         ${NFD_HEADER}
         ${NFD_SOURCE}
         src/main.cpp

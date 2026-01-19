@@ -1,6 +1,7 @@
 #pragma once
 #include "SerializationTests/SerializationTest.h"
 #include "TestResult.h"
+#include "TestTypes.h"
 
 #include <iostream>
 

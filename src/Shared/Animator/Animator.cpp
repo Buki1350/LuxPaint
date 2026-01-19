@@ -30,7 +30,7 @@ void Animator::update() {
 
 Vec2f Animator::animatePosition(UIObject *uiObject, Vec2f targetPosition, float duration, MovementType movementType) {
     for (auto& anim : instance().animatedObjectsValues) {
-        if (anim->uiObject == uiObject && anim->objectParameter == POSITION) {
+        if (anim->uiObject == uiObject && anim->objectParameter == ANIM_POSITION) {
             auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
 
             if (av->targetValue == targetPosition)
@@ -49,7 +49,7 @@ Vec2f Animator::animatePosition(UIObject *uiObject, Vec2f targetPosition, float 
 
     // nie znaleziono istniejącej animacji → nowa
     auto newAV = std::make_unique<AnimationValue<Vec2f>>(
-        uiObject, uiObject->position, targetPosition, duration, POSITION, movementType
+        uiObject, uiObject->position, targetPosition, duration, ANIM_POSITION, movementType
     );
     Vec2f start = newAV->startValue;
     instance().animatedObjectsValues.push_back(std::move(newAV));
@@ -58,7 +58,7 @@ Vec2f Animator::animatePosition(UIObject *uiObject, Vec2f targetPosition, float 
 
 Vec2f Animator::animateSize(UIObject *uiObject, Vec2f targetSize, float duration, MovementType movementType) {
     for (auto& anim : instance().animatedObjectsValues) {
-        if (anim->uiObject == uiObject && anim->objectParameter == SIZE) {
+        if (anim->uiObject == uiObject && anim->objectParameter == ANIM_SIZE) {
             auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
 
             if (av->targetValue == targetSize)
@@ -75,7 +75,7 @@ Vec2f Animator::animateSize(UIObject *uiObject, Vec2f targetSize, float duration
     }
 
     auto newAV = std::make_unique<AnimationValue<Vec2f>>(
-        uiObject, uiObject->size, targetSize, duration, SIZE, movementType
+        uiObject, uiObject->size, targetSize, duration, ANIM_SIZE, movementType
     );
     Vec2f start = newAV->startValue;
     instance().animatedObjectsValues.push_back(std::move(newAV));
@@ -84,7 +84,7 @@ Vec2f Animator::animateSize(UIObject *uiObject, Vec2f targetSize, float duration
 
 Color Animator::animateColor(UIObject *uiObject, Color targetColor, float duration, MovementType movementType) {
     for (auto& anim : instance().animatedObjectsValues) {
-        if (anim->uiObject == uiObject && anim->objectParameter == COLOR) {
+        if (anim->uiObject == uiObject && anim->objectParameter == ANIM_COLOR) {
             auto av = static_cast<AnimationValue<Color>*>(anim.get());
             if (av->isResetting) return av->savedValue;
 
@@ -105,7 +105,7 @@ Color Animator::animateColor(UIObject *uiObject, Color targetColor, float durati
     }
 
     auto newAV = std::make_unique<AnimationValue<Color>>(
-        uiObject, uiObject->color, targetColor, duration, COLOR, movementType
+        uiObject, uiObject->color, targetColor, duration, ANIM_COLOR, movementType
     );
     Color start = newAV->startValue;
     instance().animatedObjectsValues.push_back(std::move(newAV));
@@ -115,7 +115,7 @@ Color Animator::animateColor(UIObject *uiObject, Color targetColor, float durati
 float Animator::animateImageAlpha(UIObject *uiObject, float targetAlpha,
                                   float duration, MovementType movementType) {
   for (auto &anim : instance().animatedObjectsValues) {
-    if (anim->uiObject == uiObject && anim->objectParameter == IMAGE_ALPHA) {
+    if (anim->uiObject == uiObject && anim->objectParameter == ANIM_IMAGE_ALPHA) {
       auto av = static_cast<AnimationValue<float> *>(anim.get());
 
       if (av->targetValue == targetAlpha)
@@ -132,7 +132,7 @@ float Animator::animateImageAlpha(UIObject *uiObject, float targetAlpha,
   }
 
   auto newAV = std::make_unique<AnimationValue<float>>(
-      uiObject, uiObject->imageAlpha, targetAlpha, duration, IMAGE_ALPHA,
+      uiObject, uiObject->imageAlpha, targetAlpha, duration, ANIM_IMAGE_ALPHA,
       movementType);
   float start = newAV->startValue;
   instance().animatedObjectsValues.push_back(std::move(newAV));
@@ -142,7 +142,7 @@ float Animator::animateImageAlpha(UIObject *uiObject, float targetAlpha,
 float Animator::animateRoundness(UIObject *uiObject, float targetRoundness,
                                  float duration, MovementType movementType) {
   for (auto& anim : instance().animatedObjectsValues) {
-    if (anim->uiObject == uiObject && anim->objectParameter == ROUNDNESS) {
+    if (anim->uiObject == uiObject && anim->objectParameter == ANIM_ROUNDNESS) {
       auto av = static_cast<AnimationValue<float>*>(anim.get());
 
       if (av->targetValue == targetRoundness)
@@ -159,7 +159,7 @@ float Animator::animateRoundness(UIObject *uiObject, float targetRoundness,
   }
 
   auto newAV = std::make_unique<AnimationValue<float>>(
-      uiObject, uiObject->roundness, targetRoundness, duration, ROUNDNESS, movementType
+      uiObject, uiObject->roundness, targetRoundness, duration, ANIM_ROUNDNESS, movementType
   );
   float start = newAV->startValue;
   instance().animatedObjectsValues.push_back(std::move(newAV));
@@ -169,7 +169,7 @@ float Animator::animateRoundness(UIObject *uiObject, float targetRoundness,
 float Animator::animateOutline(UIObject *uiObject, float targetOutline,
                                float duration, MovementType movementType) {
   for (auto &anim : instance().animatedObjectsValues) {
-    if (anim->uiObject == uiObject && anim->objectParameter == OUTLINE) {
+    if (anim->uiObject == uiObject && anim->objectParameter == ANIM_OUTLINE) {
       auto av = static_cast<AnimationValue<float> *>(anim.get());
 
       if (av->targetValue == targetOutline)
@@ -186,7 +186,7 @@ float Animator::animateOutline(UIObject *uiObject, float targetOutline,
   }
 
   auto newAV = std::make_unique<AnimationValue<float>>(
-      uiObject, uiObject->outlineScale, targetOutline, duration, OUTLINE,
+      uiObject, uiObject->outlineScale, targetOutline, duration, ANIM_OUTLINE,
       movementType);
   float start = newAV->startValue;
   instance().animatedObjectsValues.push_back(std::move(newAV));
@@ -203,7 +203,7 @@ void Animator::reset(UIObject* uiObject, UIObjectParameter parameter, float time
 
 
 void Animator::reset(UIObject *uiObject, float time) {
-  if (animatorContains(uiObject, NONE))
+  if (animatorContains(uiObject, ANIM_NONE))
     return;
   for (auto &aov : instance().animatedObjectsValues) {
     if (aov->uiObject == uiObject) {
@@ -219,23 +219,23 @@ void Animator::apply(UIObject* uiObject) {
     for (auto &anim : instance().animatedObjectsValues) {
         if (anim->uiObject == uiObject) {
             // typ animacji zależy od parametru — ale zawsze możemy użyć targetValue
-            if (anim->objectParameter == POSITION) {
+            if (anim->objectParameter == ANIM_POSITION) {
                 auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
                 *av->currentValue = av->targetValue;
                 av->savedValue = av->targetValue;
-            } else if (anim->objectParameter == SIZE) {
+            } else if (anim->objectParameter == ANIM_SIZE) {
                 auto av = static_cast<AnimationValue<Vec2f>*>(anim.get());
                 *av->currentValue = av->targetValue;
                 av->savedValue = av->targetValue;
-            } else if (anim->objectParameter == COLOR) {
+            } else if (anim->objectParameter == ANIM_COLOR) {
                 auto av = static_cast<AnimationValue<Color>*>(anim.get());
                 *av->currentValue = av->targetValue;
                 av->savedValue = av->targetValue;
-            } else if (anim->objectParameter == IMAGE_ALPHA) {
+            } else if (anim->objectParameter == ANIM_IMAGE_ALPHA) {
                 auto av = static_cast<AnimationValue<float>*>(anim.get());
                 *av->currentValue = av->targetValue;
                 av->savedValue = av->targetValue;
-            } else if (anim->objectParameter == ROUNDNESS) {
+            } else if (anim->objectParameter == ANIM_ROUNDNESS) {
                 auto av = static_cast<AnimationValue<float>*>(anim.get());
                 *av->currentValue = av->targetValue;
                 av->savedValue = av->targetValue;
@@ -259,7 +259,7 @@ void Animator::apply(UIObject* uiObject) {
 }
 
 void Animator::sizeUp(UIObject *uiObject, float scale, float time) {
-  if (animatorContains(uiObject, SIZE)) return;
+  if (animatorContains(uiObject, ANIM_SIZE)) return;
   Vector2 offsetSize = {uiObject->size.x * scale, uiObject->size.y * scale};
   Vector2 offsetPos = {-uiObject->size.x * scale / 2.0f,
                        -uiObject->size.y * scale / 2.0f};

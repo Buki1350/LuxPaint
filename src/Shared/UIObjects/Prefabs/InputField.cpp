@@ -10,9 +10,6 @@ InputField::InputField() {
   text.margin = 5;
   color = WHITE;
 }
-InputField::~InputField() {
-    if (this == _instance) { _instance = nullptr; }
-}
 
 void InputField::setMode(InputMode mode) {
     _mode = mode;
@@ -125,6 +122,12 @@ void InputField::draw() {
   }
 
   EndScissorMode();
+}
+
+void InputField::destroy() {
+    if (this == _instance) { _instance = nullptr; }
+    Updatable::markedForDeletion = true;
+    UIObject::destroy();
 }
 void InputField::onValueChanged(std::function<void()> lambdaFunc) {
     _onValueChangedCallback = lambdaFunc;

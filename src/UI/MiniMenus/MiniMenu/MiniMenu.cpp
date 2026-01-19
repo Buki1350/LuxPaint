@@ -8,20 +8,22 @@
 #include "Shared/Utils/Files/utiFiles.h"
 #include "Shared/Utils/View/utiView.h"
 
+#include <iostream>
+
 std::vector<MiniMenu*> MiniMenu::instances = {};
 
 MiniMenu *MiniMenu::createInstance() {
   float margin = MINIMENU_MARGIN_SCALE * uti::view::getSmallerMonitorEdge();
-  MiniMenu *newFrontPanel = new MiniMenu();
-  instances.insert(instances.begin(), newFrontPanel);
-  newFrontPanel->_oBackground = new UIObject();
-  newFrontPanel->_targetSize = Vec2f::ones() * margin;
-  newFrontPanel->_oBackground->color = uti::files::loadColor("miniMenu", "uiGlobal");
-  newFrontPanel->_oBackground->size = {0, 0};
+  MiniMenu *newInstance = new MiniMenu();
+  instances.insert(instances.begin(), newInstance);
+  newInstance->_oBackground = new UIObject();
+  newInstance->_targetSize = Vec2f::ones() * margin;
+  newInstance->_oBackground->color = uti::files::loadColor("miniMenu", "uiGlobal");
+  newInstance->_oBackground->size = {0, 0};
   if (instances.size() > 1)
-    newFrontPanel->_oBackground->setZLayer(instances[1]->_oBackground->getZLayer());
+    newInstance->_oBackground->setZLayer(instances[1]->_oBackground->getZLayer());
 
-  return newFrontPanel;
+  return newInstance;
 }
 
 void MiniMenu::destroyInstance(MiniMenu *miniMenu) {
@@ -76,9 +78,9 @@ MiniMenu* MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) 
 MiniMenu::ObjectWithSavedSize MiniMenu::flexSeparator() { return {new UIObject(), true}; }
 
 void MiniMenu::update() {
+  _handleDeleting();
   _handleClosing();
   _calculateTransforms();
-  _handleDeleting();
   _handleKeybindings();
 }
 
@@ -88,8 +90,8 @@ void MiniMenu::_handleClosing() {
     this != MiniMenu::instances[0] ||
     _disableClosing) return;
 
-  for (auto instance : instances) {
-    if (IsMouseButtonPressed(0)) {
+  if (IsMouseButtonPressed(0)) {
+    for (auto instance : instances) {
       bool cursorAboveAny = instance->_oBackground->cursorAbove();
 
       for (auto &e : instance->_oPackedObjects) {
@@ -199,7 +201,7 @@ void MiniMenu::_handleDeleting() {
       return;
     }
 
-    if (!Animator::animatorContains(_oBackground, NONE)) {
+    if (!Animator::animatorContains(_oBackground, ANIM_NONE)) {
       auto it = std::find(instances.begin(), instances.end(), this);
       if (it != instances.end()) instances.erase(it);
 
@@ -213,7 +215,7 @@ void MiniMenu::_handleDeleting() {
       _oPackedObjects.clear();
       _onDestructionFunc();
 
-      delete this;
+      markedForDeletion = true;
     }
   }
 }

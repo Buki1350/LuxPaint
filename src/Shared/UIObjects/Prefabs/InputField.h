@@ -24,7 +24,6 @@ class InputField final : public UIObject, public Updatable {
 
 public:
   InputField();
-  ~InputField() override;
 
   void setMode(InputMode mode);
   std::string getValue() const;
@@ -33,6 +32,7 @@ public:
 
   void update() override;
   void draw() override;
+  void destroy() override;
 
   bool isFocused() const { return this == _instance; }
   void onValueChanged(std::function<void()> lambdaFunc);

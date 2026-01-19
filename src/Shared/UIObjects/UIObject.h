@@ -55,11 +55,11 @@ public:
 
 // ... animator utility
 enum UIObjectParameter {
-  NONE, // ... for reset
-  POSITION,
-  SIZE,
-  COLOR,
-  OUTLINE,
-  IMAGE_ALPHA,
-  ROUNDNESS
+  ANIM_NONE, // ... for reset
+  ANIM_POSITION,
+  ANIM_SIZE,
+  ANIM_COLOR,
+  ANIM_OUTLINE,
+  ANIM_IMAGE_ALPHA,
+  ANIM_ROUNDNESS
 };

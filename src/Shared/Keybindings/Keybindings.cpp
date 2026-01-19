@@ -99,6 +99,9 @@ InputAction Keybindings::getDetectedAction() {
 
   if (_pushedKeys.empty()) return InputAction::IA_NONE;
 
+  for (auto p : _pushedKeys) std::cout << Keybindings::keyboardKeyToString(p) << ", ";
+  std::cout << std::endl;
+
   InputAction foundAction = IA_NONE;
   //auto debugActDictCopy = actionsDictionary;
   for (auto e : actionsDictionary) {

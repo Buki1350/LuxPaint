@@ -8,20 +8,22 @@ void InputActionListener::init() {
 }
 
 void InputActionListener::update() {
+  InputAction action = Keybindings::getDetectedAction();
+
 #ifdef DEBUG
-  updateDebug();
+  handleDebug(action);
 #endif
 
-  switch (Keybindings::getDetectedAction()) {
-    case UNDO: App::instance().snapshotManager.undo(); break;
-    case REDO: App::instance().snapshotManager.redo(); break;
-    default: break;
+  switch (action) {
+  case UNDO: App::instance().snapshotManager.undo(); break;
+  case REDO: App::instance().snapshotManager.redo(); break;
+  default: break;
   }
 }
 
 #ifdef DEBUG
-void InputActionListener::updateDebug() {
-  switch (Keybindings::getDetectedAction()) {
+void InputActionListener::handleDebug(InputAction action) {
+  switch (action) {
   case DEBUG_CREATEIMAGE_250x250:
     BlankCanvasBuilder::CreateBlank(Vec2i(250, 250));
     break;
@@ -30,3 +32,4 @@ void InputActionListener::updateDebug() {
   }
 }
 #endif
+

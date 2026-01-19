@@ -10,7 +10,6 @@ template <typename T>
 class MiniMenuBuilderBase {
 protected:
   inline static MiniMenu* menu = nullptr;
-  inline static MiniMenuBuilderBase* baseInstance = nullptr;
   static void _Build() {
     if (menu != nullptr) return;
     menu = MiniMenu::createInstance();

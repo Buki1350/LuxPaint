@@ -5,6 +5,8 @@
 #include "../../../Automatition/Updatables/Updatable.h"
 #include "../../../Shared/UIObjects/UIObject.h"
 
+#include <iostream>
+
 class MiniMenu final : public Updatable {
     template <typename T> friend class MiniMenuBuilderBase;
     struct ObjectWithSavedSize; // predef
@@ -70,4 +72,6 @@ public:
     static ObjectWithSavedSize flexSeparator();
 
     static void setBackgroundColorForAll(Color color);
+
+    ~MiniMenu() override {std::cout << "MiniMenu::~MiniMenu" << std::endl;};
 };

@@ -8,6 +8,8 @@
 #include "UIObjectsManager.h"
 #include "raylib.h"
 
+#include <iostream>
+
 UIObject::UIObject() {
   text.setParent(this);
   

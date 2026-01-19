@@ -262,6 +262,7 @@ void ColorPicker::destroy() {
   if (_OnDestroy)   // <––––– tu!
     _OnDestroy();
 
+  Updatable::markedForDeletion = true;
   UIObject::destroy();
 }
 

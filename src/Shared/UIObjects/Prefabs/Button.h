@@ -33,7 +33,7 @@ public:
     }
     else {
       _focused = false;
-      Animator::reset(this, COLOR, ANIMATION_SIZEUP_DURATION);
+      Animator::reset(this, ANIM_COLOR, ANIMATION_SIZEUP_DURATION);
     }
 
     if (!cursorAbove() || uti::input::mouseReleased()) {
