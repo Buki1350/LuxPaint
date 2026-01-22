@@ -36,6 +36,7 @@ public:
   float         imageMarginScale = 0;
 
   UIObject();
+  virtual ~UIObject() {}
   virtual void draw();
   void setZLayer(int newZLayer);
   int getZLayer() const;

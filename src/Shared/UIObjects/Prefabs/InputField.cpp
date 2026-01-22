@@ -4,6 +4,8 @@
 #include "Shared/Utils/Time/utiTime.h"
 #include "raylib.h"
 
+#include <iostream>
+
 InputField::InputField() {
   text.setParent(this);
   text.center = false;
@@ -105,8 +107,7 @@ void InputField::draw() {
   Vec2f finalPos = position;
   Vec2f finalSize = size;
 
-  BeginScissorMode((int)finalPos.x, (int)finalPos.y, (int)finalSize.x,
-                   (int)finalSize.y);
+  BeginScissorMode(finalPos.x, finalPos.y, finalSize.x, finalSize.y);
 
   DrawTextEx(App::instance().getAppData().defaultFont, _value.c_str(),
              {finalPos.x + text.margin - _scrollOffset,
@@ -118,7 +119,12 @@ void InputField::draw() {
     int cursorX = MeasureText(beforeCursor.c_str(), text.fontSize);
     int x = (int)(finalPos.x + text.margin + cursorX - _scrollOffset);
     int y = (int)(finalPos.y + (finalSize.y - text.fontSize) / 2.0f);
+
     DrawRectangle(x, y, 2, text.fontSize, text.textColor);
+        // std::cout << _instance << std::endl;
+        // std::cout << "x and y:" << x << ", " << y << std::endl;
+        // std::cout << "textcolor:" << uti::colors::colorToHex(text.textColor) << std::endl;
+        // std::cout << "finalpos: " << finalPos.x << ", " << finalPos.y << std::endl;
   }
 
   EndScissorMode();

@@ -13,7 +13,6 @@ class SnapshotManager {
 public:
   void saveSnapshot(std::unique_ptr<Snapshot> snapshot) {
     if (_currentIndex != 0) {
-      // usuń całą "przyszłość" undo
       _snapshots.erase(
           _snapshots.begin(),
           _snapshots.begin() + _currentIndex

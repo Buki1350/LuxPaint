@@ -1,5 +1,8 @@
 #include "Colors.h"
 
+#include <__msvc_ostream.hpp>
+#include <iostream>
+
 namespace uti::colors {
 
 Color hexToColor(const std::string hex) {
@@ -77,6 +80,7 @@ float getColorLuminance(Color c) {
 
 // returns black or whhite depending on UIObject luminance
 Color getDynamicBlackOrWhiteFor(Color color) {
+  std::cout << colorToHex(color, true) << std::endl;
   return getColorLuminance(color) < 160.0f ? WHITE : BLACK;
 }
 

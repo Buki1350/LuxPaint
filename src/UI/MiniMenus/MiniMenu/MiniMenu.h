@@ -62,6 +62,7 @@ public:
 
     MiniMenu* pack(UIObject *object);
     MiniMenu *packRow(std::initializer_list<ObjectWithSavedSize> objects);
+    void _handleDynamicFontColor();
     void update() override;
     void onDestroy(std::function<void()> labdaFunction);
     void disableClosing();

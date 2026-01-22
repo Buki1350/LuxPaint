@@ -30,7 +30,7 @@ void UIObjectsManager::AddUIObject(UIObject *object) {
   _pendingUIObjects.push_back(object);
 }
 
-void UIObjectsManager::DrawAll() {
+void UIObjectsManager::drawAll() {
   _updateRenderOrderList();
 
   auto snapshot = _objectsInRenderOrder;

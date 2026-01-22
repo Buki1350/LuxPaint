@@ -89,7 +89,6 @@ Texture &UIObject::getTexture() { return _texture; }
 void UIObject::destroy() {
   Animator::terminate(this);
   UIObjectsManager::_objectsInRenderOrder.remove(this);
-  delete this;
 }
 
 
@@ -175,10 +174,15 @@ void UIObject::draw() {
 }
 
 void UIObject::setZLayer(int newZLayer) {
+  // 1. Usuń z aktualnej listy renderowania
   UIObjectsManager::_objectsInRenderOrder.remove(this);
+
+  // 2. Zmień warstwę
   this->_zLayer = newZLayer;
-  UIObjectsManager::_objectsInRenderOrder.push_back(this);
-  UIObjectsManager::_updateRenderOrderList();
+
+  // 3. Zamiast pchać na koniec, dodaj do PENDING
+  // Manager wstawi to w odpowiednie miejsce przy drawAll()
+  UIObjectsManager::AddUIObject(this);
 }
 
 int UIObject::getZLayer() const { return this->_zLayer; }

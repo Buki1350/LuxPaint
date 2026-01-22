@@ -5,6 +5,7 @@
 #include "../../Shared/DelayedAction/DelayedAction_until.h"
 #include "../../Shared/Serializer/Serializer.h"
 #include "Selectors/MarchingAntsSelector.h"
+#include "Shared/SnapshotsManager/SnapshotsTypes/ImageSnapshot.h"
 #include "Shared/Utils/View/utiView.h"
 
 #include <iostream>
@@ -311,8 +312,6 @@ Image Canvas::exportAsImage() {
 
   return result;
 }
-
-
 
 void Canvas::addTexture(Texture2D texture) {
   addImage(LoadImageFromTexture(texture));

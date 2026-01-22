@@ -117,7 +117,7 @@ void ToolSizeSlider::update() {
             _minVal = (int)sliderVal / 5;
         }
 
-        if (_inputField->text.value.empty())
+        if (_inputField->getValue().empty())
             _inputField->setValue("1");
         _updateSliderFromInput();
     }

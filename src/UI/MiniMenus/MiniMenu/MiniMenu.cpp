@@ -18,8 +18,8 @@ MiniMenu *MiniMenu::createInstance() {
   instances.insert(instances.begin(), newInstance);
   newInstance->_oBackground = new UIObject();
   newInstance->_targetSize = Vec2f::ones() * margin;
-  newInstance->_oBackground->color = uti::files::loadColor("miniMenu", "uiGlobal");
   newInstance->_oBackground->size = {0, 0};
+  newInstance->_oBackground->color = uti::files::loadColor("miniMenu", "uiGlobal");
   if (instances.size() > 1)
     newInstance->_oBackground->setZLayer(instances[1]->_oBackground->getZLayer());
 
@@ -36,7 +36,8 @@ void MiniMenu::destroy() { destroyInstance(this); }
 
 MiniMenu * MiniMenu::pack(UIObject* object) { return packRow({object}); }
 
-MiniMenu* MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) {
+MiniMenu *
+MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) {
   float margin = MINIMENU_MARGIN_SCALE * uti::view::getSmallerMonitorEdge();
 
   Row row;
@@ -46,7 +47,9 @@ MiniMenu* MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) 
   for (auto e : objects) {
     row.push_back(e);
 
-    if (!e.flexible) { rowWidth += e.initialSize.x; }
+    if (!e.flexible) {
+      rowWidth += e.initialSize.x;
+    }
     rowWidth += margin;
     rowHeight = std::max(rowHeight, e.initialSize.y);
 
@@ -56,15 +59,10 @@ MiniMenu* MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) 
 
     _oPackedObjects.push_back(e);
 
-    if (dynamic_cast<Button*>(e.object) || dynamic_cast<InputField*>(e.object)) {
+    if (dynamic_cast<Button *>(e.object) ||
+        dynamic_cast<InputField *>(e.object)) {
       _buttonsAndInputs.push_back(e.object);
     }
-
-    Color textCol = uti::colors::getDynamicBlackOrWhiteFor(_oBackground->color);
-    for (auto &el : _oPackedObjects) {
-      el.object->text.textColor = textCol;
-    }
-
   }
 
   _rows.push_back(row);
@@ -74,14 +72,26 @@ MiniMenu* MiniMenu::packRow(std::initializer_list<ObjectWithSavedSize> objects) 
 
   return this;
 }
+void MiniMenu::_handleDynamicFontColor() {
+  Color textCol = uti::colors::getDynamicBlackOrWhiteFor(_oBackground->color);
+  for (auto &el : _oPackedObjects) {
+    if (auto* input = dynamic_cast<InputField*>(el.object)) {
+      // input->textColor = textCol; // ... bugfix
+    }
+    else {
+      el.object->text.textColor = textCol;
+    }
+  }
+}
 
 MiniMenu::ObjectWithSavedSize MiniMenu::flexSeparator() { return {new UIObject(), true}; }
 
 void MiniMenu::update() {
+  _calculateTransforms();
+  _handleDynamicFontColor();
+  _handleKeybindings();
   _handleDeleting();
   _handleClosing();
-  _calculateTransforms();
-  _handleKeybindings();
 }
 
 void MiniMenu::_handleClosing() {
@@ -110,8 +120,7 @@ void MiniMenu::_handleClosing() {
 }
 
 void MiniMenu::_calculateTransforms() {
-    if (!_oBackground || _markedForDeletion)
-        return;
+    if (!_oBackground || _markedForDeletion) return;
 
     float margin = MINIMENU_MARGIN_SCALE * uti::view::getSmallerMonitorEdge();
 
@@ -253,7 +262,7 @@ void MiniMenu::_focusNext() {
   _currentSelected = _buttonsAndInputs[nextIndex];
 
   if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
-    input->setFocused(true);
+    //input->setFocused(true);
   }
   else if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
     btn->setFocused(true);
@@ -283,7 +292,7 @@ void MiniMenu::_focusPrevious() {
   }
 
   if (auto* input = dynamic_cast<InputField*>(_currentSelected)) {
-    input->setFocused(true);
+    //input->setFocused(true);
   }
   else if (auto* btn = dynamic_cast<Button*>(_currentSelected)) {
     btn->setFocused(true);

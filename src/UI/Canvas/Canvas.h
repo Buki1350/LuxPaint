@@ -39,7 +39,7 @@ class Canvas final : public UIObject, public Updatable, public Initializable {
   void _createBackground();
 
 public:
-  void init();
+  void init() override;
   void addImage(Image image);
   void addTexture(Texture2D texture);
   void update() override;

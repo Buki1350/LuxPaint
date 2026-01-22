@@ -27,8 +27,11 @@ class ToolBox final : public UIObject, public Updatable, public Initializable {
     UIObject* _oToolSetListBackground = nullptr;
     std::vector<Button*> _toolsButtons;
     std::pair<Vec2f, Vec2f> _calculateTransforms();
+    bool _forDelete = false;
 
   public:
+    void destroy();
+    bool isForDelete() const;
     ToolsSetList( ToolBox* toolBox, ToolSet& toolSet );
     void update() override;
   };

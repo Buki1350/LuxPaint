@@ -259,8 +259,7 @@ void ColorPicker::destroy() {
   for (auto &slider : _sliders)
     if (slider) slider->destroy();
 
-  if (_OnDestroy)   // <––––– tu!
-    _OnDestroy();
+  if (_OnDestroy) _OnDestroy();
 
   Updatable::markedForDeletion = true;
   UIObject::destroy();

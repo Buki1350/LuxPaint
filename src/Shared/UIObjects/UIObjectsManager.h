@@ -17,6 +17,6 @@ public:
   static bool isInitialized();
   static void init();
   static void AddUIObject(UIObject *object);
-  static void DrawAll();
+  static void drawAll();
   static UIObject* GetObjectByName(std::string name);
 };

@@ -47,6 +47,9 @@ public:
       Texture2D blankImage = uti::convert::matrixToTexture(blankImageMatrix);
       App::instance().canvas.addTexture(blankImage);
 
+      App::instance().snapshotManager.saveSnapshot(
+        std::make_unique<ImageSnapshot>(App::instance().canvas.getLayersInfo()));
+
       menu->destroy();
     });
 
@@ -65,7 +68,7 @@ public:
       MiniMenu::flexSeparator(),
       field1Value1,
       slash,
-      field1Value2
+      field1Value2,
     });
 
     auto separator = new UIObject();
@@ -83,8 +86,7 @@ public:
     Matrx<Color> blankImageMatrix(size);
     blankImageMatrix.fill(WHITE);
     Texture2D blankImage = uti::convert::matrixToTexture(blankImageMatrix);
+
     App::instance().canvas.addTexture(blankImage);
-    App::instance().snapshotManager.saveSnapshot(
-        std::make_unique<ImageSnapshot>(App::instance().canvas.getLayersInfo()));
   }
 };

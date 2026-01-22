@@ -40,6 +40,7 @@ void ToolBox::init() {
   _toolSets.push_back(shapes_toolset);
 
   for (auto ts : _toolSets) {
+    ts->button->setZLayer(this->getZLayer() + 1);
     ts->button->onClick([this, ts]() { _expandTools(ts); });
   }
 
@@ -79,16 +80,31 @@ void ToolBox::update() {
 
     tileStartPosition.y += pixTileHeight + pixTileMargin;
   }
+
+  for (auto ts : _toolsSetList_Instances) {
+    if (ts != nullptr && ts->isForDelete()) {
+      delete ts;
+    }
+  }
 }
 
-void ToolBox::_expandTools(ToolSet* toolSet) {
+void ToolBox::_expandTools(ToolSet *toolSet) {
   new ToolsSetList(this, *toolSet);
+}
+
+void ToolBox::ToolsSetList::destroy() {
+  _forDelete = true;
+}
+
+bool ToolBox::ToolsSetList::isForDelete() const {
+  return _forDelete;
 }
 
 ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
 : _toolBox(toolBox), _toolSet(toolSet) {
   toolBox->_toolsSetList_Instances.push_back(this);
   _oToolSetListBackground = new UIObject();
+  _oToolSetListBackground->setZLayer(toolBox->getZLayer() - 1);
   _oToolSetListBackground->roundness = toolBox->roundness;
 
   // ... tools
@@ -96,7 +112,7 @@ ToolBox::ToolsSetList::ToolsSetList(ToolBox* toolBox, ToolSet& toolSet )
     Button* newButton = new Button();
     newButton->setImage(tool->icon);
     newButton->onClick([tool] {App::instance().canvas.setCurrentTool(tool); });
-    newButton->setZLayer(_oToolSetListBackground->getZLayer() + 1);
+    newButton->setZLayer(toolBox->getZLayer() + 1);
     newButton->roundness = 1;
     newButton->color = WHITE;
     newButton->imageMarginScale = UIOBJECT_ICON_MARGIN * 2;
@@ -147,7 +163,7 @@ void ToolBox::ToolsSetList::update() {
         _oToolSetListBackground->destroy();
         for (auto button : _toolsButtons) button->destroy();
 
-        delete this;
+        _forDelete = true;
     });
     return;
   }

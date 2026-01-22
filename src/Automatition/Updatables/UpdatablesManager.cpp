@@ -16,7 +16,7 @@ void UpdatablesManager::updateAll() {
   auto snapshot = _updatables;
   for (Updatable* updatable : snapshot) {
     if (updatable != nullptr && !updatable->markedForDeletion) {
-      std::cout << "Update from: " << typeid(*updatable).name() << std::endl;
+      //std::cout << "Update from: " << typeid(*updatable).name() << std::endl;
       updatable->update();
     }
   }
