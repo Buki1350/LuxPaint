@@ -14,7 +14,7 @@
 #include "Shared/Utils/Files/utiFiles.h"
 
 void ManagerButton::init() {
-  this->color = uti::files::loadColor("managerButton", "uiGlobal");
+  this->color = uti::files::loadColor("managerButton");
   this->setImage(Serializer::loadImage("manager_button.png"));
   this->setZLayer(LAYER_WIDGETS);
   this->imageMarginScale = UIOBJECT_ICON_MARGIN;

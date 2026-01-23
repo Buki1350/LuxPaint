@@ -19,9 +19,9 @@ MiniMenu *MiniMenu::createInstance() {
   newInstance->_oBackground = new UIObject();
   newInstance->_targetSize = Vec2f::ones() * margin;
   newInstance->_oBackground->size = {0, 0};
-  newInstance->_oBackground->color = uti::files::loadColor("miniMenu", "uiGlobal");
+  newInstance->_oBackground->color = uti::files::loadColor("miniMenu");
   if (instances.size() > 1)
-    newInstance->_oBackground->setZLayer(instances[1]->_oBackground->getZLayer());
+    newInstance->_oBackground->setZLayer(instances[1]->_oBackground->getZLayer() + 1);
 
   return newInstance;
 }

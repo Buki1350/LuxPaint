@@ -96,12 +96,25 @@ class ColorsSettingsBuilder : public MiniMenuBuilderBase<ColorsSettingsBuilder> 
     }
 
     void applyGlobalUIColor(Color c) {
-        App::instance().toolBox.setBackgroundColor(c);
-        App::instance().colorHolder.setBackgroundColor(c);
-        App::instance().managerButton.color = c;
-        MiniMenu::setBackgroundColorForAll(c);
-        App::instance().toolSizeSlider.color = c;
+        struct Entry {
+            const char* name;
+            std::function<void(Color)> apply;
+        };
+
+        std::vector<Entry> targets = {
+            { "toolbox",        [](Color c){ App::instance().toolBox.setBackgroundColor(c); } },
+            { "colorHolder",    [](Color c){ App::instance().colorHolder.setBackgroundColor(c); } },
+            { "managerButton",  [](Color c){ App::instance().managerButton.color = c; } },
+            { "miniMenu",       [](Color c){ MiniMenu::setBackgroundColorForAll(c); } },
+            { "toolSizeSlider", [](Color c){ App::instance().toolSizeSlider.color = c; } },
+        };
+
+        for (auto& t : targets) {
+            t.apply(c);
+            uti::files::saveColor(t.name, c);
+        }
     }
+
 
 public:
 

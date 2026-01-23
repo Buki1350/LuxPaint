@@ -5,7 +5,7 @@
 #include <map>
 
 namespace uti::files {
-  Color loadColor(std::string token, std::string defaultToken = "");
+  Color loadColor(const std::string& token, const std::string& defaultToken = "", const std::string& defaultNewColor = "#7d7d7d");
   void saveColor(const char *token, const Color &color);
   std::map<InputAction, std::vector<KeyboardKey>> loadActions();
   std::map<std::string, Color> loadAllColors();

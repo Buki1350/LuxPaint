@@ -46,7 +46,7 @@ ColorPicker::ColorPicker() {
     const char *labels = "RGBA";
     UIObject * label = new UIObject;
     label->text = std::string(1, labels[i]);
-    label->color = uti::files::loadColor("colorPickerLabel", "uiGlobal");
+    label->color = uti::files::loadColor("colorPickerLabel");
     label->outlineScale = 0;
     label->setZLayer(this->getZLayer() + 2);
     _sliderLabels.push_back(label);

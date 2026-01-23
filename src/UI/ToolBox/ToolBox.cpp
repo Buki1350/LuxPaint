@@ -14,7 +14,7 @@
 #include "Tools/ShapesTools/LineTool.h"
 
 void ToolBox::init() {
-  this->color = uti::files::loadColor("toolbox", "uiGlobal");
+  this->color = uti::files::loadColor("toolbox");
   this->setZLayer(LAYER_WIDGETS);
 
   _toolSetListColor = uti::files::loadColor("toolSet");

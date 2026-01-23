@@ -4,21 +4,36 @@
 
 namespace uti::files {
 
-Color loadColor(std::string token, std::string defaultToken) {
-  if (!defaultToken.empty()) {
-    std::string foundDefaultColorString = Serializer::loadFromData<std::string>(FILE_COLOR_PALETTE, defaultToken);
-    if (!foundDefaultColorString.empty()) {
-      return colors::hexToColor(foundDefaultColorString);
+  Color loadColor(const std::string& token,
+                  const std::string& defaultToken,
+                  const std::string& defaultNewColor)
+  {
+    std::string colorStr =
+        Serializer::loadFromData<std::string>(FILE_COLOR_PALETTE, token);
+
+    if (!colorStr.empty()) {
+      return colors::hexToColor(colorStr);
     }
+
+    if (!defaultToken.empty()) {
+      std::string defaultStr =
+          Serializer::loadFromData<std::string>(FILE_COLOR_PALETTE, defaultToken);
+
+      if (!defaultStr.empty()) {
+        // zapisz kopię defaulta pod tokenem
+        Serializer::saveToData<std::string>(
+            FILE_COLOR_PALETTE, token, defaultStr);
+
+        return colors::hexToColor(defaultStr);
+      }
+    }
+
+    Serializer::saveToData<std::string>(
+        FILE_COLOR_PALETTE, token, defaultNewColor);
+
+    return colors::hexToColor(defaultNewColor);
   }
 
-  Color color = colors::hexToColor(Serializer::loadFromData<std::string>(FILE_COLOR_PALETTE, token));
-  if (color.r == 0 && color.g == 0 && color.b == 0 && color.a == 255) {
-    Serializer::saveToResources<std::string>(FILE_COLOR_PALETTE, token, "#7d7d7d");
-    color = colors::hexToColor("#7d7d7d");
-  }
-  return color;
-}
 
 void saveColor(const char *token, const Color &color) {
   Serializer::saveToData<std::string>("ColorPalette.dat", token, colors::colorToHex(color));

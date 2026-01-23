@@ -35,7 +35,7 @@ void ToolSizeSlider::init() {
         });
 
     this->position = Vec2f(0, 25);
-    this->color = uti::files::loadColor("ToolSizeSlider", "uiGlobal");
+    this->color = uti::files::loadColor("ToolSizeSlider");
     this->setZLayer(LAYER_WIDGETS);
     this->name = "ToolSizeSlider";
 }

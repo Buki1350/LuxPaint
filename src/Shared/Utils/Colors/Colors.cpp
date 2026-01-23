@@ -80,7 +80,7 @@ float getColorLuminance(Color c) {
 
 // returns black or whhite depending on UIObject luminance
 Color getDynamicBlackOrWhiteFor(Color color) {
-  std::cout << colorToHex(color, true) << std::endl;
+  //std::cout << colorToHex(color, true) << std::endl;
   return getColorLuminance(color) < 160.0f ? WHITE : BLACK;
 }
 

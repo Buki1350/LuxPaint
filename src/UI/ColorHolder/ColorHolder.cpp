@@ -13,7 +13,7 @@
 #include <iostream>
 
 void ColorHolder::init() {
-  this->color = uti::files::loadColor("colorHolder", "uiGlobal");
+  this->color = uti::files::loadColor("colorHolder");
   this->setZLayer(LAYER_WIDGETS);
 
   Button* colorPickButton = new Button();

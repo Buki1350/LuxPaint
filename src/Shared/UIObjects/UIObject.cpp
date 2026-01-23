@@ -89,6 +89,7 @@ Texture &UIObject::getTexture() { return _texture; }
 void UIObject::destroy() {
   Animator::terminate(this);
   UIObjectsManager::_objectsInRenderOrder.remove(this);
+  isActive = false;
 }
 
 
